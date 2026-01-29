@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="de" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sven Maibaum - Portfolio | Software-Architekt & Spieleentwickler</title>
+    <meta
+      name="description"
+      content="Entdecken Sie das Portfolio von Sven Maibaum, Gründer von MayStudios. Experte für Software-Architektur, Full-Stack & Spieleentwicklung (Unreal Engine, Unity) und KI."
+    />
+    <meta
+      name="keywords"
+      content="Sven Maibaum, Portfolio, MayStudios, Software Architekt, Spieleentwickler, Full-Stack Entwicklung, Backend, Frontend, KI, Unreal Engine, Unity, Java, Python, C++, Spring Boot, React, Vue, Node.js, Burscheid, Exambyte, Gemma, Language Model, Architektur Showcase, Softwareentwicklung Portfolio"
+    />
+    <meta name="author" content="Sven Maibaum" />
+    <link rel="canonical" href="https://www.sven-maibaum.com/index.html" />
+    <link rel="icon" href="/assets/favicon.ico" type="image/x-icon" />
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-P9SXPLL2SY"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "G-P9SXPLL2SY");
+    </script>
+
+    <script>
+      (function () {
+        const savedTheme = localStorage.getItem("theme");
+        const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+        if (savedTheme) {
+          document.documentElement.setAttribute("data-theme", savedTheme);
+        } else if (prefersDark) {
+          document.documentElement.setAttribute("data-theme", "dark");
+        } else {
+          document.documentElement.setAttribute("data-theme", "light");
+        }
+      })();
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "Person",
+            "@id": "https://www.sven-maibaum.com/#person",
+            "name": "Sven Maibaum",
+            "url": "https://www.sven-maibaum.com/index.html",
+            "image": "https://www.sven-maibaum.com/assets/sven-maibaum-profil.jpg",
+            "jobTitle": "Leitender Software-Architekt & Spieleentwickler",
+            "worksFor": [
+              {
+                "@type": "Organization",
+                "name": "MayStudios"
+              },
+              {
+                "@type": "Organization",
+                "name": "LikeTik by Axinity"
+              },
+              {
+                "@type": "Organization",
+                "name": "Emotions Gaming"
+              }
+            ],
+            "alumniOf": {
+              "@type": "CollegeOrUniversity",
+              "name": "Heinrich-Heine-Universität Düsseldorf"
+            },
+            "knowsAbout": [
+              "Softwarearchitektur",
+              "Webentwicklung",
+              "Full-Stack Entwicklung",
+              "Backend Entwicklung",
+              "Spieleentwicklung",
+              "Unreal Engine",
+              "Unity",
+              "Java",
+              "Python",
+              "C++",
+              "Spring Boot",
+              "React",
+              "Vue.js",
+              "Node.js",
+              "Künstliche Intelligenz",
+              "Machine Learning",
+              "Datenbanken",
+              "DevOps"
+            ],
+            "description": "Sven Maibaum ist Gründer von MayStudios, ein erfahrener Software-Architekt und Spieleentwickler mit Fokus auf Full-Stack-Entwicklung, KI-Modelle und innovative Softwarelösungen.",
+            "sameAs": [
+              "https://www.linkedin.com/in/sven-maibaum/",
+              "https://github.com/maystudios"
+            ],
+            "address": {
+              "@type": "PostalAddress",
+              "addressLocality": "Burscheid",
+              "addressCountry": "DE"
+            }
+          },
+          {
+            "@type": "WebSite",
+            "url": "https://www.sven-maibaum.com/index.html",
+            "name": "Sven Maibaum - Portfolio",
+            "publisher": {
+              "@id": "https://www.sven-maibaum.com/#person"
+            },
+            "description": "Portfolio von Sven Maibaum, Gründer von MayStudios. Präsentation von Projekten in Software-Architektur, Full-Stack Entwicklung, Spieleentwicklung und KI.",
+            "inLanguage": "de-DE"
+          }
+        ]
+      }
+    </script>
+  </head>
+  <body class="antialiased">
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

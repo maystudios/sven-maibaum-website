@@ -4,12 +4,7 @@ const currentYear = new Date().getFullYear();
 
 export default function Footer() {
   return (
-    <footer className="relative bg-canvas border-t border-border">
-      {/* Top accent gradient line */}
-      <div
-        className="absolute top-0 left-0 right-0 h-px pointer-events-none"
-        style={{ background: "linear-gradient(to right, transparent, rgba(59,130,246,0.3), transparent)" }}
-      />
+    <footer className="bg-canvas border-t border-border">
       <motion.div
         initial={{ opacity: 0, y: 16 }}
         whileInView={{ opacity: 1, y: 0 }}

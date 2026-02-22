@@ -12,6 +12,7 @@ import Impressum from "./pages/Impressum";
 import Datenschutz from "./pages/Datenschutz";
 import AGB from "./pages/AGB";
 import NotFound from "./pages/NotFound";
+import Visitenkarte from "./pages/Visitenkarte";
 
 export default function App() {
   return (
@@ -25,6 +26,7 @@ export default function App() {
           <Route path="/projekte/exambyte" element={<ProjectExambyte />} />
           <Route path="/projekte/ki-marketing" element={<ProjectKIMarketing />} />
           <Route path="/projekte/itchio" element={<ProjectItchio />} />
+          <Route path="/visitenkarte" element={<Visitenkarte />} />
           <Route path="/showcase" element={<ArchitectShowcase />} />
           <Route path="/impressum" element={<Impressum />} />
           <Route path="/datenschutz" element={<Datenschutz />} />

@@ -1,82 +1,123 @@
-const experiences = [
+import { motion } from "motion/react";
+import { staggerContainerSlow, fadeInLeft, lineReveal } from "../lib/animations";
+
+type ExperienceEntry = {
+  period: string;
+  company: string;
+  title: string;
+  detail: string;
+  tags: string[];
+};
+
+const experiences: ExperienceEntry[] = [
   {
-    badge: "LT",
-    title: "Leitender Software-Architekt",
+    period: "März 2025 – Heute",
     company: "LikeTik by Axinity (Teilzeit)",
-    timeframe: "März 2025 – Heute",
+    title: "Leitender Software-Architekt",
     detail:
       "Verantwortlich für Software-Projektleitung und die Konzeption sowie Implementierung skalierbarer Web-Architekturen in innovativen Software-Engineering Projekten.",
-    badgeClass: "bg-teal-500/20 text-teal-400",
-    titleClass: "text-teal-400",
+    tags: ["Architektur", "Web", "Projektleitung"],
   },
   {
-    badge: "EG",
-    title: "Leitender Spieleentwickler",
+    period: "Okt. 2024 – Heute",
     company: "Emotions Gaming (Teilzeit)",
-    timeframe: "Okt. 2024 – Heute",
+    title: "Leitender Spieleentwickler",
     detail:
-      "Führende Rolle in der Entwicklung kreativer und technisch anspruchsvoller Spiele, u.a. für das Open-World-Multiplayer-Projekt \"The Prisonbreak\". Einsatz von Perforce und Unreal Engine.",
-    badgeClass: "bg-purple-500/20 text-purple-400",
-    titleClass: "text-purple-400",
+      'Führende Rolle in der Entwicklung kreativer und technisch anspruchsvoller Spiele, u.a. für das Open-World-Multiplayer-Projekt "The Prisonbreak". Einsatz von Perforce und Unreal Engine.',
+    tags: ["Unreal Engine", "Perforce", "Multiplayer"],
   },
   {
-    badge: "MS",
-    title: "Unternehmensinhaber & Entwickler",
+    period: "Juni 2023 – Heute",
     company: "MayStudios (Freiberuflich)",
-    timeframe: "Juni 2023 – Heute (Gründer)",
+    title: "Unternehmensinhaber & Entwickler",
     detail:
       "Data Scientist & Full-Stack Developer mit über 6 Jahren Erfahrung. Spezialisiert auf Backend-Systeme mit Spring Boot/Framework und datengetriebene Lösungen.",
-    badgeClass: "bg-orange-500/20 text-orange-400",
-    titleClass: "",
-    titleStyle: "#dd6b20",
+    tags: ["Spring Boot", "Full-Stack", "Data Science"],
   },
   {
-    badge: "P",
-    title: "Spieleentwickler",
+    period: "März 2024 – Juli 2024",
     company: "Phantomedia (Vollzeit)",
-    timeframe: "März 2024 – Juli 2024 (5 Monate)",
+    title: "Spieleentwickler",
     detail:
       "Mitwirkung an der Entwicklung von Spielen unter Verwendung von Perforce und Unreal Engine, Fokus auf Gameplay-Mechaniken und Systemintegration.",
-    badgeClass: "bg-gray-500/20 text-gray-400",
-    titleClass: "",
+    tags: ["Unreal Engine", "Gameplay", "Systeme"],
   },
 ];
 
+
 export default function Experience() {
   return (
-    <section id="experience" className="section-padding fade-in-up">
-      <div className="container mx-auto px-6">
-        <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
-          <span className="gradient-text">Berufserfahrung</span>
+    <section
+      id="experience"
+      className="bg-canvas border-t border-border py-24"
+    >
+      <div className="mx-auto max-w-5xl px-6">
+        <p className="swiss-eyebrow mb-3">Erfahrung</p>
+        <h2 className="swiss-heading-lg mb-16">
+          Berufserfahrung
         </h2>
-        <div className="space-y-8 max-w-3xl mx-auto">
-          {experiences.map((experience) => (
-            <div
-              key={experience.title}
-              className="glassmorphism p-6 rounded-lg shadow-lg flex items-start space-x-4 experience-card"
-            >
-              <div
-                className={`flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center text-xl font-bold ${
-                  experience.badgeClass
-                }`}
-                aria-hidden="true"
+
+        <motion.div
+          className="relative"
+          variants={staggerContainerSlow}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-5%" }}
+        >
+          {/* Animated vertical timeline line (desktop only) */}
+          <motion.div
+            className="hidden md:block absolute left-[199px] top-0 bottom-0 w-px bg-surface2 origin-top"
+            variants={lineReveal}
+          />
+
+          <div className="space-y-12">
+            {experiences.map((exp, index) => (
+              <motion.div
+                key={exp.title}
+                className="grid md:grid-cols-[200px_1fr] gap-8 relative"
+                variants={fadeInLeft}
+                whileHover={{ x: 3 }}
+                transition={{ duration: 0.2, ease: "easeOut" }}
               >
-                {experience.badge}
-              </div>
-              <div>
-                <h3
-                  className={`text-xl font-semibold ${experience.titleClass}`.trim()}
-                  style={experience.titleStyle ? { color: experience.titleStyle } : undefined}
-                >
-                  {experience.title}
-                </h3>
-                <p>{experience.company}</p>
-                <p className="text-sm">{experience.timeframe}</p>
-                <p className="mt-2 text-sm">{experience.detail}</p>
-              </div>
-            </div>
-          ))}
-        </div>
+                {/* Timeline dot (desktop only) */}
+                <motion.div
+                  className="hidden md:block absolute left-[195px] top-2 w-2 h-2 bg-brand rounded-full"
+                  aria-hidden="true"
+                  animate={{ scale: [1, 1.3, 1], opacity: [0.4, 1, 0.4] }}
+                  transition={{ repeat: Infinity, duration: 2.5, delay: index * 0.5, ease: "easeInOut" }}
+                />
+
+                {/* Left: period + company */}
+                <div className="text-sm text-faint">
+                  <p className="font-mono text-xs text-faint mb-1">
+                    {exp.period}
+                  </p>
+                  <p className="font-medium text-muted">{exp.company}</p>
+                </div>
+
+                {/* Right: title + detail + tags */}
+                <div>
+                  <h3 className="font-display font-bold text-fg mb-2">
+                    {exp.title}
+                  </h3>
+                  <p className="text-muted text-sm leading-relaxed mb-4">
+                    {exp.detail}
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {exp.tags.map((tag) => (
+                      <span
+                        key={tag}
+                        className="border border-border text-faint text-xs px-2 py-0.5 rounded-sm"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
       </div>
     </section>
   );

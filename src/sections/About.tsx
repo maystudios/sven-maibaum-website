@@ -1,34 +1,55 @@
+import { motion } from 'motion/react';
+import SectionHeading from "../components/SectionHeading";
+
 export default function About() {
   return (
-    <section id="about" className="section-padding fade-in-up">
-      <div className="container mx-auto px-6">
-        <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
-          <span className="gradient-text">Über Mich</span>
-        </h2>
-        <div className="flex flex-col md:flex-row items-center gap-10 md:gap-16">
-          <div className="md:w-1/3">
-            <img
-              src="/assets/images/sven_maibaum_profile.webp"
-              alt="Sven Maibaum - Profilbild"
-              className="rounded-full shadow-2xl mx-auto w-64 h-64 md:w-80 md:h-80 object-cover border-4 glow-effect"
-              style={{ borderColor: "var(--link-color)" }}
-              loading="lazy"
-            />
-          </div>
-          <div className="md:w-2/3 text-center md:text-left">
-            <h3 className="text-2xl font-semibold mb-4">
-              <strong className="text-gray-300">Über mich</strong>
-            </h3>
+    <section
+      id="about"
+      className="bg-surface border-t border-border py-24"
+    >
+      <div className="max-w-6xl mx-auto px-6 sm:px-10">
+        <SectionHeading eyebrow="Über Mich" title="Über Mich" className="mb-12" />
 
-            <blockquote className="space-y-4 mb-6 text-left">
-              <p className="leading-relaxed">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-16">
+          {/* Left column: image */}
+          <motion.div
+            className="md:col-span-4"
+            initial={{ opacity: 0, x: -20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+            viewport={{ once: true, margin: "-10%" }}
+          >
+            <motion.div
+              className="border border-border overflow-hidden"
+              whileHover={{ scale: 1.02, boxShadow: "0 0 0 2px rgba(59,130,246,0.5)" }}
+              transition={{ duration: 0.4 }}
+            >
+              <img
+                src={`${import.meta.env.BASE_URL}assets/images/sven_maibaum_profile.webp`}
+                alt="Sven Maibaum - Profilbild"
+                className="w-full object-cover"
+                loading="lazy"
+              />
+            </motion.div>
+          </motion.div>
+
+          {/* Right column: biography */}
+          <motion.div
+            className="md:col-span-8"
+            initial={{ opacity: 0, x: 20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, delay: 0.1, ease: "easeOut" }}
+            viewport={{ once: true, margin: "-10%" }}
+          >
+            <div className="space-y-5 text-muted text-lg leading-relaxed">
+              <p>
                 Ich bin Sven Maibaum, Software-Architekt und Spieleentwickler. Schon als Kind
                 habe ich alles auseinandergenommen, was irgendwie Technik war – einfach, um zu
                 verstehen, wie es funktioniert. Mit elf Jahren habe ich angefangen zu
                 programmieren und meine ersten kleinen Spiele gebaut.
               </p>
 
-              <p className="leading-relaxed">
+              <p>
                 Schon seit ich ein kleiner Junge war, wollte ich eigentlich Ingenieur werden.
                 Maschinen, Mechanik und Logik haben mich von Anfang an fasziniert – das
                 Zusammenspiel vieler kleiner Teile, die gemeinsam etwas Großes erschaffen. Mit
@@ -38,101 +59,103 @@ export default function About() {
                 nicht losgelassen.
               </p>
 
-              <p className="leading-relaxed">
+              <p>
                 Beruflich bin ich aktuell in mehreren Bereichen aktiv, die sich ideal ergänzen:
               </p>
 
-              <p className="leading-relaxed">
-                Bei <strong>LikeTik by </strong>
+              <p>
+                Bei <strong className="text-fg">LikeTik by </strong>
                 <a
                   href="https://www.liketik.com/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-purple-400 hover:underline"
+                  className="text-brandLight hover:text-brand transition-colors duration-200"
                 >
                   Axinity
                 </a>
-                <strong> </strong>arbeite ich als leitender Software-Architekt an einer
-                E-Commerce-Plattform, die wir als <strong>offizieller Partner von TikTok</strong>
+                <strong className="text-fg"> </strong>arbeite ich als leitender Software-Architekt an einer
+                E-Commerce-Plattform, die wir als{' '}
+                <strong className="text-fg">offizieller Partner von TikTok</strong>{' '}
                 entwickeln. Unser Ziel ist es, Social-Commerce technisch neu und skalierbar
                 umzusetzen – mit stabilen Systemen, die Marken und Creator direkt miteinander
                 verbinden.
               </p>
 
-              <p className="leading-relaxed">
-                Bei <strong>
-                  <a
-                    href="https://www.emotions-gaming.de/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-orange-400 hover:underline"
-                  >
-                    Emotions Gaming
-                  </a>
-                </strong> leite ich die Entwicklung des Spiels
-                <strong>
-                  <a
-                    href="/projekte/heistline"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-orange-400 hover:underline"
-                  >
-                    {" „HeistLine"}
-                  </a>
-                </strong>
+              <p>
+                Bei{' '}
+                <a
+                  href="https://www.emotions-gaming.de/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-brandLight hover:text-brand transition-colors duration-200 font-semibold"
+                >
+                  Emotions Gaming
+                </a>{' '}
+                leite ich die Entwicklung des Spiels{' '}
+                <a
+                  href="/projekte/heistline"
+                  className="text-brandLight hover:text-brand transition-colors duration-200 font-semibold"
+                >
+                  „HeistLine"
+                </a>
                 , einem storybasierten Action-Projekt, bei dem Gameplay und Technik eng
                 zusammenarbeiten, um ein intensives Spielerlebnis zu schaffen.
               </p>
 
-              <p className="leading-relaxed">
-                Mit <strong>
-                  <a
-                    href="http://maystudios.net/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-teal-400 hover:underline"
-                  >
-                    MayStudios
-                  </a>
-                </strong> konzentriere ich mich auf eigene Spiele- und Tool-Entwicklung –
-                darunter Titel wie <em>Mr. Dork 3</em> sowie kleinere
+              <p>
+                Mit{' '}
+                <a
+                  href="http://maystudios.net/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-brandLight hover:text-brand transition-colors duration-200 font-semibold"
+                >
+                  MayStudios
+                </a>{' '}
+                konzentriere ich mich auf eigene Spiele- und Tool-Entwicklung –
+                darunter Titel wie <em>Mr. Dork 3</em> sowie kleinere{' '}
                 <a
                   href="https://maystudios.itch.io/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-teal-400 hover:underline"
+                  className="text-brandLight hover:text-brand transition-colors duration-200"
                 >
-                  {" itch.io-Projekte"}
+                  itch.io-Projekte
                 </a>
-                . Außerdem veröffentliche ich
+                . Außerdem veröffentliche ich{' '}
                 <a
                   href="https://www.fab.com/sellers/May-Studios"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-teal-400 hover:underline"
+                  className="text-brandLight hover:text-brand transition-colors duration-200"
                 >
-                  {" Plugins und Entwicklungstools"}
-                </a>
-                {" "}für andere Entwickler.
+                  Plugins und Entwicklungstools
+                </a>{' '}
+                für andere Entwickler.
               </p>
 
-              <p className="leading-relaxed">
-                Derzeit studiere ich <strong className="text-gray-300">Computer Science an der
-                Heinrich-Heine-Universität Düsseldorf</strong>. Das Studium ist stark
-                theorieorientiert und vertieft mein Verständnis in Bereichen wie Algorithmen,
-                Core Systems und theoretischer Informatik. Gleichzeitig arbeite ich in realen
-                Projekten – so kann ich Theorie und Praxis direkt miteinander verbinden und
-                gezielt weiterentwickeln.
+              <p>
+                Derzeit studiere ich{' '}
+                <strong className="text-fg">
+                  Computer Science an der Heinrich-Heine-Universität Düsseldorf
+                </strong>
+                . Das Studium ist stark theorieorientiert und vertieft mein Verständnis in
+                Bereichen wie Algorithmen, Core Systems und theoretischer Informatik.
+                Gleichzeitig arbeite ich in realen Projekten – so kann ich Theorie und Praxis
+                direkt miteinander verbinden und gezielt weiterentwickeln.
               </p>
-            </blockquote>
+            </div>
 
-            <a
+            <motion.a
               href="#contact"
-              className="bg-gradient-to-r text-white font-medium py-2 px-6 rounded-lg transition duration-300 transform hover:scale-105 inline-block shadow-md nav-link"
+              className="swiss-btn-primary inline-flex items-center gap-2 mt-8 min-h-[44px]"
+              whileHover={{ scale: 1.02 }}
+              transition={{ duration: 0.2 }}
             >
-              Nehmen Sie Kontakt auf
-            </a>
-          </div>
+              Kontakt aufnehmen
+              <span aria-hidden="true">&rarr;</span>
+            </motion.a>
+          </motion.div>
         </div>
       </div>
     </section>

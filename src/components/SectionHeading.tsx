@@ -1,8 +1,11 @@
+import { motion } from "motion/react";
+
 type SectionHeadingProps = {
   eyebrow?: string;
   title: string;
   subtitle?: string;
   align?: "left" | "center";
+  className?: string;
 };
 
 export default function SectionHeading({
@@ -10,20 +13,49 @@ export default function SectionHeading({
   title,
   subtitle,
   align = "center",
+  className = "",
 }: SectionHeadingProps) {
+  const isCenter = align === "center";
+
   return (
-    <div className={`max-w-3xl ${align === "center" ? "mx-auto text-center" : "text-left"}`}>
+    <motion.div
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, margin: "-5%" }}
+      transition={{ staggerChildren: 0.12 }}
+      className={`max-w-3xl ${isCenter ? "mx-auto text-center" : "text-left"} ${className}`}
+    >
       {eyebrow ? (
-        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate">
-          {eyebrow}
-        </p>
+        <motion.div
+          variants={{ hidden: { opacity: 0, y: 12 }, visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: "easeOut" } } }}
+          className={`flex items-center gap-3 mb-4 ${isCenter ? "justify-center" : ""}`}
+        >
+          <span
+            className="block h-px w-8"
+            style={{ background: "linear-gradient(to right, #3b82f6, transparent)" }}
+            aria-hidden="true"
+          />
+          <p className="swiss-eyebrow">
+            {eyebrow}
+          </p>
+        </motion.div>
       ) : null}
-      <h2 className="mt-3 font-display text-3xl sm:text-4xl font-semibold text-gradient">
+
+      <motion.h2
+        variants={{ hidden: { opacity: 0, y: 16 }, visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } } }}
+        className="swiss-heading-lg"
+      >
         {title}
-      </h2>
+      </motion.h2>
+
       {subtitle ? (
-        <p className="mt-4 text-base text-slate leading-relaxed">{subtitle}</p>
+        <motion.p
+          variants={{ hidden: { opacity: 0, y: 12 }, visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: "easeOut" } } }}
+          className={`mt-4 text-muted text-lg max-w-2xl leading-relaxed ${isCenter ? "mx-auto" : ""}`}
+        >
+          {subtitle}
+        </motion.p>
       ) : null}
-    </div>
+    </motion.div>
   );
 }

@@ -5,7 +5,7 @@ import react from '@vitejs/plugin-react'
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), 'VITE_')
   const base = mode === 'production'
-    ? (env.VITE_BASE_PATH || '/sven-maibaum-portfolio/')
+    ? (env.VITE_BASE_PATH || '/sven-maibaum-website/')
     : '/'
 
   return {

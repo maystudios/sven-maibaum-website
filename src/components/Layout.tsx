@@ -24,11 +24,13 @@ export default function Layout() {
   const isSpecialDetail = specialDetailPages.has(path);
   const isLegalPage = path === "/impressum" || path === "/datenschutz" || path === "/agb";
   const isShowcase = path === "/showcase";
-  const isKnown = isHome || isProjectPage || isLegalPage || isShowcase;
+  const isVisitenkarte = path === "/visitenkarte";
+  const isKnown = isHome || isProjectPage || isLegalPage || isShowcase || isVisitenkarte;
   const isNotFound = !isKnown;
   const showHeader = (isHome || isProjectPage) && !isSpecialDetail;
-  const showFooter = !isShowcase && !isNotFound && !isSpecialDetail;
+  const showFooter = !isShowcase && !isNotFound && !isSpecialDetail && !isVisitenkarte;
 
+  // IntersectionObserver for .fade-in-up CSS animations (fallback)
   useEffect(() => {
     const animated = Array.from(document.querySelectorAll<HTMLElement>(".fade-in-up"));
     if (animated.length === 0) return;
@@ -54,52 +56,78 @@ export default function Layout() {
     return () => observer.disconnect();
   }, [location.pathname]);
 
+  // Smooth scroll for nav-link anchors
   useEffect(() => {
+    const easeInOutCubic = (t: number) =>
+      t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+
+    const scrollTo = (target: number, duration = 700) => {
+      const start = window.scrollY;
+      const distance = target - start;
+      if (Math.abs(distance) < 2) return;
+      const startTime = performance.now();
+      const step = (now: number) => {
+        const progress = Math.min((now - startTime) / duration, 1);
+        window.scrollTo(0, start + distance * easeInOutCubic(progress));
+        if (progress < 1) requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    };
+
+    const getHeaderOffset = () => {
+      const header = document.querySelector("header") as HTMLElement | null;
+      return header ? header.offsetHeight : 64;
+    };
+
     const handleClick = (event: MouseEvent) => {
       const target = event.target as HTMLElement | null;
-      const anchor = target?.closest("a.nav-link") as HTMLAnchorElement | null;
-      if (!anchor) return;
+      // Match any internal hash link (nav, hero CTAs, etc.)
+      const anchor = target?.closest('a[href^="#"], a[href^="/#"]') as HTMLAnchorElement | null;
+      if (!anchor || anchor.target === "_blank") return;
 
       const href = anchor.getAttribute("href") || "";
-      const hash = href.startsWith("#")
-        ? href
-        : href.includes("#")
-          ? "#" + href.split("#")[1]
-          : "";
+      const hash = href.startsWith("#") ? href : "#" + href.split("#")[1];
       if (!hash || hash.length < 2) return;
 
-      const targetElement = document.querySelector(hash) as HTMLElement | null;
-      if (!targetElement) return;
+      const targetEl = document.querySelector(hash) as HTMLElement | null;
+      if (!targetEl) return;
 
       event.preventDefault();
-      const header = document.querySelector("header.fixed") as HTMLElement | null;
-      const headerOffset = header ? header.offsetHeight : 0;
-      const elementPosition = targetElement.getBoundingClientRect().top + window.pageYOffset;
-      const offsetPosition = elementPosition - headerOffset;
-
-      window.scrollTo({ top: offsetPosition, behavior: "smooth" });
-      if (href.startsWith("/")) {
-        history.replaceState(null, "", hash);
-      }
+      const top = targetEl.getBoundingClientRect().top + window.pageYOffset - getHeaderOffset();
+      scrollTo(top);
+      history.replaceState(null, "", hash);
     };
 
     document.addEventListener("click", handleClick);
     return () => document.removeEventListener("click", handleClick);
   }, [location.pathname]);
 
+  // Smooth scroll to hash on navigation
   useEffect(() => {
     if (!location.hash) return;
-    const targetElement = document.querySelector(location.hash) as HTMLElement | null;
-    if (!targetElement) return;
-    const header = document.querySelector("header.fixed") as HTMLElement | null;
-    const headerOffset = header ? header.offsetHeight : 0;
-    const elementPosition = targetElement.getBoundingClientRect().top + window.pageYOffset;
-    const offsetPosition = elementPosition - headerOffset;
-    window.scrollTo({ top: offsetPosition, behavior: "smooth" });
+    const targetEl = document.querySelector(location.hash) as HTMLElement | null;
+    if (!targetEl) return;
+    const header = document.querySelector("header") as HTMLElement | null;
+    const headerOffset = header ? header.offsetHeight : 64;
+    const top = targetEl.getBoundingClientRect().top + window.pageYOffset - headerOffset;
+    setTimeout(() => {
+      const start = window.scrollY;
+      const distance = top - start;
+      if (Math.abs(distance) < 2) return;
+      const easeInOutCubic = (t: number) =>
+        t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+      const startTime = performance.now();
+      const step = (now: number) => {
+        const progress = Math.min((now - startTime) / 700, 1);
+        window.scrollTo(0, start + distance * easeInOutCubic(progress));
+        if (progress < 1) requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    }, 50);
   }, [location.hash, location.pathname]);
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-canvas">
       {showHeader ? <Header isHome={isHome} /> : null}
       <main>
         <Outlet />

@@ -73,7 +73,7 @@ export default function About() {
                 >
                   Axinity
                 </a>
-                <strong className="text-fg"> </strong>arbeite ich als leitender Software-Architekt an einer
+                {' '}arbeite ich als leitender Software-Architekt an einer
                 E-Commerce-Plattform, die wir als{' '}
                 <strong className="text-fg">offizieller Partner von TikTok</strong>{' '}
                 entwickeln. Unser Ziel ist es, Social-Commerce technisch neu und skalierbar

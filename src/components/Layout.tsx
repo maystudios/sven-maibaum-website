@@ -8,6 +8,13 @@ export default function Layout() {
   const path = location.pathname;
   const isHome = path === "/";
 
+  // Scroll to top on route change (unless navigating to a hash anchor)
+  useEffect(() => {
+    if (!location.hash) {
+      window.scrollTo(0, 0);
+    }
+  }, [location.pathname]);
+
   // IntersectionObserver for .fade-in-up CSS animations (fallback)
   useEffect(() => {
     const animated = Array.from(document.querySelectorAll<HTMLElement>(".fade-in-up"));

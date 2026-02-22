@@ -97,12 +97,19 @@ export default function Header({ isHome }: HeaderProps) {
       transition={{ duration: 0.5, ease: "easeOut" }}
       className="fixed top-0 left-0 right-0 z-50 border-b transition-all duration-300"
       style={{
-        background: scrolled ? "rgba(9,9,11,0.92)" : "transparent",
-        backdropFilter: scrolled ? "blur(12px)" : "none",
         borderColor: scrolled ? "rgba(39,39,42,0.8)" : "transparent",
       }}
     >
-      <nav className="header-inner" aria-label="Hauptnavigation">
+      {/* Background layer isolated from interactive children to fix iOS Safari backdrop-filter hit-test bug */}
+      <div
+        className="absolute inset-0 pointer-events-none transition-all duration-300"
+        style={{
+          background: scrolled ? "rgba(9,9,11,0.92)" : "transparent",
+          backdropFilter: scrolled ? "blur(12px)" : "none",
+          WebkitBackdropFilter: scrolled ? "blur(12px)" : "none",
+        }}
+      />
+      <nav className="header-inner relative" aria-label="Hauptnavigation">
         {/* Logo – hard left */}
         <a
           href="/#home"

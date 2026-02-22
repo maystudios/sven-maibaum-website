@@ -18,6 +18,7 @@ const getNavLinks = (isHome: boolean) => [
 export default function Header({ isHome }: HeaderProps) {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [isMobile, setIsMobile] = useState(() => window.innerWidth < 768);
   const [activeSection, setActiveSection] = useState("home");
   const location = useLocation();
   const menuRef = useRef<HTMLDivElement | null>(null);
@@ -27,6 +28,12 @@ export default function Header({ isHome }: HeaderProps) {
     const handleScroll = () => setScrolled(window.scrollY > 50);
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  useEffect(() => {
+    const handler = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener("resize", handler, { passive: true });
+    return () => window.removeEventListener("resize", handler);
   }, []);
 
   // Track active section via IntersectionObserver
@@ -90,6 +97,10 @@ export default function Header({ isHome }: HeaderProps) {
     return hash === activeSection;
   };
 
+  // On mobile the header is always opaque so it's always visible as a pinned nav bar.
+  // On desktop it starts transparent and becomes opaque once the user scrolls.
+  const showBg = scrolled || isMobile;
+
   return (
     <motion.header
       initial={{ y: -100 }}
@@ -97,16 +108,16 @@ export default function Header({ isHome }: HeaderProps) {
       transition={{ duration: 0.5, ease: "easeOut" }}
       className="fixed top-0 left-0 right-0 z-50 border-b transition-all duration-300"
       style={{
-        borderColor: scrolled ? "rgba(39,39,42,0.8)" : "transparent",
+        borderColor: showBg ? "rgba(39,39,42,0.8)" : "transparent",
       }}
     >
       {/* Background layer isolated from interactive children to fix iOS Safari backdrop-filter hit-test bug */}
       <div
         className="absolute inset-0 pointer-events-none transition-all duration-300"
         style={{
-          background: scrolled ? "rgba(9,9,11,0.92)" : "transparent",
-          backdropFilter: scrolled ? "blur(12px)" : "none",
-          WebkitBackdropFilter: scrolled ? "blur(12px)" : "none",
+          background: showBg ? "rgba(9,9,11,0.92)" : "transparent",
+          backdropFilter: showBg ? "blur(12px)" : "none",
+          WebkitBackdropFilter: showBg ? "blur(12px)" : "none",
         }}
       />
       <nav className="header-inner relative" aria-label="Hauptnavigation">

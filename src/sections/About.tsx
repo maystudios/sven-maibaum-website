@@ -5,7 +5,7 @@ export default function About() {
   return (
     <section
       id="about"
-      className="bg-surface border-t border-border py-24"
+      className="bg-canvas border-t border-border py-24"
     >
       <div className="max-w-6xl mx-auto px-6 sm:px-10">
         <SectionHeading eyebrow="Über Mich" title="Über Mich" className="mb-12" />
@@ -153,7 +153,9 @@ export default function About() {
               transition={{ duration: 0.2 }}
             >
               Kontakt aufnehmen
-              <span aria-hidden="true">&rarr;</span>
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true" className="translate-y-px">
+                <path d="M2 7h10M7 2l5 5-5 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
             </motion.a>
           </motion.div>
         </div>

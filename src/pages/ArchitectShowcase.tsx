@@ -142,7 +142,7 @@ export default function ArchitectShowcase() {
       </section>
 
       {/* SECTION 2 — Kernkompetenzen */}
-      <section className="bg-surface border-t border-border py-24">
+      <section className="bg-canvas border-t border-border py-24">
         <div className="max-w-6xl mx-auto px-6">
           <SectionHeading eyebrow="Kompetenzen" title="Was ich beherrsche" className="mb-16" />
           <motion.div
@@ -203,7 +203,7 @@ export default function ArchitectShowcase() {
       </section>
 
       {/* SECTION 4 — Architektur-Prinzipien */}
-      <section className="bg-surface border-t border-border py-24">
+      <section className="bg-canvas border-t border-border py-24">
         <div className="max-w-5xl mx-auto px-6">
           <SectionHeading eyebrow="Arbeitsweise" title="Meine Prinzipien" className="mb-16" />
           <motion.div
@@ -251,8 +251,11 @@ export default function ArchitectShowcase() {
                 <span className="font-mono text-xs text-brand/50 tracking-widest mb-3 block">{project.number}</span>
                 <h3 className="font-display font-bold text-fg mb-2">{project.title}</h3>
                 <p className="text-muted text-sm mb-4">{project.description}</p>
-                <Link to={project.link} className="swiss-btn-secondary text-sm">
-                  Ansehen &rarr;
+                <Link to={project.link} className="swiss-btn-secondary inline-flex items-center gap-2 text-sm">
+                  Ansehen
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true" className="translate-y-px">
+                    <path d="M2 7h10M7 2l5 5-5 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
                 </Link>
               </motion.div>
             ))}
@@ -261,7 +264,7 @@ export default function ArchitectShowcase() {
       </section>
 
       {/* SECTION 6 — CTA Footer */}
-      <section className="bg-surface border-t border-border py-16 text-center">
+      <section className="bg-canvas border-t border-border py-16 text-center">
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -271,8 +274,11 @@ export default function ArchitectShowcase() {
         >
           <h2 className="swiss-heading-md text-fg mb-4">Bereit für ein Gespräch?</h2>
           <p className="text-muted mb-8">Ich freue mich über neue Projekte, Ideen und Kooperationen.</p>
-          <Link to="/#contact" className="swiss-btn-primary">
-            Kontakt aufnehmen &rarr;
+          <Link to="/#contact" className="swiss-btn-primary inline-flex items-center gap-2">
+            Kontakt aufnehmen
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true" className="translate-y-px">
+              <path d="M2 7h10M7 2l5 5-5 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
           </Link>
         </motion.div>
       </section>

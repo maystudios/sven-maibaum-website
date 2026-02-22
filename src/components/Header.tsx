@@ -1,19 +1,18 @@
 import { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "motion/react";
-import ThemeToggle from "./ThemeToggle";
 
 type HeaderProps = {
   isHome: boolean;
 };
 
 const getNavLinks = (isHome: boolean) => [
-  { label: "Home", href: isHome ? "#home" : "/#home" },
-  { label: "Über Mich", href: isHome ? "#about" : "/#about" },
-  { label: "Ansatz", href: isHome ? "#philosophy" : "/#philosophy" },
-  { label: "Showcase", href: "/showcase" },
-  { label: "Projekte", href: isHome ? "#projects" : "/#projects" },
-  { label: "Kontakt", href: isHome ? "#contact" : "/#contact" },
+  { label: "Home",       href: isHome ? "#home"       : "/#home"       },
+  { label: "Über Mich",  href: isHome ? "#about"      : "/#about"      },
+  { label: "Ansatz",     href: isHome ? "#philosophy" : "/#philosophy" },
+  { label: "Projekte",   href: isHome ? "#projects"   : "/#projects"   },
+  { label: "Tech Stack", href: isHome ? "#skills"     : "/#skills"     },
+  { label: "Kontakt",    href: isHome ? "#contact"    : "/#contact"    },
 ];
 
 export default function Header({ isHome }: HeaderProps) {
@@ -33,7 +32,7 @@ export default function Header({ isHome }: HeaderProps) {
   // Track active section via IntersectionObserver
   useEffect(() => {
     if (!isHome) return;
-    const ids = ["home", "about", "philosophy", "experience", "projects", "skills", "contact"];
+    const ids = ["home", "about", "philosophy", "skills", "projects", "contact"];
     const sections = ids.map((id) => document.getElementById(id)).filter(Boolean) as HTMLElement[];
     if (sections.length === 0) return;
 
@@ -98,9 +97,9 @@ export default function Header({ isHome }: HeaderProps) {
       transition={{ duration: 0.5, ease: "easeOut" }}
       className="fixed top-0 left-0 right-0 z-50 border-b transition-all duration-300"
       style={{
-        background: scrolled ? "rgba(9,9,11,0.92)" : "rgba(9,9,11,0.65)",
-        backdropFilter: "blur(12px)",
-        borderColor: scrolled ? "rgba(39,39,42,0.8)" : "rgba(39,39,42,0.3)",
+        background: scrolled ? "rgba(9,9,11,0.92)" : "transparent",
+        backdropFilter: scrolled ? "blur(12px)" : "none",
+        borderColor: scrolled ? "rgba(39,39,42,0.8)" : "transparent",
       }}
     >
       <nav className="header-inner" aria-label="Hauptnavigation">
@@ -110,10 +109,10 @@ export default function Header({ isHome }: HeaderProps) {
           className="text-lg font-bold tracking-tight text-fg hover:text-fg/80 transition-colors"
           style={{ flexShrink: 0 }}
         >
-          Sven Maibaum<span className="text-brand">.</span>
+          Sven Maibaum
         </a>
 
-        {/* Desktop: links + ThemeToggle */}
+        {/* Desktop: links */}
         <div className="header-desktop">
           {navLinks.map((link, i) => {
             const active = isActiveLink(link.href, link.label);
@@ -141,12 +140,10 @@ export default function Header({ isHome }: HeaderProps) {
               </motion.a>
             );
           })}
-          <ThemeToggle />
         </div>
 
-        {/* Mobile: ThemeToggle + Burger */}
+        {/* Mobile: Burger */}
         <div className="header-mobile">
-          <ThemeToggle />
           <button
             id="mobile-menu-button"
             className="min-h-[44px] min-w-[44px] inline-flex items-center justify-center text-muted hover:text-fg transition-colors"

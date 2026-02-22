@@ -44,7 +44,10 @@ export default function ProjectCard({ project }: ProjectCardProps) {
               className="swiss-btn-primary inline-flex items-center gap-1 px-4 py-2 text-sm min-h-[44px]"
               aria-label={`${project.cta} – ${project.title}`}
             >
-              {project.cta} &rarr;
+              {project.cta}
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true" className="translate-y-px">
+                <path d="M2 7h10M7 2l5 5-5 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
             </a>
           ) : (
             <Link
@@ -52,7 +55,10 @@ export default function ProjectCard({ project }: ProjectCardProps) {
               className="swiss-btn-secondary inline-flex items-center gap-1 px-4 py-2 text-sm min-h-[44px]"
               aria-label={`${project.cta} – ${project.title}`}
             >
-              {project.cta} &rarr;
+              {project.cta}
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true" className="translate-y-px">
+                <path d="M2 7h10M7 2l5 5-5 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
             </Link>
           )}
         </div>

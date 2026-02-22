@@ -4,7 +4,7 @@ const currentYear = new Date().getFullYear();
 
 export default function Footer() {
   return (
-    <footer className="relative bg-surface border-t border-border">
+    <footer className="relative bg-canvas border-t border-border">
       {/* Top accent gradient line */}
       <div
         className="absolute top-0 left-0 right-0 h-px pointer-events-none"
@@ -52,6 +52,11 @@ export default function Footer() {
             <li>
               <a className="text-sm text-muted hover:text-fg transition-colors duration-200 nav-link" href="/#about">
                 Über mich
+              </a>
+            </li>
+            <li>
+              <a className="text-sm text-muted hover:text-fg transition-colors duration-200" href="/showcase">
+                Showcase
               </a>
             </li>
             <li>

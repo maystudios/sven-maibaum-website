@@ -7,28 +7,6 @@ export default function Layout() {
   const location = useLocation();
   const path = location.pathname;
   const isHome = path === "/";
-  const projectPaths = new Set([
-    "/projekte/heistline",
-    "/projekte/mr-dork-3",
-    "/projekte/liketik",
-    "/projekte/exambyte",
-    "/projekte/ki-marketing",
-    "/projekte/itchio",
-  ]);
-  const isProjectPage = projectPaths.has(path);
-  const specialDetailPages = new Set([
-    "/projekte/liketik",
-    "/projekte/exambyte",
-    "/projekte/ki-marketing",
-  ]);
-  const isSpecialDetail = specialDetailPages.has(path);
-  const isLegalPage = path === "/impressum" || path === "/datenschutz" || path === "/agb";
-  const isShowcase = path === "/showcase";
-  const isVisitenkarte = path === "/visitenkarte";
-  const isKnown = isHome || isProjectPage || isLegalPage || isShowcase || isVisitenkarte;
-  const isNotFound = !isKnown;
-  const showHeader = (isHome || isProjectPage) && !isSpecialDetail;
-  const showFooter = !isShowcase && !isNotFound && !isSpecialDetail && !isVisitenkarte;
 
   // IntersectionObserver for .fade-in-up CSS animations (fallback)
   useEffect(() => {
@@ -128,11 +106,11 @@ export default function Layout() {
 
   return (
     <div className="min-h-screen bg-canvas">
-      {showHeader ? <Header isHome={isHome} /> : null}
+      <Header isHome={isHome} />
       <main>
         <Outlet />
       </main>
-      {showFooter ? <Footer /> : null}
+      <Footer />
     </div>
   );
 }

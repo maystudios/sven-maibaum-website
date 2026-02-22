@@ -9,21 +9,8 @@ export default function Hero() {
       id="home"
       className="bg-canvas min-h-screen flex items-center relative overflow-hidden"
     >
-      {/* Blue radial gradient vignette */}
-      <div
-        className="absolute inset-0 pointer-events-none z-0"
-        style={{ background: "radial-gradient(ellipse 80% 60% at 50% 0%, rgba(59,130,246,0.05) 0%, transparent 70%)" }}
-      />
-
-      {/* Top accent line */}
-      <div
-        className="absolute top-0 left-0 right-0 h-px z-10 pointer-events-none"
-        style={{ background: "linear-gradient(to right, transparent, rgba(59,130,246,0.5), transparent)" }}
-      />
-
       {/* Geometric grid background */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        {/* Vertical lines – 12 columns */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden>
         {Array.from({ length: 12 }).map((_, i) => (
           <motion.div
             key={`v-${i}`}
@@ -34,7 +21,6 @@ export default function Hero() {
             transition={{ duration: 1.2, delay: i * 0.06, ease: 'easeOut' }}
           />
         ))}
-        {/* Horizontal lines – 8 rows */}
         {Array.from({ length: 8 }).map((_, i) => (
           <motion.div
             key={`h-${i}`}
@@ -45,80 +31,102 @@ export default function Hero() {
             transition={{ duration: 1.4, delay: 0.2 + i * 0.07, ease: 'easeOut' }}
           />
         ))}
-        {/* Accent dot 1 */}
-        <motion.div
-          className="absolute w-1.5 h-1.5 rounded-full bg-brand"
-          style={{ left: `calc(100% / 13 * 3)`, top: `calc(100% / 9 * 3)`, transform: 'translate(-50%, -50%)' }}
-          initial={{ scale: 0, opacity: 0 }}
-          animate={{ scale: [0, 1.4, 1], opacity: [0, 1, 0.7] }}
-          transition={{ duration: 0.8, delay: 1.2 }}
-        />
-        {/* Accent dot 2 */}
-        <motion.div
-          className="absolute w-1 h-1 rounded-full bg-brandLight"
-          style={{ left: `calc(100% / 13 * 9)`, top: `calc(100% / 9 * 6)`, transform: 'translate(-50%, -50%)' }}
-          initial={{ scale: 0, opacity: 0 }}
-          animate={{ scale: [0, 1.4, 1], opacity: [0, 1, 0.5] }}
-          transition={{ duration: 0.8, delay: 1.5 }}
+        <div
+          className="absolute inset-0"
+          style={{ background: "radial-gradient(ellipse 80% 60% at 50% 0%, rgba(59,130,246,0.05) 0%, transparent 70%)" }}
         />
       </div>
 
+      {/* Top accent rule */}
+      <motion.div
+        className="absolute top-0 left-0 right-0 h-px pointer-events-none z-10"
+        style={{ background: "linear-gradient(to right, transparent, rgba(59,130,246,0.5), transparent)" }}
+        initial={{ scaleX: 0 }}
+        animate={{ scaleX: 1 }}
+        transition={{ duration: 1, ease: "easeOut" }}
+      />
+
       {/* Content */}
-      <div className="relative z-10 max-w-6xl mx-auto px-6 sm:px-10 w-full py-20">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
-          {/* Left column: text */}
-          <motion.div
-            className="lg:col-span-7"
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-          >
-            {/* Accent line + eyebrow */}
-            <div className="flex items-center gap-3 mb-4">
-              <span className="h-px w-12 bg-brand/60" />
-              <span className="text-xs uppercase tracking-widest text-faint">
-                Software-Architekt &amp;{" "}
+      <div className="relative z-10 max-w-7xl mx-auto px-6 sm:px-10 lg:px-16 w-full py-24 lg:py-32">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+
+          {/* Left column */}
+          <div className="lg:col-span-7 flex flex-col gap-8">
+
+            {/* Eyebrow */}
+            <motion.div
+              className="flex items-center gap-3"
+              initial={{ opacity: 0, x: -16 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+            >
+              <span className="block w-6 h-px bg-brand" />
+              <span className="text-xs font-mono uppercase tracking-widest text-brand">
+                Portfolio
+              </span>
+            </motion.div>
+
+            {/* Heading + subtitle */}
+            <motion.div
+              className="flex flex-col gap-2"
+              initial={{ opacity: 0, y: 24 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+            >
+              <h1 className="text-5xl sm:text-6xl md:text-7xl font-extrabold font-display text-fg tracking-tight leading-none">
+                Sven Maibaum
+              </h1>
+              <p className="text-xl sm:text-2xl md:text-3xl font-semibold text-muted leading-tight mt-2">
+                Experte für{" "}
                 <FlipWords
-                  words={["Spieleentwickler", "Full-Stack-Entwickler", "KI-Enthusiast", "Unreal-Engine-Experte"]}
+                  words={["Software-Architektur", "Spieleentwicklung", "Full-Stack-Dev", "KI & Tooling"]}
                   className="text-brand"
                 />
-              </span>
-            </div>
+              </p>
+            </motion.div>
 
-            {/* Heading */}
-            <h1 className="text-5xl md:text-7xl font-extrabold font-display text-fg tracking-tight leading-none mb-6">
-              Sven Maibaum
-            </h1>
-
-            {/* Subtitle */}
-            <p className="text-lg md:text-xl text-muted max-w-xl mb-8 leading-relaxed">
-              Experte für Software-Architektur, Full-Stack Entwicklung &amp; Spieleentwicklung.
-            </p>
+            {/* Description */}
+            <motion.p
+              className="max-w-lg text-base md:text-lg text-muted leading-relaxed"
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.45 }}
+            >
+              Ich baue skalierbare Systeme, immersive Spiele und smarte Tools –
+              vom Backend bis zum Game Engine Plugin.
+            </motion.p>
 
             {/* CTA buttons */}
-            <div className="flex flex-wrap gap-4">
+            <motion.div
+              className="flex flex-wrap items-center gap-4"
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.6 }}
+            >
               <a
                 href="#projects"
-                className="swiss-btn-primary inline-flex items-center gap-2 min-h-[44px]"
+                className="swiss-btn-primary inline-flex items-center justify-center min-h-[44px]"
               >
                 Projekte ansehen
-                <span aria-hidden="true">&rarr;</span>
               </a>
               <a
                 href="#contact"
                 className="swiss-btn-secondary inline-flex items-center gap-2 min-h-[44px]"
               >
                 Kontakt
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true" className="translate-y-px">
+                  <path d="M2 7h10M7 2l5 5-5 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
               </a>
-            </div>
-          </motion.div>
+            </motion.div>
+          </div>
 
           {/* Right column: profile image + tags */}
           <motion.div
             className="lg:col-span-5 flex flex-col items-center lg:items-end gap-6"
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
           >
             <motion.div
               className="border border-border overflow-hidden rounded-sm"
@@ -133,7 +141,6 @@ export default function Hero() {
               />
             </motion.div>
 
-            {/* Skill tags */}
             <div className="flex flex-wrap justify-center lg:justify-end gap-2">
               {heroTags.map((tag, i) => (
                 <motion.span
@@ -142,15 +149,24 @@ export default function Hero() {
                   animate={{ opacity: 1, y: 0 }}
                   whileHover={{ scale: 1.06 }}
                   transition={{ duration: 0.35, delay: 0.6 + i * 0.07, ease: "easeOut" }}
-                  className="border border-border text-muted text-xs uppercase tracking-wide px-3 py-1.5 rounded-sm"
+                  className="border border-border text-muted text-xs font-mono uppercase tracking-wide px-3 py-1.5 rounded-sm"
                 >
                   {tag}
                 </motion.span>
               ))}
             </div>
           </motion.div>
+
         </div>
       </div>
+
+      {/* Bottom accent rule */}
+      <motion.div
+        className="absolute bottom-0 left-0 right-0 h-px bg-border/50 pointer-events-none"
+        initial={{ scaleX: 0 }}
+        animate={{ scaleX: 1 }}
+        transition={{ duration: 1, delay: 0.5, ease: "easeOut" }}
+      />
     </section>
   );
 }

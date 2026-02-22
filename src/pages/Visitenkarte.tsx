@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { QRCodeCanvas } from "qrcode.react";
-import ThemeToggle from "../components/ThemeToggle";
 
 export default function Visitenkarte() {
   const [showQR, setShowQR] = useState(false);
@@ -115,11 +114,6 @@ export default function Visitenkarte() {
           </svg>
         </button>
 
-        <ThemeToggle
-          iconSizeClass="w-5 h-5"
-          darkIconId="vk-theme-dark-icon"
-          lightIconId="vk-theme-light-icon"
-        />
       </div>
 
       {/* Card */}

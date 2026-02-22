@@ -1,85 +1,88 @@
 import { motion } from "motion/react";
-import { staggerContainer, cardVariant } from "../lib/animations";
+import { Layers, ShieldCheck, Zap, Wrench } from "lucide-react";
 
-type PhilosophyItem = {
-  number: string;
-  title: string;
-  summary: string;
-  detail: string;
-};
-
-const items: PhilosophyItem[] = [
+const items = [
   {
-    number: "01",
+    icon: Layers,
     title: "Modular & erweiterbar",
-    summary: "Schnittstellen & Strukturen, die \u00c4nderungen leicht machen.",
-    detail:
-      "Systeme sind nie wirklich \u201efertig\u201c. Ich designe APIs und Grenzen so, dass sie Erweiterungen aushalten \u2013 ohne Refactor-Lawinen. Hexagonal / Ports-&-Adapters, klare Abh\u00e4ngigkeitsrichtung, Events f\u00fcr Entkopplung wo sinnvoll.",
+    description:
+      "Systeme sind nie wirklich fertig. Ich designe APIs und Grenzen so, dass sie Erweiterungen aushalten \u2013 ohne Refactor-Lawinen. Hexagonal\u2009/\u2009Ports-&-Adapters, klare Abh\u00e4ngigkeitsrichtung, Events f\u00fcr Entkopplung wo sinnvoll.",
   },
   {
-    number: "02",
+    icon: ShieldCheck,
     title: "Clean Code & Design",
-    summary:
-      "Verst\u00e4ndlich, testbar, anpassbar \u2013 \u00fcber den ganzen Lifecycle.",
-    detail:
-      "Lesbar, testbar, \u00e4nderbar \u2013 das z\u00e4hlt nachhaltig mehr als \u201eckleve\u201c Einzeiler. Naming, klare Module, geringe Kopplung, hohe Koh\u00e4sion, sinnvolle Comments & Docs.",
+    description:
+      "Lesbar, testbar, \u00e4nderbar \u2013 das z\u00e4hlt nachhaltig mehr als clevere Einzeiler. Naming, klare Module, geringe Kopplung, hohe Koh\u00e4sion, sinnvolle Comments & Docs \u2013 \u00fcber den gesamten Lifecycle.",
   },
   {
-    number: "03",
+    icon: Zap,
     title: "Schnell prototypen & lernen",
-    summary: "Ideen praktisch pr\u00fcfen, fr\u00fch Erkenntnisse gewinnen.",
-    detail:
-      "Ich validiere fr\u00fch: kleine Prototypen geben schnelle Erkenntnisse \u2013 auch wenn wir sie verwerfen. Fail-fast, aber nachhaltig: Prototyp \u2260 M\u00fcllcode \u2013 Erkenntnisse flie\u00dfen kuratiert ins Produkt.",
+    description:
+      "Ich validiere fr\u00fch: kleine Prototypen geben schnelle Erkenntnisse \u2013 auch wenn wir sie verwerfen. Fail-fast, aber nachhaltig: Erkenntnisse flie\u00dfen kuratiert ins Produkt, kein Wegwerfcode.",
   },
   {
-    number: "04",
+    icon: Wrench,
     title: "Core-Systeme & Dev-Tools",
-    summary: "Kleine Helfer mit gro\u00dfer Wirkung im Alltag.",
-    detail:
-      "Ich baue gern Grundlagen, die anderen den Alltag erleichtern: Utility-Libs, Reusable Widgets/Plugins, CI-Snippets. Viele kleine 1%-Verbesserungen ergeben sp\u00fcrbare Velocity-Gewinne.",
+    description:
+      "Ich baue gern Grundlagen, die anderen den Alltag erleichtern: Utility-Libs, Reusable Widgets/Plugins, CI-Snippets. Viele kleine 1\u2009%-Verbesserungen ergeben sp\u00fcrbare Velocity-Gewinne im Team.",
   },
 ];
 
+const containerVariants = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.1 } },
+};
+
+const cardVariants = {
+  hidden: { opacity: 0, y: 24 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" as const } },
+};
 
 export default function Philosophy() {
   return (
-    <section
-      id="philosophy"
-      className="bg-surface border-t border-border py-24"
-    >
-      <div className="mx-auto max-w-5xl px-6">
-        <p className="swiss-eyebrow mb-3">Philosophie</p>
-        <h2 className="swiss-heading-lg mb-16">
-          Meine Arbeitsphilosophie
-        </h2>
+    <section id="philosophy" className="bg-canvas border-t border-border py-24 px-6">
+      <div className="max-w-6xl mx-auto">
+        <div className="mb-16">
+          <p className="text-xs uppercase tracking-widest text-muted font-medium mb-4">
+            Arbeitsweise
+          </p>
+          <h2 className="text-4xl md:text-5xl font-bold text-fg leading-tight">
+            Meine Arbeitsphilosophie
+          </h2>
+          <p className="mt-4 text-muted text-lg max-w-xl">
+            Prinzipien, die ich in jedem Projekt verfolge – unabhängig von Technologie oder Teamgröße.
+          </p>
+        </div>
 
         <motion.div
-          className="grid md:grid-cols-2 gap-px bg-surface2"
-          variants={staggerContainer}
+          className="grid grid-cols-1 md:grid-cols-2 gap-px bg-border"
+          variants={containerVariants}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-80px" }}
         >
-          {items.map((item) => (
+          {items.map(({ icon: Icon, title, description }) => (
             <motion.div
-              key={item.number}
-              className="bg-surface p-8 cursor-default"
-              variants={cardVariant}
-              whileHover={{ y: -3, boxShadow: "inset 0 0 0 1px #3b82f6" }}
-              transition={{ duration: 0.2 }}
+              key={title}
+              variants={cardVariants}
+              className="relative bg-canvas p-8 group cursor-default"
             >
-              <span className="font-mono text-xs text-brand/50 tracking-widest mb-3 block">
-                {item.number}
-              </span>
-              <h3 className="font-display font-bold text-fg text-lg mb-2">
-                {item.title}
+              <motion.div
+                className="absolute inset-0 pointer-events-none"
+                initial={{ opacity: 0 }}
+                whileHover={{ opacity: 1 }}
+                transition={{ duration: 0.2 }}
+                style={{ boxShadow: "inset 0 0 0 1px #3b82f6" }}
+              />
+
+              <div className="mb-5 inline-flex items-center justify-center w-10 h-10 bg-surface text-brand">
+                <Icon size={20} strokeWidth={1.5} />
+              </div>
+
+              <h3 className="text-fg font-bold text-lg mb-2 tracking-tight">
+                {title}
               </h3>
-              <p className="text-muted text-sm leading-relaxed mb-3">
-                {item.summary}
-              </p>
-              <p className="text-faint text-sm leading-relaxed">
-                {item.detail}
-              </p>
+              <p className="text-muted text-sm leading-relaxed">{description}</p>
             </motion.div>
           ))}
         </motion.div>

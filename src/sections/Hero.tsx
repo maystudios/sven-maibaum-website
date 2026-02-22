@@ -9,12 +9,12 @@ export default function Hero() {
       id="home"
       className="bg-canvas min-h-screen flex items-center relative overflow-hidden"
     >
-      {/* Geometric grid background — fixed pixel cell size (148×120 px = 16:13 ratio).
-          On FHD 1920×1080 this gives exactly 13 columns × 9 rows.
-          On smaller viewports the cells stay the same size, fewer are visible. */}
+      {/* Geometric grid background — fixed pixel cell size (148×100 px).
+          On FHD 1920×1080 this gives ~13 columns × ~10 rows.
+          Both axes use absolute pixel positions so the cell size never changes. */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden>
-        {/* Vertical lines — fixed 148 px spacing, enough to cover 4K widths */}
-        {Array.from({ length: 20 }).map((_, i) => (
+        {/* Vertical lines — 148 px spacing, covers up to ~3700 px wide (4K) */}
+        {Array.from({ length: 25 }).map((_, i) => (
           <motion.div
             key={`v-${i}`}
             className="absolute top-0 bottom-0 w-px"
@@ -24,17 +24,17 @@ export default function Hero() {
             transition={{ duration: 1.2, delay: i * 0.06, ease: 'easeOut' }}
           />
         ))}
-        {/* Horizontal lines — CSS background with fixed 120 px row height */}
-        <motion.div
-          className="absolute inset-0"
-          style={{
-            backgroundImage: 'linear-gradient(rgba(39,39,42,0.3) 1px, transparent 1px)',
-            backgroundSize: '100% 100px',
-          }}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1.4, delay: 0.2, ease: 'easeOut' }}
-        />
+        {/* Horizontal lines — 100 px spacing, covers up to ~1800 px tall */}
+        {Array.from({ length: 18 }).map((_, i) => (
+          <motion.div
+            key={`h-${i}`}
+            className="absolute left-0 right-0 h-px"
+            style={{ top: `${(i + 1) * 100}px`, backgroundColor: 'rgba(39,39,42,0.3)' }}
+            initial={{ scaleX: 0, opacity: 0 }}
+            animate={{ scaleX: 1, opacity: 1 }}
+            transition={{ duration: 1.4, delay: 0.2 + i * 0.05, ease: 'easeOut' }}
+          />
+        ))}
         <div
           className="absolute inset-0"
           style={{ background: "radial-gradient(ellipse 80% 60% at 50% 0%, rgba(59,130,246,0.05) 0%, transparent 70%)" }}

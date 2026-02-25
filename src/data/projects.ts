@@ -129,7 +129,7 @@ export const projectCards: ProjectCard[] = [
     ],
     filters: ["typescript", "ai-ml"],
     dataTags: ["cli", "typescript", "ai-ml", "open-source", "developer-tools"],
-    image: `${import.meta.env.BASE_URL}assets/projects/maxsimcli/preview-v2.svg`,
+    image: `${import.meta.env.BASE_URL}assets/projects/maxsimcli/preview-v3.svg`,
     route: "/projekte/maxsimcli",
     cta: "Mehr anzeigen",
     accent: "text-blue-400",

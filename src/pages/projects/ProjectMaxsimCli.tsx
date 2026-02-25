@@ -163,26 +163,6 @@ function Hero() {
         }}
       />
 
-      {/* Scanning beam — horizontal sweep */}
-      <div
-        aria-hidden
-        className="absolute inset-0 overflow-hidden pointer-events-none"
-        style={{ zIndex: 1 }}
-      >
-        <motion.div
-          initial={{ x: "-10%" }}
-          animate={{ x: "110%" }}
-          transition={{ duration: 6, repeat: Infinity, repeatDelay: 8, ease: "easeInOut" }}
-          style={{
-            position: "absolute",
-            top: 0,
-            bottom: 0,
-            width: "80px",
-            background: "linear-gradient(to right, transparent, rgba(59,130,246,0.07), transparent)",
-          }}
-        />
-      </div>
-
       {/* Subtle vignette edges */}
       <div
         aria-hidden

@@ -154,12 +154,12 @@ function Hero() {
         }}
       />
 
-      {/* Aceternity-style radial glow — accent color from design system */}
+      {/* Subtle radial accent */}
       <div
         aria-hidden
-        className="absolute inset-0 animate-glow-pulse pointer-events-none"
+        className="absolute inset-0 pointer-events-none"
         style={{
-          background: "radial-gradient(ellipse 55% 45% at 50% 55%, rgba(59,130,246,0.13) 0%, transparent 70%)",
+          background: "radial-gradient(ellipse 55% 45% at 50% 55%, rgba(59,130,246,0.08) 0%, transparent 70%)",
         }}
       />
 
@@ -271,9 +271,16 @@ function Hero() {
           </div>
 
           <a
-            href="https://github.com/maystudios/maxsim"
+            href="https://maxsimcli.dev"
             target="_blank" rel="noopener noreferrer"
             className="swiss-btn-primary"
+          >
+            maxsimcli.dev
+          </a>
+          <a
+            href="https://github.com/maystudios/maxsim"
+            target="_blank" rel="noopener noreferrer"
+            className="swiss-btn-secondary"
           >
             GitHub
           </a>

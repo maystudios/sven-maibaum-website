@@ -7,17 +7,41 @@
       <stop offset="0%" stop-color="rgba(9,9,11,0)"/>
       <stop offset="100%" stop-color="rgba(9,9,11,0.85)"/>
     </radialGradient>
+    <radialGradient id="glow" cx="50%" cy="50%" r="45%">
+      <stop offset="0%" stop-color="rgba(59,130,246,0.07)"/>
+      <stop offset="100%" stop-color="rgba(9,9,11,0)"/>
+    </radialGradient>
   </defs>
 
   <rect width="600" height="400" fill="#09090b"/>
   <rect width="600" height="400" fill="url(#grid)"/>
+  <rect width="600" height="400" fill="url(#glow)"/>
   <rect width="600" height="400" fill="url(#fade)"/>
 
+  <!-- eyebrow -->
   <text
-    x="300" y="222"
+    x="300" y="168"
+    text-anchor="middle"
+    font-family="'Space Grotesk','Inter',system-ui,sans-serif"
+    font-size="11" font-weight="500" letter-spacing="3"
+    fill="rgba(59,130,246,0.7)"
+  >AGENTIC CODING · CLAUDE CODE</text>
+
+  <!-- main title -->
+  <text
+    x="300" y="236"
     text-anchor="middle"
     font-family="'Space Grotesk','Inter',system-ui,sans-serif"
     font-size="96" font-weight="800" letter-spacing="-5"
     fill="#fafafa"
   >maxsim</text>
+
+  <!-- npm install line -->
+  <text
+    x="300" y="274"
+    text-anchor="middle"
+    font-family="'ui-monospace','Fira Code','Fira Mono',monospace"
+    font-size="13" font-weight="400" letter-spacing="0.5"
+    fill="rgba(250,250,250,0.3)"
+  >npx maxsimcli@latest</text>
 </svg>

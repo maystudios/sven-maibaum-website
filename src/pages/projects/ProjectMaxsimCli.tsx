@@ -145,12 +145,12 @@ export default function ProjectMaxsimCli() {
       <h2>Tech Stack</h2>
       <div className="flex flex-wrap gap-3">
         {[
-          { label: "TypeScript", cls: "tech-tag tech-tag-blue" },
-          { label: "Node.js", cls: "tech-tag tech-tag-green" },
-          { label: "Claude API", cls: "tech-tag tech-tag-purple" },
-          { label: "Git", cls: "tech-tag tech-tag-orange" },
-          { label: "npm", cls: "tech-tag tech-tag-red" },
           { label: "Open Source", cls: "tech-tag tech-tag-teal" },
+          { label: "Claude Code", cls: "tech-tag tech-tag-purple" },
+          { label: "Agentic Coding", cls: "tech-tag tech-tag-blue" },
+          { label: "TypeScript", cls: "tech-tag tech-tag-gray" },
+          { label: "Node.js", cls: "tech-tag tech-tag-green" },
+          { label: "npm", cls: "tech-tag tech-tag-red" },
         ].map((t) => (
           <span key={t.label} className={t.cls}>
             {t.label}

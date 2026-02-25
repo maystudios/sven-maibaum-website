@@ -124,8 +124,8 @@ export const projectCards: ProjectCard[] = [
       "Open-Source-CLI für KI-gestütztes Software-Engineering. Strukturierte Phasen, atomare Commits und spezialisierte Agent-Teams direkt im Terminal.",
     tags: [
       { label: "Open Source", className: "tech-tag tech-tag-teal" },
-      { label: "TypeScript", className: "tech-tag tech-tag-blue" },
-      { label: "Claude API", className: "tech-tag tech-tag-purple" },
+      { label: "Claude Code", className: "tech-tag tech-tag-purple" },
+      { label: "Agentic Coding", className: "tech-tag tech-tag-blue" },
     ],
     filters: ["typescript", "ai-ml"],
     dataTags: ["cli", "typescript", "ai-ml", "open-source", "developer-tools"],

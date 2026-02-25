@@ -524,26 +524,24 @@ export default function Skills() {
           </div>
         </div>
 
-        <div className="relative">
+        <div className="relative overflow-hidden">
           <div className="absolute left-0 top-0 bottom-0 w-24 z-10 pointer-events-none"
             style={{ background: "linear-gradient(to right, var(--sw-bg), transparent)" }} />
           <div className="absolute right-0 top-0 bottom-0 w-24 z-10 pointer-events-none"
             style={{ background: "linear-gradient(to left, var(--sw-bg), transparent)" }} />
-          <motion.div className="flex" animate={{ x: ["0%", "-50%"] }}
-            transition={{ duration: 30, ease: "linear", repeat: Infinity }}>
+          <div className="flex marquee-left">
             {marqueeRow1.map((item, i) => <TechBadge key={`r1-${item.name}-${i}`} {...item} />)}
-          </motion.div>
+          </div>
         </div>
 
-        <div className="relative mt-4">
+        <div className="relative overflow-hidden mt-4">
           <div className="absolute left-0 top-0 bottom-0 w-24 z-10 pointer-events-none"
             style={{ background: "linear-gradient(to right, var(--sw-bg), transparent)" }} />
           <div className="absolute right-0 top-0 bottom-0 w-24 z-10 pointer-events-none"
             style={{ background: "linear-gradient(to left, var(--sw-bg), transparent)" }} />
-          <motion.div className="flex" animate={{ x: ["-50%", "0%"] }}
-            transition={{ duration: 34, ease: "linear", repeat: Infinity }}>
+          <div className="flex marquee-right">
             {[...marqueeRow2].reverse().map((item, i) => <TechBadge key={`r2-${item.name}-${i}`} {...item} />)}
-          </motion.div>
+          </div>
         </div>
       </div>
     </section>

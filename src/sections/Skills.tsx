@@ -466,7 +466,9 @@ function MarqueeRow({ items, speed = 60, reverse = false }: MarqueeRowProps) {
         posRef.current += speed * (delta / 1000);
         const halfWidth = track.scrollWidth / 2;
         if (halfWidth > 0) posRef.current = posRef.current % halfWidth;
-        const x = reverse ? posRef.current : -posRef.current;
+        // forward: 0 → -halfWidth → wrap to 0 (seamless: copy2 == copy1)
+        // reverse: -halfWidth → 0 → wrap to -halfWidth (seamless: copy1 == copy2)
+        const x = reverse ? posRef.current - halfWidth : -posRef.current;
         track.style.transform = `translateX(${x}px)`;
       }
       lastTimeRef.current = timestamp;

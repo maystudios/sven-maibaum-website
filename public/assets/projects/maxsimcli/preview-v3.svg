@@ -32,7 +32,7 @@
     x="300" y="236"
     text-anchor="middle"
     font-family="'Space Grotesk','Inter',system-ui,sans-serif"
-    font-size="96" font-weight="800" letter-spacing="-5"
+    font-size="80" font-weight="800" letter-spacing="-4"
     fill="#fafafa"
   >maxsim</text>
 

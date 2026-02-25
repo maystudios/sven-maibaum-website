@@ -129,7 +129,7 @@ export const projectCards: ProjectCard[] = [
     ],
     filters: ["typescript", "ai-ml"],
     dataTags: ["cli", "typescript", "ai-ml", "open-source", "developer-tools"],
-    image: "https://placehold.co/600x400/0ea5e9/ffffff?text=maxsimcli",
+    image: `${import.meta.env.BASE_URL}assets/projects/maxsimcli/preview.svg`,
     route: "/projekte/maxsimcli",
     cta: "Mehr anzeigen",
     accent: "text-blue-400",

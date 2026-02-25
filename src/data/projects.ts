@@ -138,9 +138,9 @@ export const projectCards: ProjectCard[] = [
   },
   {
     id: "cc-templates",
-    title: "maystudios",
+    title: "cc-templates",
     summary:
-      "Claude Code Komponenten — Skills, Agents, Hooks und Commands — mit einem einzigen npx-Befehl installieren.",
+      "Paketmanager für Claude Code: Skills, Agents, Hooks und Commands aus dem Community-Katalog per npx installieren.",
     tags: [
       { label: "Agentic Coding", className: "tech-tag tech-tag-blue" },
       { label: "Claude Code", className: "tech-tag tech-tag-purple" },

@@ -8,34 +8,38 @@ const COMPONENT_TYPES = [
   {
     type: "Skills",
     flag: "--skill",
-    desc: "Instruction sets that extend Claude's capabilities for specific tasks. Installed to .claude/skills/<name>/.",
+    dest: ".claude/skills/<name>/",
+    desc: "Instruction sets, die Claude's Fähigkeiten für spezifische Aufgaben erweitern. Ein Verzeichnis mit Markdown-Regeln und Referenzen.",
     accent: "#3b82f6",
   },
   {
     type: "Agents",
     flag: "--agent",
-    desc: "Custom sub-agents with specialized behaviors. Each defines a focused AI persona or workflow.",
+    dest: ".claude/agents/<name>.md",
+    desc: "Spezialisierte Sub-Agenten mit eigenem Verhalten — jeder definiert eine fokussierte KI-Rolle oder einen Workflow.",
     accent: "#10b981",
   },
   {
     type: "Hooks",
     flag: "--hook",
-    desc: "Shell commands that run on Claude Code lifecycle events. Merged into settings.json — never overwrites existing hooks.",
+    dest: "settings.json (gemergt)",
+    desc: "Shell-Befehle, die automatisch auf Claude Code Lifecycle-Events reagieren. Werden sicher in settings.json eingebunden.",
     accent: "#f59e0b",
   },
   {
     type: "Commands",
     flag: "--command",
-    desc: "Custom slash commands for Claude Code. Each adds a /command-name shortcut in the interface.",
+    dest: ".claude/commands/<name>.md",
+    desc: "Custom Slash-Commands für Claude Code. Jeder fügt ein /command-name Shortcut zur Oberfläche hinzu.",
     accent: "#8b5cf6",
   },
 ];
 
 const AVAILABLE_SKILLS = [
-  { name: "tech-product-landing", desc: "Landing pages für Software/CLI-Tools und Developer Libraries" },
-  { name: "video-download",        desc: "Videos von YouTube, Instagram, TikTok u.v.m. herunterladen" },
-  { name: "video-fetch-and-summarize", desc: "Videos herunterladen und mit Gemini AI zusammenfassen" },
-  { name: "video-summarizer",      desc: "Bestehende MP4-Dateien mit Gemini AI analysieren" },
+  { name: "tech-product-landing",      desc: "Landing Pages für Software-/CLI-Tools und Developer Libraries (Vite + React + Tailwind v4 + Framer Motion)" },
+  { name: "video-download",            desc: "Videos von YouTube, Instagram, TikTok und 1000+ Plattformen herunterladen via yt-dlp" },
+  { name: "video-fetch-and-summarize", desc: "Videos herunterladen und strukturierte KI-Zusammenfassungen mit Google Gemini erstellen" },
+  { name: "video-summarizer",          desc: "Bestehende MP4-Dateien analysieren und Markdown-Zusammenfassungen generieren" },
 ];
 
 // ─── Primitives ───────────────────────────────────────────────────────────────
@@ -51,7 +55,7 @@ function Eyebrow({ children, accent = false }: { children: React.ReactNode; acce
 function SectionHeading({ children }: { children: React.ReactNode }) {
   return (
     <h2
-      className="font-display font-bold text-fg pb-4 mb-8"
+      className="font-display font-bold pb-4 mb-8"
       style={{
         fontSize: "clamp(1.25rem, 3vw, 1.75rem)",
         letterSpacing: "-0.02em",
@@ -90,7 +94,7 @@ function Terminal({ title = "Terminal", children }: { title?: string; children: 
 
 function TLine({ prompt = "$", command, comment }: { prompt?: string; command: string; comment?: string }) {
   return (
-    <div className="flex gap-2 items-start">
+    <div className="flex gap-2 items-start flex-wrap">
       <span className="shrink-0 select-none" style={{ color: "var(--sw-accent)" }}>{prompt}</span>
       <span style={{ color: "#86efac" }}>{command}</span>
       {comment && <span className="ml-1" style={{ color: "var(--sw-text-faint)" }}># {comment}</span>}
@@ -101,6 +105,14 @@ function TLine({ prompt = "$", command, comment }: { prompt?: string; command: s
 function TComment({ children }: { children: React.ReactNode }) {
   return (
     <p className="pl-5 text-xs" style={{ color: "var(--sw-text-faint)" }}>
+      {children}
+    </p>
+  );
+}
+
+function TOutput({ children }: { children: React.ReactNode }) {
+  return (
+    <p className="pl-5 text-xs" style={{ color: "var(--sw-text-muted)" }}>
       {children}
     </p>
   );
@@ -129,7 +141,6 @@ function Hero() {
       className="relative overflow-hidden"
       style={{ borderBottom: "1px solid var(--sw-border)", minHeight: 420 }}
     >
-      {/* Grid background */}
       <div
         aria-hidden
         className="absolute inset-0"
@@ -149,9 +160,7 @@ function Hero() {
         }}
       />
 
-      {/* Hero content */}
       <div className="relative z-10 max-w-5xl mx-auto px-6 sm:px-10 py-20 sm:py-28">
-        {/* Badge */}
         <motion.div
           initial={{ opacity: 0, y: -8 }}
           animate={{ opacity: 1, y: 0 }}
@@ -168,7 +177,6 @@ function Hero() {
           <span className="swiss-eyebrow" style={{ marginBottom: 0 }}>Open Source · MIT License</span>
         </motion.div>
 
-        {/* Title */}
         <motion.h1
           initial={{ opacity: 0, y: 18 }}
           animate={{ opacity: 1, y: 0 }}
@@ -184,10 +192,9 @@ function Hero() {
             backgroundClip: "text",
           }}
         >
-          maystudios
+          cc-templates
         </motion.h1>
 
-        {/* Subtitle */}
         <motion.p
           initial={{ opacity: 0, y: 18 }}
           animate={{ opacity: 1, y: 0 }}
@@ -195,12 +202,13 @@ function Hero() {
           className="mt-5 max-w-2xl"
           style={{ color: "var(--sw-text-muted)", fontSize: "1.0625rem", lineHeight: 1.65 }}
         >
-          Claude Code Komponenten installieren — Skills, Agents, Hooks und Commands —
-          mit{" "}
-          <strong style={{ color: "var(--sw-fg)", fontWeight: 600 }}>einem einzigen Befehl.</strong>
+          Claude Code Komponenten aus dem Community-Katalog installieren —{" "}
+          <strong style={{ color: "var(--sw-fg)", fontWeight: 600 }}>
+            Skills, Agents, Hooks und Commands
+          </strong>{" "}
+          mit einem einzigen Befehl.
         </motion.p>
 
-        {/* Install snippet + CTAs */}
         <motion.div
           initial={{ opacity: 0, y: 18 }}
           animate={{ opacity: 1, y: 0 }}
@@ -217,7 +225,7 @@ function Hero() {
             }}
           >
             <span style={{ color: "var(--sw-accent)", userSelect: "none" }}>$</span>
-            <span className="select-all" style={{ color: "#86efac" }}>npx maystudios</span>
+            <span className="select-all" style={{ color: "#86efac" }}>npx cc-templates</span>
           </div>
           <a
             href="https://github.com/maystudios/cc-templates"
@@ -245,10 +253,10 @@ function Hero() {
 
 function StatsBar() {
   const stats = [
-    { label: "Typ",      value: "CLI Tool" },
-    { label: "Sprache",  value: "TypeScript" },
-    { label: "Lizenz",   value: "MIT" },
-    { label: "Status",   value: "Aktiv" },
+    { label: "Typ",       value: "CLI Tool" },
+    { label: "Sprache",   value: "TypeScript" },
+    { label: "Lizenz",    value: "MIT" },
+    { label: "Node.js",   value: "≥ 22" },
   ];
   return (
     <div className="grid grid-cols-2 md:grid-cols-4" style={{ borderBottom: "1px solid var(--sw-border)" }}>
@@ -271,7 +279,6 @@ function StatsBar() {
 export default function ProjectCcTemplates() {
   return (
     <div className="bg-canvas min-h-screen pt-16">
-      {/* Back */}
       <Link
         to="/#projects"
         className="back-to-portfolio fixed left-4 top-[72px] z-40"
@@ -280,28 +287,49 @@ export default function ProjectCcTemplates() {
         ← Alle Projekte
       </Link>
 
-      {/* Hero */}
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.4 }}>
         <Hero />
       </motion.div>
 
-      {/* Stats */}
       <StatsBar />
 
-      {/* ── Content ─────────────────────────────────────────────────────── */}
       <div className="max-w-5xl mx-auto px-6 sm:px-10 py-16 space-y-20">
 
-        {/* 1. What is it */}
+        {/* 1. Was ist cc-templates */}
         <FadeIn>
           <section>
             <Eyebrow>Kontext</Eyebrow>
-            <SectionHeading>Was ist maystudios?</SectionHeading>
-            <p className="text-sm leading-relaxed mb-8" style={{ color: "var(--sw-text-muted)", maxWidth: "52ch" }}>
-              Ein CLI-Tool, das Claude Code Komponenten aus dem öffentlichen Katalog in Sekunden installiert.
-              Statt Skills, Agents oder Hooks manuell zu kopieren, reicht ein einziger <code style={{ color: "var(--sw-accent-light)" }}>npx</code>-Befehl.
+            <SectionHeading>Was ist cc-templates?</SectionHeading>
+            <p className="text-sm leading-relaxed mb-8" style={{ color: "var(--sw-text-muted)", maxWidth: "60ch" }}>
+              cc-templates ist ein <strong style={{ color: "var(--sw-fg)" }}>Paketmanager für Claude Code</strong>.
+              Wer Skills, Agents, Hooks oder Commands aus dem Community-Katalog installieren möchte,
+              braucht dafür keinen manuellen Datei-Copy mehr — ein einziger{" "}
+              <code style={{ color: "var(--sw-accent-light)" }}>npx</code>-Befehl reicht.
+              Die Komponenten landen direkt in <code style={{ color: "var(--sw-accent-light)" }}>.claude/</code> und
+              sind sofort in Claude Code verfügbar.
             </p>
 
-            {/* Component types grid */}
+            {/* Interactive demo */}
+            <Terminal title="bash — interaktives Menü">
+              <TLine command="npx cc-templates" />
+              <TOutput>? What type of component do you want to install?</TOutput>
+              <TOutput>  Skill · Agent · Hook · Command</TOutput>
+              <TOutput>? Which skill?</TOutput>
+              <TOutput>  tech-product-landing</TOutput>
+              <TOutput>  video-download</TOutput>
+              <TOutput>  video-fetch-and-summarize</TOutput>
+              <TOutput>▸ video-summarizer</TOutput>
+              <p className="pl-5 text-xs" style={{ color: "#86efac" }}>✓ Installed skill video-download to .claude/skills/video-download/</p>
+            </Terminal>
+          </section>
+        </FadeIn>
+
+        {/* 2. Component Types */}
+        <FadeIn>
+          <section>
+            <Eyebrow>Komponenten</Eyebrow>
+            <SectionHeading>Was lässt sich installieren?</SectionHeading>
+
             <div
               className="grid grid-cols-1 sm:grid-cols-2 gap-px"
               style={{ background: "var(--sw-border)", border: "1px solid var(--sw-border)" }}
@@ -310,78 +338,72 @@ export default function ProjectCcTemplates() {
                 <div
                   key={c.type}
                   className="p-6"
-                  style={{
-                    background: "var(--sw-surface)",
-                    borderTop: `2px solid ${c.accent}`,
-                  }}
+                  style={{ background: "var(--sw-surface)", borderTop: `2px solid ${c.accent}` }}
                 >
-                  <div className="flex items-baseline gap-3 mb-2">
+                  <div className="flex items-baseline gap-3 mb-1">
                     <h3 className="font-display font-bold text-sm" style={{ color: c.accent }}>{c.type}</h3>
-                    <code className="font-mono text-xs" style={{ color: "var(--sw-text-faint)" }}>{c.flag} &lt;name&gt;</code>
+                    <code className="font-mono text-xs" style={{ color: "var(--sw-text-faint)" }}>{c.flag}</code>
                   </div>
-                  <p className="text-xs leading-relaxed" style={{ color: "var(--sw-text-muted)" }}>{c.desc}</p>
+                  <p className="text-xs mb-2" style={{ color: "var(--sw-text-muted)", lineHeight: 1.6 }}>{c.desc}</p>
+                  <p className="font-mono text-xs" style={{ color: "var(--sw-text-faint)" }}>→ {c.dest}</p>
                 </div>
               ))}
             </div>
           </section>
         </FadeIn>
 
-        {/* 2. Installation */}
+        {/* 3. CLI Commands */}
         <FadeIn>
           <section>
-            <Eyebrow>Getting Started</Eyebrow>
-            <SectionHeading>Installation</SectionHeading>
+            <Eyebrow>Usage</Eyebrow>
+            <SectionHeading>Alle Befehle</SectionHeading>
 
-            {/* Interactive */}
-            <div
-              className="p-6 mb-6 relative overflow-hidden"
-              style={{
-                background: "var(--sw-surface)",
-                border: "1px solid var(--sw-border-light)",
-                borderLeft: "3px solid var(--sw-accent)",
-                borderRadius: "2px",
-              }}
-            >
+            <div className="space-y-4">
               <div
-                aria-hidden
-                className="absolute inset-0 pointer-events-none"
+                className="p-6 relative overflow-hidden"
                 style={{
-                  background: "radial-gradient(ellipse 60% 80% at 0% 50%, rgba(59,130,246,0.05) 0%, transparent 70%)",
+                  background: "var(--sw-surface)",
+                  border: "1px solid var(--sw-border-light)",
+                  borderLeft: "3px solid var(--sw-accent)",
+                  borderRadius: "2px",
                 }}
-              />
-              <p className="swiss-eyebrow mb-3" style={{ color: "var(--sw-accent)" }}>Interaktiv</p>
-              <Terminal title="bash">
-                <TLine command="npx maystudios" />
-                <TComment>→ Wähle Komponenten-Typ: Skill · Agent · Hook · Command</TComment>
-                <TComment>→ Wähle Komponente aus dem Katalog</TComment>
-                <TComment>→ Fertig — installiert in .claude/</TComment>
-              </Terminal>
-            </div>
+              >
+                <div
+                  aria-hidden
+                  className="absolute inset-0 pointer-events-none"
+                  style={{
+                    background: "radial-gradient(ellipse 60% 80% at 0% 50%, rgba(59,130,246,0.05) 0%, transparent 70%)",
+                  }}
+                />
+                <p className="swiss-eyebrow mb-3" style={{ color: "var(--sw-accent)" }}>Interaktiv</p>
+                <Terminal title="bash">
+                  <TLine command="npx cc-templates" />
+                  <TComment>→ Menü: Typ wählen → Komponente wählen → fertig</TComment>
+                </Terminal>
+              </div>
 
-            {/* Direct */}
-            <div className="mb-6">
-              <p className="swiss-eyebrow mb-3">Direkt — ohne Menü</p>
-              <Terminal>
-                <TLine command="npx maystudios --skill tech-product-landing" />
-                <TLine command="npx maystudios --skill video-download" />
-                <TLine command="npx maystudios --list" comment="Gesamten Katalog anzeigen" />
-                <TLine command="npx maystudios --skill &lt;name&gt; --global" comment="Zu ~/.claude/ installieren" />
-                <TLine command="npx maystudios --skill &lt;name&gt; --force" comment="Bestehende überschreiben" />
+              <Terminal title="bash — direkte Installation">
+                <TLine command="npx cc-templates --skill video-download" />
+                <TLine command="npx cc-templates --agent my-agent" />
+                <TLine command="npx cc-templates --hook my-hook" />
+                <TLine command="npx cc-templates --command my-command" />
+                <TLine command="npx cc-templates --list" comment="gesamten Katalog anzeigen" />
+                <TLine command="npx cc-templates --skill video-download --global" comment="nach ~/.claude/ installieren" />
+                <TLine command="npx cc-templates --skill video-download --force" comment="bestehende überschreiben" />
               </Terminal>
-            </div>
 
-            {/* Via skills.sh */}
-            <div>
-              <p className="swiss-eyebrow mb-3">Via skills.sh</p>
-              <Terminal>
-                <TLine command="npx skills add maystudios/cc-templates" comment="Alle Skills" />
-                <TLine command="npx skills add maystudios/cc-templates --skill video-download" />
-              </Terminal>
+              <div>
+                <p className="swiss-eyebrow mb-3">Via skills.sh</p>
+                <Terminal>
+                  <TLine command="npx skills add maystudios/cc-templates" comment="alle Skills" />
+                  <TLine command="npx skills add maystudios/cc-templates --skill video-download" />
+                </Terminal>
+              </div>
             </div>
           </section>
         </FadeIn>
 
-        {/* 3. Available Skills */}
+        {/* 4. Available Skills */}
         <FadeIn>
           <section>
             <Eyebrow>Katalog</Eyebrow>
@@ -389,32 +411,34 @@ export default function ProjectCcTemplates() {
 
             <div style={{ border: "1px solid var(--sw-border)" }}>
               <div
-                className="grid grid-cols-[1fr_1fr] gap-4 px-5 py-3"
+                className="grid grid-cols-[1fr_2fr] gap-4 px-5 py-3 hidden sm:grid"
                 style={{ borderBottom: "1px solid var(--sw-border)", background: "var(--sw-surface)" }}
               >
-                <span className="swiss-eyebrow" style={{ marginBottom: 0 }}>Skill</span>
-                <span className="swiss-eyebrow hidden sm:block" style={{ marginBottom: 0 }}>Beschreibung</span>
+                <span className="swiss-eyebrow" style={{ marginBottom: 0 }}>Name</span>
+                <span className="swiss-eyebrow" style={{ marginBottom: 0 }}>Beschreibung</span>
               </div>
               {AVAILABLE_SKILLS.map((skill, i) => (
                 <div
                   key={skill.name}
-                  className="grid grid-cols-1 sm:grid-cols-[1fr_1fr] gap-1 sm:gap-4 px-5 py-3.5"
+                  className="grid grid-cols-1 sm:grid-cols-[1fr_2fr] gap-1 sm:gap-4 px-5 py-4"
                   style={{ borderBottom: i < AVAILABLE_SKILLS.length - 1 ? "1px solid var(--sw-border)" : undefined }}
                 >
                   <span className="font-mono text-xs" style={{ color: "var(--sw-accent-light)" }}>
                     {skill.name}
                   </span>
-                  <span className="text-xs" style={{ color: "var(--sw-text-muted)" }}>{skill.desc}</span>
+                  <span className="text-xs leading-relaxed" style={{ color: "var(--sw-text-muted)" }}>
+                    {skill.desc}
+                  </span>
                 </div>
               ))}
             </div>
             <p className="text-xs mt-3" style={{ color: "var(--sw-text-faint)" }}>
-              Agents, Hooks und Commands folgen — der Katalog wächst via Community-Beiträge.
+              Agents, Hooks und Commands folgen — der Katalog wächst via Community Pull Requests.
             </p>
           </section>
         </FadeIn>
 
-        {/* 4. Links */}
+        {/* 5. Links */}
         <FadeIn>
           <section>
             <Eyebrow>Links</Eyebrow>

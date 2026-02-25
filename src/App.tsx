@@ -5,7 +5,6 @@ import ProjectHeistLine from "./pages/projects/ProjectHeistLine";
 import ProjectMrDork3 from "./pages/projects/ProjectMrDork3";
 import ProjectLikeTik from "./pages/projects/ProjectLikeTik";
 import ProjectExambyte from "./pages/projects/ProjectExambyte";
-import ProjectKIMarketing from "./pages/projects/ProjectKIMarketing";
 import ProjectItchio from "./pages/projects/ProjectItchio";
 import ArchitectShowcase from "./pages/ArchitectShowcase";
 import Impressum from "./pages/Impressum";
@@ -24,7 +23,6 @@ export default function App() {
           <Route path="/projekte/mr-dork-3" element={<ProjectMrDork3 />} />
           <Route path="/projekte/liketik" element={<ProjectLikeTik />} />
           <Route path="/projekte/exambyte" element={<ProjectExambyte />} />
-          <Route path="/projekte/ki-marketing" element={<ProjectKIMarketing />} />
           <Route path="/projekte/itchio" element={<ProjectItchio />} />
           <Route path="/visitenkarte" element={<Visitenkarte />} />
           <Route path="/showcase" element={<ArchitectShowcase />} />

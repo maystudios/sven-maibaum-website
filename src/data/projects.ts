@@ -136,23 +136,6 @@ export const projectCards: ProjectCard[] = [
     buttonClass:
       "inline-block bg-yellow-500 hover:bg-yellow-600 text-white font-medium py-2 px-4 rounded-lg transition duration-300 transform hover:scale-105 text-sm",
   },
-  {
-    id: "ki-marketing",
-    title: "KI-Marketing Automation",
-    summary: "KI-gestützte Marketingautomatisierung mit Python und modernen LLM-Technologien.",
-    tags: [
-      { label: "Python", className: "tech-tag tech-tag-yellow" },
-      { label: "LLMs", className: "tech-tag tech-tag-purple" },
-      { label: "Automatisierung", className: "tech-tag tech-tag-teal" },
-    ],
-    filters: ["KI", "Backend"],
-    dataTags: ["Python", "KI", "Marketing"],
-    image: "https://placehold.co/600x400/1a1a2e/60a5fa?text=KI+Marketing+Automation",
-    route: "/projekte/ki-marketing",
-    cta: "Zum Projekt",
-    accent: "text-brand",
-    buttonClass: "swiss-btn-secondary",
-  },
 ];
 
 export const projectFilters = [

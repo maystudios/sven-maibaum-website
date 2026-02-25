@@ -52,13 +52,6 @@ const routes = [
     image: DEFAULT_IMAGE,
   },
   {
-    path: '/projekte/ki-marketing',
-    title: 'KI-Marketing Automation | Sven Maibaum',
-    description:
-      'KI-gestützte Marketingautomatisierung mit Python und modernen LLM-Technologien für effizientere Content-Erstellung.',
-    image: DEFAULT_IMAGE,
-  },
-  {
     path: '/projekte/itchio',
     title: 'Game Jams & itch.io – Indie-Spieleprojekte | Sven Maibaum',
     description:

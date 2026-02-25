@@ -68,8 +68,8 @@ export const projectCards: ProjectCard[] = [
       { label: "Game Jam", className: "tech-tag tech-tag-orange" },
       { label: "Terrafix", className: "tech-tag tech-tag-green" },
     ],
-    filters: ["unity"],
-    dataTags: ["game-dev", "indie", "prototyping", "unity", "unreal-engine"],
+    filters: ["unreal-engine"],
+    dataTags: ["game-dev", "indie", "prototyping", "unreal-engine"],
     image: `${import.meta.env.BASE_URL}assets/projects/itchio/itchio.png`,
     route: "/projekte/itchio",
     cta: "Mehr anzeigen",
@@ -179,7 +179,6 @@ export const projectCards: ProjectCard[] = [
 export const projectFilters = [
   { id: "all", label: "Alle" },
   { id: "unreal-engine", label: "Unreal Engine" },
-  { id: "unity", label: "Unity" },
   { id: "ai-ml", label: "AI/ML" },
   { id: "java", label: "Java" },
   { id: "python", label: "Python" },

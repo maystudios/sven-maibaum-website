@@ -59,6 +59,13 @@ const routes = [
     image: `${BASE_URL}/assets/projects/itchio/gamejam-winner.jpg`,
   },
   {
+    path: '/projekte/maxsimcli',
+    title: 'maxsimcli – Open-Source-CLI für KI-gestütztes Software-Engineering | Sven Maibaum',
+    description:
+      'Strukturiertes, KI-gestütztes Software-Engineering direkt im Terminal. Phasen-basiertes Planen, atomare Commits und spezialisierte Claude-Agent-Teams.',
+    image: DEFAULT_IMAGE,
+  },
+  {
     path: '/impressum',
     title: 'Impressum | Sven Maibaum',
     description: 'Impressum und rechtliche Informationen zum Portfolio von Sven Maibaum.',

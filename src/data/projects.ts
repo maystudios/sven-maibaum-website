@@ -118,6 +118,25 @@ export const projectCards: ProjectCard[] = [
       "inline-block bg-yellow-500 hover:bg-yellow-600 text-black font-medium py-2 px-4 rounded-lg transition duration-300 transform hover:scale-105 text-sm",
   },
   {
+    id: "maxsimcli",
+    title: "maxsimcli",
+    summary:
+      "Open-Source-CLI für KI-gestütztes Software-Engineering. Strukturierte Phasen, atomare Commits und spezialisierte Agent-Teams direkt im Terminal.",
+    tags: [
+      { label: "Open Source", className: "tech-tag tech-tag-teal" },
+      { label: "TypeScript", className: "tech-tag tech-tag-blue" },
+      { label: "Claude API", className: "tech-tag tech-tag-purple" },
+    ],
+    filters: ["typescript", "ai-ml"],
+    dataTags: ["cli", "typescript", "ai-ml", "open-source", "developer-tools"],
+    image: "https://placehold.co/600x400/0ea5e9/ffffff?text=maxsimcli",
+    route: "/projekte/maxsimcli",
+    cta: "Mehr anzeigen",
+    accent: "text-blue-400",
+    buttonClass:
+      "inline-block bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition duration-300 transform hover:scale-105 text-sm",
+  },
+  {
     id: "exambyte",
     title: "Exambyte",
     summary:
@@ -145,4 +164,5 @@ export const projectFilters = [
   { id: "ai-ml", label: "AI/ML" },
   { id: "java", label: "Java" },
   { id: "python", label: "Python" },
+  { id: "typescript", label: "TypeScript" },
 ];

@@ -137,6 +137,25 @@ export const projectCards: ProjectCard[] = [
       "inline-block bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition duration-300 transform hover:scale-105 text-sm",
   },
   {
+    id: "cc-templates",
+    title: "maystudios",
+    summary:
+      "Claude Code Komponenten — Skills, Agents, Hooks und Commands — mit einem einzigen npx-Befehl installieren.",
+    tags: [
+      { label: "Agentic Coding", className: "tech-tag tech-tag-blue" },
+      { label: "Claude Code", className: "tech-tag tech-tag-purple" },
+      { label: "Open Source", className: "tech-tag tech-tag-teal" },
+    ],
+    filters: ["typescript", "ai-ml"],
+    dataTags: ["cli", "typescript", "ai-ml", "open-source", "developer-tools", "claude-code"],
+    image: `${import.meta.env.BASE_URL}assets/projects/maxsimcli/preview-v3.svg`,
+    route: "/projekte/cc-templates",
+    cta: "Mehr anzeigen",
+    accent: "text-blue-400",
+    buttonClass:
+      "inline-block bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition duration-300 transform hover:scale-105 text-sm",
+  },
+  {
     id: "exambyte",
     title: "Exambyte",
     summary:

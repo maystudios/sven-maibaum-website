@@ -66,6 +66,13 @@ const routes = [
     image: DEFAULT_IMAGE,
   },
   {
+    path: '/projekte/cc-templates',
+    title: 'maystudios – Claude Code Komponenten per CLI installieren | Sven Maibaum',
+    description:
+      'Skills, Agents, Hooks und Commands für Claude Code mit einem einzigen npx-Befehl installieren. Open-Source-Katalog für Agentic Coding.',
+    image: DEFAULT_IMAGE,
+  },
+  {
     path: '/impressum',
     title: 'Impressum | Sven Maibaum',
     description: 'Impressum und rechtliche Informationen zum Portfolio von Sven Maibaum.',

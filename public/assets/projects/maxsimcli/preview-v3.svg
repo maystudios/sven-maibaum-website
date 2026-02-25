@@ -7,11 +7,6 @@
       <stop offset="0%" stop-color="rgba(9,9,11,0)"/>
       <stop offset="100%" stop-color="rgba(9,9,11,0.85)"/>
     </radialGradient>
-    <linearGradient id="titleGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#fafafa"/>
-      <stop offset="60%" stop-color="#93c5fd"/>
-      <stop offset="100%" stop-color="#3b82f6"/>
-    </linearGradient>
   </defs>
 
   <rect width="600" height="400" fill="#09090b"/>
@@ -23,6 +18,6 @@
     text-anchor="middle"
     font-family="'Space Grotesk','Inter',system-ui,sans-serif"
     font-size="96" font-weight="800" letter-spacing="-5"
-    fill="url(#titleGrad)"
+    fill="#fafafa"
   >maxsim</text>
 </svg>

@@ -148,7 +148,7 @@ export const projectCards: ProjectCard[] = [
     ],
     filters: ["typescript", "ai-ml"],
     dataTags: ["cli", "typescript", "ai-ml", "open-source", "developer-tools", "claude-code"],
-    image: `${import.meta.env.BASE_URL}assets/projects/maxsimcli/preview-v3.svg`,
+    image: `${import.meta.env.BASE_URL}assets/projects/cc-templates/preview.svg`,
     route: "/projekte/cc-templates",
     cta: "Mehr anzeigen",
     accent: "text-blue-400",

@@ -9,32 +9,44 @@ export default function Hero() {
       id="home"
       className="bg-canvas min-h-screen flex items-center relative overflow-hidden"
     >
-      {/* Geometric grid background — fixed pixel cell size (148×100 px).
-          On FHD 1920×1080 this gives ~13 columns × ~10 rows.
-          Both axes use absolute pixel positions so the cell size never changes. */}
+      {/* Animated grid background */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden>
-        {/* Vertical lines — 148 px spacing, covers up to ~3700 px wide (4K) */}
-        {Array.from({ length: 25 }).map((_, i) => (
+        {Array.from({ length: 7 }).map((_, i) => (
           <motion.div
-            key={`v-${i}`}
+            key={`v${i}`}
             className="absolute top-0 bottom-0 w-px"
-            style={{ left: `${(i + 1) * 148}px`, backgroundColor: 'rgba(39,39,42,0.4)' }}
-            initial={{ scaleY: 0, opacity: 0 }}
-            animate={{ scaleY: 1, opacity: 1 }}
-            transition={{ duration: 1.2, delay: i * 0.06, ease: 'easeOut' }}
+            style={{
+              left: `${(i / 6) * 100}%`,
+              background: "linear-gradient(to bottom, transparent, rgba(39,39,42,0.8), transparent)",
+            }}
+            initial={{ scaleY: 0 }}
+            animate={{ scaleY: 1 }}
+            transition={{ duration: 1, delay: i * 0.06, ease: "easeOut" }}
           />
         ))}
-        {/* Horizontal lines — 100 px spacing, covers up to ~1800 px tall */}
-        {Array.from({ length: 18 }).map((_, i) => (
+        {Array.from({ length: 5 }).map((_, i) => (
           <motion.div
-            key={`h-${i}`}
+            key={`h${i}`}
             className="absolute left-0 right-0 h-px"
-            style={{ top: `${(i + 1) * 100}px`, backgroundColor: 'rgba(39,39,42,0.3)' }}
-            initial={{ scaleX: 0, opacity: 0 }}
-            animate={{ scaleX: 1, opacity: 1 }}
-            transition={{ duration: 1.4, delay: 0.2 + i * 0.05, ease: 'easeOut' }}
+            style={{
+              top: `${(i / 4) * 100}%`,
+              background: "linear-gradient(to right, transparent, rgba(39,39,42,0.8), transparent)",
+            }}
+            initial={{ scaleX: 0 }}
+            animate={{ scaleX: 1 }}
+            transition={{ duration: 1, delay: 0.3 + i * 0.08, ease: "easeOut" }}
           />
         ))}
+        <motion.div
+          className="absolute w-2 h-2 rounded-full bg-brand"
+          style={{
+            left: "50%", top: "50%", transform: "translate(-50%,-50%)",
+            boxShadow: "0 0 24px 4px rgba(59,130,246,0.4)",
+          }}
+          initial={{ scale: 0, opacity: 0 }}
+          animate={{ scale: [0, 1.4, 1], opacity: 1 }}
+          transition={{ duration: 0.8, delay: 0.7 }}
+        />
         <div
           className="absolute inset-0"
           style={{ background: "radial-gradient(ellipse 80% 60% at 50% 0%, rgba(59,130,246,0.05) 0%, transparent 70%)" }}

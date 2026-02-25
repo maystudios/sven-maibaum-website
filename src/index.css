@@ -11,13 +11,17 @@
   from { transform: translateX(-50%); }
   to   { transform: translateX(0); }
 }
+.marquee-left,
+.marquee-right {
+  display: flex;
+  width: max-content;
+  will-change: transform;
+}
 .marquee-left {
   animation: marquee-left 30s linear infinite;
-  will-change: transform;
 }
 .marquee-right {
   animation: marquee-right 34s linear infinite;
-  will-change: transform;
 }
 
 /* =========================================

@@ -529,7 +529,7 @@ export default function Skills() {
             style={{ background: "linear-gradient(to right, var(--sw-bg), transparent)" }} />
           <div className="absolute right-0 top-0 bottom-0 w-24 z-10 pointer-events-none"
             style={{ background: "linear-gradient(to left, var(--sw-bg), transparent)" }} />
-          <div className="flex marquee-left">
+          <div className="marquee-left">
             {marqueeRow1.map((item, i) => <TechBadge key={`r1-${item.name}-${i}`} {...item} />)}
           </div>
         </div>
@@ -539,7 +539,7 @@ export default function Skills() {
             style={{ background: "linear-gradient(to right, var(--sw-bg), transparent)" }} />
           <div className="absolute right-0 top-0 bottom-0 w-24 z-10 pointer-events-none"
             style={{ background: "linear-gradient(to left, var(--sw-bg), transparent)" }} />
-          <div className="flex marquee-right">
+          <div className="marquee-right">
             {[...marqueeRow2].reverse().map((item, i) => <TechBadge key={`r2-${item.name}-${i}`} {...item} />)}
           </div>
         </div>

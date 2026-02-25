@@ -444,9 +444,10 @@ function TechBadge({ name, dot }: TechItem) {
   );
 }
 
-// Duplicated for seamless wrap
-const marqueeRow1 = [...row1, ...row1];
-const marqueeRow2 = [...row2, ...row2];
+// 8 copies — wrap point is many viewports off-screen, never visible
+const COPIES = 8;
+const marqueeRow1 = Array.from({ length: COPIES }, () => row1).flat();
+const marqueeRow2 = Array.from({ length: COPIES }, () => row2).flat();
 
 type MarqueeRowProps = { items: TechItem[]; speed?: number; reverse?: boolean };
 
@@ -464,11 +465,11 @@ function MarqueeRow({ items, speed = 60, reverse = false }: MarqueeRowProps) {
       if (lastTimeRef.current !== null) {
         const delta = timestamp - lastTimeRef.current;
         posRef.current += speed * (delta / 1000);
-        const halfWidth = track.scrollWidth / 2;
-        if (halfWidth > 0) posRef.current = posRef.current % halfWidth;
-        // forward: 0 → -halfWidth → wrap to 0 (seamless: copy2 == copy1)
-        // reverse: -halfWidth → 0 → wrap to -halfWidth (seamless: copy1 == copy2)
-        const x = reverse ? posRef.current - halfWidth : -posRef.current;
+        const singleWidth = track.scrollWidth / COPIES;
+        if (singleWidth > 0) posRef.current = posRef.current % singleWidth;
+        // forward: 0 → -singleWidth → wrap (wrap point is far off-screen)
+        // reverse: starts at -singleWidth, moves toward 0, wraps back
+        const x = reverse ? posRef.current - singleWidth : -posRef.current;
         track.style.transform = `translateX(${x}px)`;
       }
       lastTimeRef.current = timestamp;

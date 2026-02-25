@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Terminal, Package, Settings, Bot } from "lucide-react";
 import SectionHeading from "../components/SectionHeading";
@@ -444,8 +444,51 @@ function TechBadge({ name, dot }: TechItem) {
   );
 }
 
+// Duplicated for seamless wrap
 const marqueeRow1 = [...row1, ...row1];
 const marqueeRow2 = [...row2, ...row2];
+
+type MarqueeRowProps = { items: TechItem[]; speed?: number; reverse?: boolean };
+
+function MarqueeRow({ items, speed = 60, reverse = false }: MarqueeRowProps) {
+  const trackRef = useRef<HTMLDivElement>(null);
+  const posRef = useRef(0);
+  const rafRef = useRef(0);
+  const lastTimeRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    const track = trackRef.current;
+    if (!track) return;
+
+    const step = (timestamp: number) => {
+      if (lastTimeRef.current !== null) {
+        const delta = timestamp - lastTimeRef.current;
+        posRef.current += speed * (delta / 1000);
+        const halfWidth = track.scrollWidth / 2;
+        if (halfWidth > 0) posRef.current = posRef.current % halfWidth;
+        const x = reverse ? posRef.current : -posRef.current;
+        track.style.transform = `translateX(${x}px)`;
+      }
+      lastTimeRef.current = timestamp;
+      rafRef.current = requestAnimationFrame(step);
+    };
+
+    rafRef.current = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(rafRef.current);
+  }, [speed, reverse]);
+
+  return (
+    <div className="overflow-hidden relative">
+      <div className="absolute left-0 top-0 bottom-0 w-24 z-10 pointer-events-none"
+        style={{ background: "linear-gradient(to right, var(--sw-bg), transparent)" }} />
+      <div className="absolute right-0 top-0 bottom-0 w-24 z-10 pointer-events-none"
+        style={{ background: "linear-gradient(to left, var(--sw-bg), transparent)" }} />
+      <div ref={trackRef} style={{ display: "flex", width: "max-content" }}>
+        {items.map((item, i) => <TechBadge key={`${item.name}-${i}`} {...item} />)}
+      </div>
+    </div>
+  );
+}
 
 // ─── Main Component ───────────────────────────────────────────────────────────
 
@@ -524,24 +567,9 @@ export default function Skills() {
           </div>
         </div>
 
-        <div className="relative overflow-hidden">
-          <div className="absolute left-0 top-0 bottom-0 w-24 z-10 pointer-events-none"
-            style={{ background: "linear-gradient(to right, var(--sw-bg), transparent)" }} />
-          <div className="absolute right-0 top-0 bottom-0 w-24 z-10 pointer-events-none"
-            style={{ background: "linear-gradient(to left, var(--sw-bg), transparent)" }} />
-          <div className="marquee-left">
-            {marqueeRow1.map((item, i) => <TechBadge key={`r1-${item.name}-${i}`} {...item} />)}
-          </div>
-        </div>
-
-        <div className="relative overflow-hidden mt-4">
-          <div className="absolute left-0 top-0 bottom-0 w-24 z-10 pointer-events-none"
-            style={{ background: "linear-gradient(to right, var(--sw-bg), transparent)" }} />
-          <div className="absolute right-0 top-0 bottom-0 w-24 z-10 pointer-events-none"
-            style={{ background: "linear-gradient(to left, var(--sw-bg), transparent)" }} />
-          <div className="marquee-right">
-            {[...marqueeRow2].reverse().map((item, i) => <TechBadge key={`r2-${item.name}-${i}`} {...item} />)}
-          </div>
+        <MarqueeRow items={marqueeRow1} speed={60} />
+        <div className="mt-4">
+          <MarqueeRow items={[...marqueeRow2].reverse()} speed={50} reverse />
         </div>
       </div>
     </section>

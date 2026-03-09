@@ -1,0 +1,19 @@
+{
+  "version": "4.2.3",
+  "model_profile": "balanced",
+  "planning": {
+    "commit_docs": true,
+    "search_gitignored": false
+  },
+  "git": {
+    "branching_strategy": "none",
+    "phase_branch_template": "maxsim/phase-{phase}-{slug}",
+    "milestone_branch_template": "maxsim/{milestone}-{slug}"
+  },
+  "workflow": {
+    "depth": "standard",
+    "auto_commit": true,
+    "skip_research": false,
+    "skip_review": false
+  }
+}

@@ -22,7 +22,7 @@ export const publications: Publication[] = [
     subtitle:
       "Künstliche Intelligenz zur Bilderkennung am Beispiel von Obst mithilfe von paralleler Programmierung auf Basis von Grafikarten",
     type: "Facharbeit · Informatik (Abitur)",
-    year: 2024,
+    year: 2023,
     abstract:
       "Konstruktion eines vollständig eigenständigen Convolutional Neural Networks zur Bilderkennung. Die Arbeit behandelt die Theorie biologischer Neuronen, Netzarchitekturen (Perceptron, Feed Forward, CNN) und Lernverfahren (Forward Propagation, Backpropagation) sowie die praktische Implementierung mit GPU-Parallelisierung und Tensor-Core-Optimierung.",
     tags: [

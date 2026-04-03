@@ -1,105 +1,16 @@
 import ProjectShell from "../../components/ProjectShell";
 
-const products = [
-  {
-    name: "May Simple Recoil",
-    tagline: "Advanced Recoil Solution for Unreal Engine",
-    version: "1.0.0",
-    price: "ab 9,25 €",
-    engine: "UE 5.5",
-    type: "Code Plugin (C++ & Blueprint)",
-    rating: "Neu",
-    link: "https://www.fab.com/listings/98344337-dca3-4a3d-8197-71316393d13a",
-    docs: "https://maystudios.gitbook.io/maysimplerecoil",
-    demo: "https://drive.google.com/file/d/1-U5L-Ox1DAcLNovxWIXKZbmYGKP2KVGl/view?usp=sharing",
-    video: "https://youtu.be/XvQN8jUSBKc",
-    features: [
-      {
-        title: "Realistic Recoil Dynamics",
-        text: "Natürliches Rückstoßverhalten, das sich dynamisch an Spieler-States anpasst — Sprint, Crouch, Jump, ADS.",
-      },
-      {
-        title: "Real-Time Editor Preview",
-        text: "Integriertes Editor-Tool zum sofortigen Visualisieren und Testen von Recoil-Settings ohne Play-Mode.",
-      },
-      {
-        title: "Network Replicated",
-        text: "Vollständig repliziertes System für Multiplayer-Spiele mit Demo-Waffen und Spread-Component.",
-      },
-      {
-        title: "SIMD-Optimiert",
-        text: "Moderne C++-Techniken und SIMD-Optimierungen in performance-kritischen Bereichen.",
-      },
-      {
-        title: "Blueprint & C++",
-        text: "Volle Blueprint-Zugänglichkeit mit robustem C++-Backend für schnelle Iteration und Prototyping.",
-      },
-      {
-        title: "Customizable Easing",
-        text: "Timeline-basierte Recoil- und Reset-Animationen mit konfigurierbaren Easing-Funktionen.",
-      },
-    ],
-    modules: [
-      { name: "MaySimpleRecoil", type: "Runtime" },
-      { name: "MaySimpleRecoilEditor", type: "Editor" },
-    ],
-    accentBorder: "border-t-orange-400",
-  },
-  {
-    name: "May Pop-up & Notification System",
-    tagline: "Ultimate Popup and Notification Solution for Unreal Engine",
-    version: "1.0.1",
-    price: "ab 5,14 €",
-    engine: "UE 5.0 – 5.7",
-    type: "Asset Package (Blueprint)",
-    rating: "5.0 / 5.0",
-    link: "https://www.fab.com/listings/13cad897-c843-4c5a-aba6-94c4cf703c56",
-    docs: "https://may-popup-system-documen-ca2wdnq.gamma.site/",
-    demo: "https://drive.google.com/file/d/1Z2odMFCKMhgJPTVI40Gn_zQebhOUv0-Z/view?usp=sharing",
-    video: null,
-    features: [
-      {
-        title: "Dynamische Popups",
-        text: "Vielseitige Popup-Stile mit konfigurierbaren Titeln, Beschreibungen, Icons und Buttons.",
-      },
-      {
-        title: "Interaktive Notifications",
-        text: "Klickbare Benachrichtigungen mit Progress-Bar, Sound-Effekten und automatischem Timer.",
-      },
-      {
-        title: "Theme-System",
-        text: "Vorkonfigurierte Dark- und White-Themes mit einfacher Anpassung über Settings-Menü.",
-      },
-      {
-        title: "Plug & Play",
-        text: "Auto-Detection und -Konfiguration: System erkennt fehlende Panels und ergänzt sie automatisch.",
-      },
-      {
-        title: "Notification Types",
-        text: "Default, General, System und Friend System — vorkonfigurierte Typen für gängige Use Cases.",
-      },
-      {
-        title: "Breite UE-Kompatibilität",
-        text: "Unterstützt Unreal Engine 5.0 bis 5.7 — funktioniert in nahezu jedem aktuellen Projekt.",
-      },
-    ],
-    modules: null,
-    accentBorder: "border-t-blue-400",
-  },
-];
-
 export default function ProjectFabStore() {
   return (
     <ProjectShell
       hasSiteHeader
       title="Fab Store"
-      subtitle="Professionelle Unreal-Engine-Plugins und Assets auf Epics offiziellem Marketplace — Recoil-Systeme, UI-Komponenten und Developer-Tools."
+      subtitle="Plugins und Assets für die Unreal Engine — veröffentlicht auf Epics offiziellem Marketplace."
       heroImage={`${import.meta.env.BASE_URL}assets/projects/fab/fab-hero.webp`}
       heroAlt="Fab – Epics offizieller Marketplace für Unreal Engine Assets"
-      ctaLabel="Zum Fab.com Store"
+      ctaLabel="Alle Assets auf Fab.com"
       ctaLink="https://www.fab.com/sellers/May-Studios"
     >
-      {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-px bg-surface2 mb-8">
         {[
           { label: "Plattform", value: "Fab.com (Epic)" },
@@ -114,193 +25,144 @@ export default function ProjectFabStore() {
         ))}
       </div>
 
-      {/* Overview */}
-      <div className="grid md:grid-cols-2 gap-12 items-center">
-        <div className="bg-surface border border-border p-8 lg:p-10">
-          <h3 className="font-display font-bold text-fg text-lg mb-3">Über den Store</h3>
-          <p>
-            Auf <strong>Fab.com</strong> veröffentliche ich professionelle Plugins und Asset-Pakete für die{" "}
-            <strong>Unreal Engine</strong>. Der Fokus liegt auf praxisnahen Developer-Tools, die sich
-            nahtlos in bestehende Projekte integrieren lassen — von Gameplay-Mechaniken wie Recoil-Systemen
-            bis zu UI-Frameworks für Popups und Notifications.
-          </p>
-          <ul className="mt-4 space-y-2 list-disc list-inside">
-            <li><strong>Code Plugins</strong> mit C++ &amp; Blueprint Support</li>
-            <li><strong>Dokumentation</strong> &amp; Playable Demos</li>
-            <li><strong>Network Replication</strong> für Multiplayer-Ready Assets</li>
-            <li><strong>Discord Community</strong> für Support &amp; Feedback</li>
-          </ul>
-        </div>
-        <div className="bg-surface border border-border p-8 lg:p-10">
-          <h3 className="font-display font-bold text-fg text-lg mb-3">Warum Fab.com?</h3>
-          <p>
-            <strong>Fab</strong> ist Epics offizieller Marketplace — der Nachfolger des Unreal Engine
-            Marketplace. Alle Assets sind dort direkt in den Editor integrierbar und profitieren von
-            Epics Qualitätssicherung und globalem Reach.
-          </p>
-          <div className="mt-4 space-y-2">
-            <div className="flex items-center gap-3">
-              <span className="text-xs uppercase tracking-widest text-faint min-w-[80px]">Seller</span>
-              <span className="text-fg text-sm font-medium">May-Studios</span>
-            </div>
-            <div className="flex items-center gap-3">
-              <span className="text-xs uppercase tracking-widest text-faint min-w-[80px]">Seit</span>
-              <span className="text-fg text-sm font-medium">September 2024</span>
-            </div>
-            <div className="flex items-center gap-3">
-              <span className="text-xs uppercase tracking-widest text-faint min-w-[80px]">Kontakt</span>
-              <a href="mailto:company@maystudios.net" className="text-brandLight hover:underline text-sm">
-                company@maystudios.net
-              </a>
-            </div>
-            <div className="flex items-center gap-3">
-              <span className="text-xs uppercase tracking-widest text-faint min-w-[80px]">Web</span>
-              <a href="https://maystudios.net" target="_blank" rel="noopener" className="text-brandLight hover:underline text-sm">
-                maystudios.net
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
+      <h2>Über den Store</h2>
+      <p>
+        Auf <strong>Fab.com</strong> veröffentliche ich Plugins und Asset-Pakete für die{" "}
+        <strong>Unreal Engine</strong> — von Gameplay-Systemen wie Weapon Recoil bis zu
+        UI-Frameworks für Popups und Notifications. Alle Assets kommen mit Dokumentation,
+        Playable Demos und Discord-Support.
+      </p>
 
-      {/* Products */}
-      {products.map((product, productIndex) => (
-        <div key={product.name}>
-          <h2>{product.name}</h2>
-          <p className="text-faint text-xs uppercase tracking-widest mb-4">{product.tagline}</p>
-
-          {/* Product stats */}
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-px bg-surface2 mb-6">
-            {[
-              { label: "Version", value: product.version },
-              { label: "Preis", value: product.price },
-              { label: "Engine", value: product.engine },
-              { label: "Typ", value: product.type },
-              { label: "Bewertung", value: product.rating },
-            ].map((stat) => (
-              <div key={stat.label} className="bg-surface p-3">
-                <p className="text-xs uppercase tracking-widest text-faint mb-1">{stat.label}</p>
-                <p className="font-display font-semibold text-fg text-xs">{stat.value}</p>
-              </div>
-            ))}
-          </div>
-
-          {/* Product features */}
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
-            {product.features.map((feature) => (
-              <div
-                key={feature.title}
-                className={`bg-surface border border-border border-t-2 ${product.accentBorder} p-6`}
-              >
-                <h3 className="font-display font-bold text-fg text-base mb-2">{feature.title}</h3>
-                <p>{feature.text}</p>
-              </div>
-            ))}
-          </div>
-
-          {/* Modules (only for Recoil) */}
-          {product.modules && (
-            <div className="bg-surface border border-border p-6 mb-6">
-              <h3 className="font-display font-bold text-fg text-base mb-3">Code Modules</h3>
-              <div className="grid sm:grid-cols-2 gap-4">
-                {product.modules.map((mod) => (
-                  <div key={mod.name} className="flex items-center gap-3">
-                    <span className="text-xs uppercase tracking-widest text-faint min-w-[60px]">{mod.type}</span>
-                    <code className="text-fg text-sm bg-surface2 px-2 py-1">{mod.name}</code>
-                  </div>
-                ))}
-              </div>
+      {/* May Simple Recoil */}
+      <div className="bg-surface border border-border p-6 lg:p-8">
+        <div className="flex flex-col lg:flex-row gap-8">
+          <div className="lg:w-1/2">
+            <div className="flex items-center flex-wrap gap-3 mb-4">
+              <h3 className="font-display font-bold text-fg text-xl m-0">May Simple Recoil</h3>
+              <span className="tech-tag tech-tag-orange">Code Plugin</span>
             </div>
-          )}
 
-          {/* Product links */}
-          <div className="flex flex-wrap gap-3">
+            <p className="mb-4">
+              Ein umfassendes <strong>Weapon-Recoil-System</strong> für Unreal Engine 5.5. Realistische
+              Rückstoß-Dynamik, die sich automatisch an Spieler-States anpasst — Sprint, Crouch, Jump, ADS.
+              Mit Real-Time Editor Preview, SIMD-Optimierung und vollständiger Network Replication.
+            </p>
+            <p className="mb-6">
+              Verfügbar als <strong>C++ & Blueprint Plugin</strong> mit zwei Modulen (Runtime + Editor).
+              Inkl. Demo-Waffen, Spread-Component und Live-Tuning-Widget.
+            </p>
+
+            <div className="mb-6">
+              <span className="tech-tag tech-tag-purple">UE 5.5</span>
+              <span className="tech-tag tech-tag-blue">C++</span>
+              <span className="tech-tag tech-tag-teal">Blueprints</span>
+              <span className="tech-tag tech-tag-green">Replicated</span>
+              <span className="tech-tag tech-tag-yellow">SIMD</span>
+            </div>
+
             <a
-              href={product.link}
+              href="https://www.fab.com/listings/98344337-dca3-4a3d-8197-71316393d13a"
               target="_blank"
               rel="noopener"
               className="swiss-btn-primary inline-flex items-center px-6 py-3 text-sm min-h-[44px]"
             >
               Auf Fab.com ansehen
             </a>
-            <a
-              href={product.docs}
-              target="_blank"
-              rel="noopener"
-              className="swiss-btn-secondary inline-flex items-center px-6 py-3 text-sm min-h-[44px]"
-            >
-              Dokumentation
-            </a>
-            <a
-              href={product.demo}
-              target="_blank"
-              rel="noopener"
-              className="swiss-btn-secondary inline-flex items-center px-6 py-3 text-sm min-h-[44px]"
-            >
-              Playable Demo
-            </a>
-            {product.video && (
-              <a
-                href={product.video}
-                target="_blank"
-                rel="noopener"
-                className="swiss-btn-secondary inline-flex items-center px-6 py-3 text-sm min-h-[44px]"
-              >
-                Video Showcase
-              </a>
-            )}
           </div>
 
-          {productIndex < products.length - 1 && (
-            <hr className="border-border mt-8" />
-          )}
-        </div>
-      ))}
+          <div className="lg:w-1/2 flex flex-col gap-4">
+            <figure className="border border-border overflow-hidden relative group h-64 lg:h-auto">
+              <img
+                src="https://media.fab.com/image_previews/gallery_images/ebfbabfc-ffef-4682-8d4a-3c20735a45de/4dd9f875-e3b4-4075-8253-49d2440073c4.jpg"
+                alt="May Simple Recoil – Editor Preview und Recoil-Kurven"
+                className="w-full h-full object-cover"
+              />
+              <figcaption className="absolute bottom-0 left-0 right-0 bg-canvas/80 text-fg text-xs py-2 px-3 text-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                Real-Time Editor Preview mit Recoil-Kurven
+              </figcaption>
+            </figure>
 
-      {/* Tech Stack */}
-      <h2>Tech Stack</h2>
-      <div className="flex flex-wrap justify-center gap-2 mt-4">
-        <span className="tech-tag tech-tag-purple">Unreal Engine 5</span>
-        <span className="tech-tag tech-tag-blue">C++</span>
-        <span className="tech-tag tech-tag-teal">Blueprints</span>
-        <span className="tech-tag tech-tag-orange">Fab.com</span>
-        <span className="tech-tag tech-tag-gray">UMG / Slate</span>
-        <span className="tech-tag tech-tag-green">Network Replication</span>
-        <span className="tech-tag tech-tag-yellow">SIMD</span>
-        <span className="tech-tag tech-tag-pink">GitBook</span>
-      </div>
-
-      {/* Community & Support */}
-      <div className="grid md:grid-cols-2 gap-8">
-        <div className="bg-surface border border-border p-6">
-          <h3 className="font-display font-bold text-fg text-lg mb-3">Community & Support</h3>
-          <p className="mb-4">Fragen, Feature Requests oder Bugs? Der Discord-Server ist die schnellste Anlaufstelle.</p>
-          <div className="flex flex-wrap gap-3">
-            <a
-              href="https://discord.gg/gReyJTbzkZ"
-              target="_blank"
-              rel="noopener"
-              className="swiss-btn-secondary inline-flex items-center px-6 py-3 text-sm min-h-[44px]"
-            >
-              Discord beitreten
-            </a>
-            <a
-              href="mailto:company@maystudios.net"
-              className="swiss-btn-secondary inline-flex items-center px-6 py-3 text-sm min-h-[44px]"
-            >
-              E-Mail senden
-            </a>
+            <figure className="border border-border overflow-hidden h-48 relative group">
+              <img
+                src="https://media.fab.com/image_previews/gallery_images/ebfbabfc-ffef-4682-8d4a-3c20735a45de/74c16797-0625-4eb6-8d6e-ccaad633564b.jpg"
+                alt="May Simple Recoil – Blueprint Integration"
+                className="w-full h-full object-cover object-center"
+              />
+              <figcaption className="absolute bottom-0 left-0 right-0 bg-canvas/80 text-fg text-xs py-2 px-3 text-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                Blueprint-Integration und Konfiguration
+              </figcaption>
+            </figure>
           </div>
         </div>
-        <div className="bg-surface border border-border p-6">
-          <h3 className="font-display font-bold text-fg text-lg mb-3">Roadmap</h3>
-          <ul className="space-y-2 list-disc list-inside">
-            <li><strong>Recoil v1.0.1:</strong> Advanced Recoil Patterns, Interactive Feedback, Enhanced Editor Tools</li>
-            <li><strong>Popup v1.0.2:</strong> Advanced Animations, Notification Queuing, Cursor Settings</li>
-            <li>Weitere Plugins und Asset-Pakete in Planung</li>
-          </ul>
+      </div>
+
+      {/* May Pop-up & Notification System */}
+      <div className="bg-surface border border-border p-6 lg:p-8">
+        <div className="flex flex-col lg:flex-row gap-8">
+          <div className="lg:w-1/2">
+            <div className="flex items-center flex-wrap gap-3 mb-4">
+              <h3 className="font-display font-bold text-fg text-xl m-0">May Pop-up & Notification System</h3>
+              <span className="tech-tag tech-tag-blue">Asset Package</span>
+            </div>
+
+            <p className="mb-4">
+              Eine <strong>All-in-One-Lösung</strong> für dynamische Popups und Notifications in Unreal Engine.
+              Vorkonfigurierte Themes (Dark & Light), interaktive Buttons, Progress-Bars und
+              Sound-Effekte — alles komplett in Blueprints, kein C++ nötig.
+            </p>
+            <p className="mb-6">
+              Unterstützt <strong>UE 5.0 bis 5.7</strong> und kommt mit Auto-Detection für fehlende
+              Panels, konfigurierbaren Notification-Types (Default, System, Friend) und einem
+              Settings-Menü für schnelle Anpassung.
+            </p>
+
+            <div className="mb-6">
+              <span className="tech-tag tech-tag-purple">UE 5.0 – 5.7</span>
+              <span className="tech-tag tech-tag-teal">Blueprints</span>
+              <span className="tech-tag tech-tag-gray">UMG Widgets</span>
+              <span className="tech-tag tech-tag-pink">Themes</span>
+            </div>
+
+            <a
+              href="https://www.fab.com/listings/13cad897-c843-4c5a-aba6-94c4cf703c56"
+              target="_blank"
+              rel="noopener"
+              className="swiss-btn-primary inline-flex items-center px-6 py-3 text-sm min-h-[44px]"
+            >
+              Auf Fab.com ansehen
+            </a>
+          </div>
+
+          <div className="lg:w-1/2 flex flex-col gap-4">
+            <figure className="border border-border overflow-hidden relative group h-64 lg:h-auto">
+              <img
+                src="https://media.fab.com/image_previews/gallery_images/4b723f56-62be-4ddd-8d95-afb5b098697d/da3e4b5b-c732-42dd-afbd-453a900386dc.jpg"
+                alt="May Popup System – Popup und Notification Beispiele"
+                className="w-full h-full object-cover"
+              />
+              <figcaption className="absolute bottom-0 left-0 right-0 bg-canvas/80 text-fg text-xs py-2 px-3 text-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                Popup- und Notification-Beispiele im Dark Theme
+              </figcaption>
+            </figure>
+
+            <figure className="border border-border overflow-hidden h-48 relative group">
+              <img
+                src="https://media.fab.com/image_previews/gallery_images/4b723f56-62be-4ddd-8d95-afb5b098697d/8c6c9c4e-08ba-41d1-af87-771e81f85de3.jpg"
+                alt="May Popup System – Theme-Konfiguration"
+                className="w-full h-full object-cover object-center"
+              />
+              <figcaption className="absolute bottom-0 left-0 right-0 bg-canvas/80 text-fg text-xs py-2 px-3 text-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                Theme-Konfiguration und Settings-Menü
+              </figcaption>
+            </figure>
+          </div>
         </div>
       </div>
+
+      <h3>Weitere Assets folgen...</h3>
+      <p>
+        Der Store wird kontinuierlich erweitert. Neue Plugins und Asset-Pakete sind in Planung.
+      </p>
     </ProjectShell>
   );
 }

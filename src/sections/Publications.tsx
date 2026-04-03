@@ -141,20 +141,22 @@ function NetworkGraph() {
       className="w-full max-w-[300px] mx-auto"
       aria-hidden="true"
     >
-      {/* Connections — brightness = source activation * |weight| */}
+      {/* Connections — color matches the connection group:
+           Input→Hidden1 = green, Hidden→Hidden = blue, Hidden2→Output = red */}
       {connections.map((c, i) => {
         const srcAct = activations[c.fromLayer]?.[c.fromIdx] ?? 0;
         const w = Math.abs(weightsRef.current[c.fromLayer]?.[c.fromIdx]?.[c.toIdx] ?? 0);
         const strength = Math.min(1, srcAct * w * 1.2);
-        const fromColor = LAYER_COLORS[c.fromLayer];
-        const toColor = LAYER_COLORS[c.fromLayer + 1];
+        // Synapse color by connection group
+        const synapseColors = ["#22c55e", "#3b82f6", "#ef4444"]; // green, blue, red
+        const synapseColor = synapseColors[c.fromLayer];
         const baseOpacity = 0.08;
         const activeOpacity = baseOpacity + strength * 0.55;
         return (
           <line
             key={`c-${i}`}
             x1={c.x1} y1={c.y1} x2={c.x2} y2={c.y2}
-            stroke={strength > 0.15 ? (strength > 0.5 ? toColor : fromColor) : "var(--sw-border)"}
+            stroke={strength > 0.1 ? synapseColor : "var(--sw-border)"}
             strokeWidth={0.6 + strength * 1.4}
             opacity={activeOpacity}
             style={{ transition: "opacity 0.3s, stroke 0.3s, stroke-width 0.3s" }}

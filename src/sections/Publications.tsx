@@ -109,17 +109,14 @@ function NetworkGraph() {
 
     let needsWeightSync = true;
 
-    // Easing helpers
-    const ease5 = (t: number) => {
-      if (t < 0.5) return 16 * t * t * t * t * t;
-      const u = 1 - t;
-      return 1 - 16 * u * u * u * u * u;
-    };
+    // Cosine ease-in-out: naturally smooth S-curve, zero velocity at endpoints
+    const cosEase = (t: number) => (1 - Math.cos(t * Math.PI)) / 2;
+
     // Continuous wave: waveX travels from first to last layer x-position
     const xMin = X_POSITIONS[0];
     const xMax = X_POSITIONS[X_POSITIONS.length - 1];
     const xRange = xMax - xMin;
-    const spread = xRange * 0.25; // tight spread for punchy per-layer activation
+    const spread = xRange * 0.4; // wide spread for flowing overlap between layers
 
     function tick() {
       if (!running) return;
@@ -140,37 +137,35 @@ function NetworkGraph() {
       const fullAct = forwardPass(sim.inputs!, sim.params!);
 
       // Timeline:
-      //   0.00–0.08  Ramp globalFade 0→1 (smooth start from idle)
-      //   0.08–0.65  Wave sweeps left→right (eased)
-      //   0.65–0.78  Hold at full brightness
-      //   0.78–0.96  Fade 1→0 (back to dim idle state)
+      //   0.00–0.10  Ramp globalFade 0→1 (gentle start from idle)
+      //   0.00–0.70  Wave sweeps left→right (cosine eased, overlaps with ramp)
+      //   0.70–0.80  Hold at full brightness
+      //   0.80–0.96  Fade 1→0 (back to dim idle state)
       //   0.96–1.00  Idle baseline, new inputs arrive
 
-      // Wave front position (ease-in-out via ease5)
+      // Wave front position (cosine ease-in-out)
       let waveX: number;
-      if (cyclePos < 0.65) {
-        const wt = ease5(cyclePos / 0.65);
+      if (cyclePos < 0.70) {
+        const wt = cosEase(cyclePos / 0.70);
         waveX = (xMin - spread) + (xRange + spread * 2) * wt;
       } else {
         waveX = xMax + spread;
       }
 
-      // Per-layer draw: eased activation per layer
+      // Per-layer draw: smooth activation as wave passes each layer
       const draw = X_POSITIONS.map((x) => {
         const raw = (waveX - x + spread * 0.5) / spread;
-        return Math.max(0, Math.min(1, ease5(Math.max(0, Math.min(1, raw)))));
+        return cosEase(Math.max(0, Math.min(1, raw)));
       });
 
-      // Global fade: controls activation brightness (0 = idle, 1 = full)
-      // Base node visibility is always present via render; this only drives activation glow
+      // Global fade: cosine ease for smooth ramp-in and fade-out
       let globalFade: number;
-      if (cyclePos < 0.08) {
-        globalFade = ease5(cyclePos / 0.08);
-      } else if (cyclePos < 0.78) {
+      if (cyclePos < 0.10) {
+        globalFade = cosEase(cyclePos / 0.10);
+      } else if (cyclePos < 0.80) {
         globalFade = 1;
       } else if (cyclePos < 0.96) {
-        const fadeT = (cyclePos - 0.78) / 0.18;
-        globalFade = 1 - ease5(fadeT);
+        globalFade = 1 - cosEase((cyclePos - 0.80) / 0.16);
       } else {
         globalFade = 0;
       }

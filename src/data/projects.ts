@@ -102,7 +102,7 @@ export const projectCards: ProjectCard[] = [
     id: "fab-store",
     title: "Fab Store",
     summary:
-      "Meine Unreal-Engine-Plugins auf Fab.com: ein Recoil-System für Shooter und ein Popup-Framework für UI.",
+      "Meine Unreal-Engine-Plugins und Assets auf Fab.com.",
     tags: [
       { label: "Unreal Engine", className: "tech-tag tech-tag-purple" },
       { label: "Fab.com", className: "tech-tag tech-tag-orange" },

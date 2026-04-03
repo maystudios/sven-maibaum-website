@@ -99,6 +99,25 @@ export const projectCards: ProjectCard[] = [
       "inline-block bg-gradient-to-r from-purple-600 to-pink-500 hover:from-purple-700 hover:to-pink-600 text-white font-medium py-2 px-4 rounded-lg transition duration-300 transform hover:scale-105 text-sm",
   },
   {
+    id: "may-studios",
+    title: "May Studios",
+    summary:
+      "Professionelle Unreal-Engine-Assets auf Fab.com — Recoil-Systeme, UI-Komponenten und Developer-Tools für Game-Entwickler.",
+    tags: [
+      { label: "Unreal Engine", className: "tech-tag tech-tag-purple" },
+      { label: "Fab.com", className: "tech-tag tech-tag-orange" },
+      { label: "C++", className: "tech-tag tech-tag-blue" },
+    ],
+    filters: ["unreal-engine"],
+    dataTags: ["unreal-engine", "c++", "blueprints", "marketplace", "plugins"],
+    image: "https://placehold.co/600x400/18181b/a1a1aa?text=May+Studios",
+    route: "/projekte/may-studios",
+    cta: "Mehr anzeigen",
+    accent: "text-orange-400",
+    buttonClass:
+      "inline-block bg-orange-500 hover:bg-orange-600 text-white font-medium py-2 px-4 rounded-lg transition duration-300 transform hover:scale-105 text-sm",
+  },
+  {
     id: "huggingface",
     title: "Hugging Face & AI Research",
     summary:

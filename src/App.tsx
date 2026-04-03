@@ -8,6 +8,7 @@ import ProjectExambyte from "./pages/projects/ProjectExambyte";
 import ProjectItchio from "./pages/projects/ProjectItchio";
 import ProjectMaxsimCli from "./pages/projects/ProjectMaxsimCli";
 import ProjectCcTemplates from "./pages/projects/ProjectCcTemplates";
+import ProjectMayStudios from "./pages/projects/ProjectMayStudios";
 import ArchitectShowcase from "./pages/ArchitectShowcase";
 import Impressum from "./pages/Impressum";
 import Datenschutz from "./pages/Datenschutz";
@@ -28,6 +29,7 @@ export default function App() {
           <Route path="/projekte/itchio" element={<ProjectItchio />} />
           <Route path="/projekte/maxsimcli" element={<ProjectMaxsimCli />} />
           <Route path="/projekte/cc-templates" element={<ProjectCcTemplates />} />
+          <Route path="/projekte/may-studios" element={<ProjectMayStudios />} />
           <Route path="/visitenkarte" element={<Visitenkarte />} />
           <Route path="/showcase" element={<ArchitectShowcase />} />
           <Route path="/impressum" element={<Impressum />} />

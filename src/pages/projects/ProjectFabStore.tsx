@@ -72,7 +72,7 @@ export default function ProjectFabStore() {
     <ProjectShell
       hasSiteHeader
       title="Fab Store"
-      subtitle="Plugins und Assets für die Unreal Engine — veröffentlicht auf Epics offiziellem Marketplace."
+      subtitle="Meine Plugins und Assets für die Unreal Engine, veröffentlicht auf Epics Marketplace Fab.com."
       heroImage={`${base}assets/projects/fab/fab-hero.webp`}
       heroAlt="Fab – Epics offizieller Marketplace für Unreal Engine Assets"
       ctaLabel="Alle Assets auf Fab.com"
@@ -94,10 +94,10 @@ export default function ProjectFabStore() {
 
       <h2>Über den Store</h2>
       <p>
-        Auf <strong>Fab.com</strong> veröffentliche ich Plugins und Asset-Pakete für die{" "}
-        <strong>Unreal Engine</strong> — von Gameplay-Systemen wie Weapon Recoil bis zu
-        UI-Frameworks für Popups und Notifications. Alle Assets kommen mit Dokumentation,
-        Playable Demos und Discord-Support.
+        Ich entwickle Plugins und Assets für die <strong>Unreal Engine</strong> und
+        verkaufe sie über <strong>Fab.com</strong>. Aktuell gibt es ein Recoil-System
+        für Shooter und ein Popup-Framework für UI. Zu jedem Asset gibt es
+        Dokumentation, eine spielbare Demo und Support über Discord.
       </p>
 
       {/* May Simple Recoil */}
@@ -110,13 +110,15 @@ export default function ProjectFabStore() {
             </div>
 
             <p className="mb-4">
-              Ein umfassendes <strong>Weapon-Recoil-System</strong> für Unreal Engine 5.5. Realistische
-              Rückstoß-Dynamik, die sich automatisch an Spieler-States anpasst — Sprint, Crouch, Jump, ADS.
-              Mit Real-Time Editor Preview, SIMD-Optimierung und vollständiger Network Replication.
+              Ein <strong>Weapon-Recoil-System</strong> für Unreal Engine 5.5. Der Rückstoß
+              passt sich dynamisch an den Spieler-State an: Sprint, Crouch, Jump, ADS. Die
+              Recoil-Kurven lassen sich direkt im Editor in Echtzeit testen, ohne den
+              Play-Mode zu starten. Das Ganze ist SIMD-optimiert und netzwerk-repliziert.
             </p>
             <p className="mb-6">
-              Verfügbar als <strong>C++ & Blueprint Plugin</strong> mit zwei Modulen (Runtime + Editor).
-              Inkl. Demo-Waffen, Spread-Component und Live-Tuning-Widget.
+              Das Plugin besteht aus zwei C++-Modulen (Runtime + Editor), lässt sich aber
+              komplett über Blueprints steuern. Im Paket sind Demo-Waffen, eine
+              Spread-Component und ein Live-Tuning-Widget dabei.
             </p>
 
             <div className="mb-6">
@@ -153,14 +155,16 @@ export default function ProjectFabStore() {
             </div>
 
             <p className="mb-4">
-              Eine <strong>All-in-One-Lösung</strong> für dynamische Popups und Notifications in Unreal Engine.
-              Vorkonfigurierte Themes (Dark & Light), interaktive Buttons, Progress-Bars und
-              Sound-Effekte — alles komplett in Blueprints, kein C++ nötig.
+              Ein <strong>Popup- und Notification-System</strong> für Unreal Engine.
+              Themes (Dark und Light) sind vorkonfiguriert, Buttons lassen sich frei
+              belegen, Notifications haben Progress-Bars und Sound-Feedback. Das
+              komplette System läuft über Blueprints, C++ braucht man dafür nicht.
             </p>
             <p className="mb-6">
-              Unterstützt <strong>UE 5.0 bis 5.7</strong> und kommt mit Auto-Detection für fehlende
-              Panels, konfigurierbaren Notification-Types (Default, System, Friend) und einem
-              Settings-Menü für schnelle Anpassung.
+              Läuft auf <strong>UE 5.0 bis 5.7</strong>. Fehlende Panels erkennt das
+              System automatisch und ergänzt sie. Es gibt vorgefertigte
+              Notification-Types (Default, System, Friend) und ein Settings-Menü,
+              über das sich alles anpassen lässt.
             </p>
 
             <div className="mb-6">
@@ -186,9 +190,9 @@ export default function ProjectFabStore() {
         </div>
       </div>
 
-      <h3>Weitere Assets folgen...</h3>
+      <h3>Mehr kommt noch</h3>
       <p>
-        Der Store wird kontinuierlich erweitert. Neue Plugins und Asset-Pakete sind in Planung.
+        An weiteren Plugins und Assets wird gearbeitet. Sobald etwas fertig ist, landet es hier.
       </p>
     </ProjectShell>
   );

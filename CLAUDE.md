@@ -68,3 +68,17 @@ No testing framework configured. Do not add one without explicit request.
 - ARIA attributes required on interactive elements; minimum 44×44px touch targets
 - Mobile-first; breakpoints `md:` (768px), `lg:` (1024px)
 - Do not add Prettier (ESLint handles formatting)
+
+## Schreibstil (deutsche Texte auf der Website)
+
+Schreibe wie ein Mensch, nicht wie eine KI. Direkt, pragmatisch, technisch korrekt.
+
+- Einfache Wörter, kurze und mittlere Sätze mischen.
+- Aktive Sprache, direkte Formulierungen.
+- Kein "—" (Gedankenstrich). Kommas und Punkte reichen.
+- Keine Floskeln: "abschließend", "zusammenfassend", "in der heutigen Zeit".
+- Keine Marketing-Sprache, Metaphern oder Hype-Wörter.
+- Keine Konstruktionen wie "nicht nur X, sondern auch Y".
+- Keine Füllwörter: "eigentlich", "irgendwie", "sehr", "wirklich".
+- Keine Wortwiederholungen. Synonyme nutzen.
+- Technische Begriffe sind OK und erwünscht.

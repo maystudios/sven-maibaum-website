@@ -140,10 +140,11 @@ function NetworkGraph() {
       const fullAct = forwardPass(sim.inputs!, sim.params!);
 
       // Timeline:
-      //   0.00–0.65  Wave sweeps left→right (eased)
+      //   0.00–0.08  Ramp globalFade 0→1 (smooth start from idle)
+      //   0.08–0.65  Wave sweeps left→right (eased)
       //   0.65–0.78  Hold at full brightness
-      //   0.78–0.96  Uniform fade-out (all layers simultaneously)
-      //   0.96–1.00  Dark, new inputs arrive
+      //   0.78–0.96  Fade 1→0 (back to dim idle state)
+      //   0.96–1.00  Idle baseline, new inputs arrive
 
       // Wave front position (ease-in-out via ease5)
       let waveX: number;
@@ -160,9 +161,12 @@ function NetworkGraph() {
         return Math.max(0, Math.min(1, ease5(Math.max(0, Math.min(1, raw)))));
       });
 
-      // Uniform global fade: applies equally to ALL elements (ease-in-out)
+      // Global fade: controls activation brightness (0 = idle, 1 = full)
+      // Base node visibility is always present via render; this only drives activation glow
       let globalFade: number;
-      if (cyclePos < 0.78) {
+      if (cyclePos < 0.08) {
+        globalFade = ease5(cyclePos / 0.08);
+      } else if (cyclePos < 0.78) {
         globalFade = 1;
       } else if (cyclePos < 0.96) {
         const fadeT = (cyclePos - 0.78) / 0.18;
@@ -225,8 +229,8 @@ function NetworkGraph() {
         const len = Math.sqrt((c.x2 - c.x1) ** 2 + (c.y2 - c.y1) ** 2);
         const draw = drawProgress[c.fromLayer] ?? 0;
         const dashOffset = len * (1 - draw);
-        // Opacity: base + strength, multiplied by fadeAlpha for fade-out
-        const activeOpacity = (0.08 + strength * 0.55) * fadeAlpha;
+        // Base dim line + activation-driven brightness
+        const activeOpacity = 0.03 + strength * 0.55 * fadeAlpha;
         return (
           <line
             key={`c-${i}`}
@@ -251,30 +255,31 @@ function NetworkGraph() {
 
         return layer.map((node, i) => {
           const act = activations[l]?.[i] ?? 0;
+          const displayAct = act * fadeAlpha; // combines activation + fade
           const isWinner = l === outputLayer && i === winnerIdx;
           const color = isWinner ? WINNER_COLOR : LAYER_COLORS[l];
           const colorDim = isWinner ? WINNER_COLOR_DIM : LAYER_COLORS_DIM[l];
           const nodeR = isWinner ? 7 : 6;
-          const glowR = (isWinner ? 18 : 12) + act * 8;
+          const glowR = (isWinner ? 18 : 12) + displayAct * 8;
           return (
             <g key={`n-${l}-${i}`}>
-              {/* Glow */}
+              {/* Glow — only when active */}
               <circle
                 cx={node.x} cy={node.y} r={glowR}
                 fill={color}
-                opacity={act * (isWinner ? 0.45 : 0.25) * fadeAlpha}
+                opacity={displayAct * (isWinner ? 0.45 : 0.25)}
               />
-              {/* Node body */}
+              {/* Node body — base always visible, activation adds brightness */}
               <circle
                 cx={node.x} cy={node.y} r={nodeR}
-                fill={act > 0.1 ? color : colorDim}
-                opacity={(0.3 + act * 0.7) * fadeAlpha}
+                fill={displayAct > 0.1 ? color : colorDim}
+                opacity={0.2 + displayAct * 0.7}
               />
-              {/* Bright center */}
+              {/* Bright center — only when active */}
               <circle
-                cx={node.x} cy={node.y} r={2 + act * (isWinner ? 3 : 2)}
+                cx={node.x} cy={node.y} r={2 + displayAct * (isWinner ? 3 : 2)}
                 fill="#fff"
-                opacity={act * (isWinner ? 0.85 : 0.6) * fadeAlpha}
+                opacity={displayAct * (isWinner ? 0.85 : 0.6)}
               />
             </g>
           );

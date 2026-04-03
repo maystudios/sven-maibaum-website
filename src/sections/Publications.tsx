@@ -119,8 +119,7 @@ function NetworkGraph() {
     const xMin = X_POSITIONS[0];
     const xMax = X_POSITIONS[X_POSITIONS.length - 1];
     const xRange = xMax - xMin;
-    const spread = xRange * 0.35; // wide spread for natural overlap
-    const MIN_ALPHA = 0.12; // never fully dark — soft cross-fade
+    const spread = xRange * 0.25; // tight spread for punchy per-layer activation
 
     function tick() {
       if (!running) return;
@@ -141,44 +140,45 @@ function NetworkGraph() {
       const fullAct = forwardPass(sim.inputs!, sim.params!);
 
       // Timeline:
-      //   0.00–0.65  Wave sweeps left→right (slow)
-      //   0.65–0.80  Hold at full brightness
-      //   0.80–0.97  Single smooth fade out
-      //   0.97–1.00  Quick reset, new inputs
+      //   0.00–0.65  Wave sweeps left→right (eased)
+      //   0.65–0.78  Hold at full brightness
+      //   0.78–0.96  Uniform fade-out (all layers simultaneously)
+      //   0.96–1.00  Dark, new inputs arrive
 
-      // Wave front position
+      // Wave front position (ease-in-out via ease5)
       let waveX: number;
       if (cyclePos < 0.65) {
         const wt = ease5(cyclePos / 0.65);
         waveX = (xMin - spread) + (xRange + spread * 2) * wt;
       } else {
-        waveX = xMax + spread; // wave has passed everything
+        waveX = xMax + spread;
       }
 
-      // Per-layer draw: how far the wave front has passed each layer's x
+      // Per-layer draw: eased activation per layer
       const draw = X_POSITIONS.map((x) => {
         const raw = (waveX - x + spread * 0.5) / spread;
         return Math.max(0, Math.min(1, ease5(Math.max(0, Math.min(1, raw)))));
       });
 
-      // Brightness envelope: single smooth fade, never fully off
-      let brightness: number;
-      if (cyclePos < 0.80) {
-        brightness = 1;
-      } else if (cyclePos < 0.97) {
-        const fadeT = (cyclePos - 0.80) / 0.17;
-        brightness = MIN_ALPHA + (1 - MIN_ALPHA) * (1 - fadeT * fadeT);
+      // Uniform global fade: applies equally to ALL elements (ease-in-out)
+      let globalFade: number;
+      if (cyclePos < 0.78) {
+        globalFade = 1;
+      } else if (cyclePos < 0.96) {
+        const fadeT = (cyclePos - 0.78) / 0.18;
+        globalFade = 1 - ease5(fadeT);
       } else {
-        brightness = MIN_ALPHA;
+        globalFade = 0;
       }
 
+      // Activations reflect wave draw-in only (fade is applied uniformly in render)
       const visible = fullAct.map((layer, l) =>
-        layer.map((a) => a * draw[l] * brightness)
+        layer.map((a) => a * draw[l])
       );
 
       setActivations(visible);
       setDrawProgress(draw);
-      setFadeAlpha(brightness);
+      setFadeAlpha(globalFade);
       frameRef.current = requestAnimationFrame(tick);
     }
 
@@ -262,19 +262,19 @@ function NetworkGraph() {
               <circle
                 cx={node.x} cy={node.y} r={glowR}
                 fill={color}
-                opacity={act * (isWinner ? 0.45 : 0.25)}
+                opacity={act * (isWinner ? 0.45 : 0.25) * fadeAlpha}
               />
-              {/* Node body — always slightly visible via fadeAlpha min */}
+              {/* Node body */}
               <circle
                 cx={node.x} cy={node.y} r={nodeR}
                 fill={act > 0.1 ? color : colorDim}
-                opacity={0.3 + act * 0.7}
+                opacity={(0.3 + act * 0.7) * fadeAlpha}
               />
               {/* Bright center */}
               <circle
                 cx={node.x} cy={node.y} r={2 + act * (isWinner ? 3 : 2)}
                 fill="#fff"
-                opacity={act * (isWinner ? 0.85 : 0.6)}
+                opacity={act * (isWinner ? 0.85 : 0.6) * fadeAlpha}
               />
             </g>
           );

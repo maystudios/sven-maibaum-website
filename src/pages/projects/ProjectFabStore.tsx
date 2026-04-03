@@ -4,14 +4,17 @@ import ProjectShell from "../../components/ProjectShell";
 const base = import.meta.env.BASE_URL;
 
 const recoilImages = [
-  { src: `${base}assets/projects/fab/recoil/01.jpg`, alt: "May Simple Recoil – Feature-Overview" },
-  { src: `${base}assets/projects/fab/recoil/02.png`, alt: "May Simple Recoil – Editor Preview" },
+  { src: `${base}assets/projects/fab/recoil/01.jpg`, alt: "May Simple Recoil – Vorschaubild" },
+  { src: `${base}assets/projects/fab/recoil/02.jpg`, alt: "May Simple Recoil – Feature-Overview" },
+  { src: `${base}assets/projects/fab/recoil/03.jpg`, alt: "May Simple Recoil – Realtime Editor Preview" },
+  { src: `${base}assets/projects/fab/recoil/04.jpg`, alt: "May Simple Recoil – Demo Map Settings" },
+  { src: `${base}assets/projects/fab/recoil/05.jpg`, alt: "May Simple Recoil – Blueprint & C++ Core" },
 ];
 
 const popupImages = [
   { src: `${base}assets/projects/fab/popup/01.jpg`, alt: "May Popup System – HUD Workflow" },
-  { src: `${base}assets/projects/fab/popup/02.jpg`, alt: "May Popup System – Recoil Integration" },
-  { src: `${base}assets/projects/fab/popup/03.jpg`, alt: "May Popup System – Übersicht" },
+  { src: `${base}assets/projects/fab/popup/02.jpg`, alt: "May Popup System – Widget Blueprint" },
+  { src: `${base}assets/projects/fab/popup/03.jpg`, alt: "May Popup System – Example Project Demo" },
 ];
 
 type CarouselImage = { src: string; alt: string };

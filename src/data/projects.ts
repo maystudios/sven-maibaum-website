@@ -140,7 +140,7 @@ export const projectCards: ProjectCard[] = [
     id: "maxsimcli",
     title: "maxsimcli",
     summary:
-      "Open-Source-CLI für KI-gestütztes Software-Engineering. Strukturierte Phasen, atomare Commits und spezialisierte Agent-Teams direkt im Terminal.",
+      "Meta-Prompting und Context Engineering für Claude Code. Strukturierte Prompts, 4 dedizierte Agenten und spec-driven Planning mit frischem Kontext pro Task.",
     tags: [
       { label: "Open Source", className: "tech-tag tech-tag-teal" },
       { label: "Claude Code", className: "tech-tag tech-tag-purple" },
@@ -148,7 +148,7 @@ export const projectCards: ProjectCard[] = [
     ],
     filters: ["typescript", "ai-ml"],
     dataTags: ["cli", "typescript", "ai-ml", "open-source", "developer-tools"],
-    image: `${import.meta.env.BASE_URL}assets/projects/maxsimcli/preview-v3.svg`,
+    image: `${import.meta.env.BASE_URL}assets/projects/maxsimcli/card.svg`,
     route: "/projekte/maxsimcli",
     cta: "Mehr anzeigen",
     accent: "text-blue-400",

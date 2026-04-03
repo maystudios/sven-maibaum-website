@@ -8,7 +8,7 @@ export default function ProjectMaxsimCli() {
       hasSiteHeader
       title="maxsimcli"
       subtitle="Meta-Prompting und Context Engineering für Claude Code. Strukturierte Prompts, dedizierte Agenten und spec-driven Planning. Jeder Task bekommt einen eigenen Subagenten mit frischem Kontext."
-      heroImage={`${base}assets/projects/maxsimcli/preview-v3.svg`}
+      heroImage={`${base}assets/projects/maxsimcli/banner.svg`}
       heroAlt="maxsimcli – Meta-prompting CLI für strukturiertes Agentic Coding"
       ctaLabel="Dokumentation auf maxsimcli.dev"
       ctaLink="https://maxsimcli.dev"

@@ -88,35 +88,41 @@ function NetworkGraph() {
   // Per-layer timing envelope (0→1) — drives draw animation uniformly per layer
   const [envelopes, setEnvelopes] = useState<number[]>(() => Array(TOPOLOGY.length).fill(0));
   const frameRef = useRef(0);
+  // Persist animation state across Strict Mode re-mounts
+  const simRef = useRef({
+    params: null as NetworkParams | null,
+    inputs: null as number[] | null,
+    prevCycle: 0,
+    start: 0,
+  });
 
   useEffect(() => {
     let running = true;
-    let params = initParams();
-    let inputs = Array.from({ length: TOPOLOGY[0] }, () => Math.random());
-    let prevCycle = 0;
-    let weightsChanged = true;
-    const start = performance.now();
+    const sim = simRef.current;
+
+    // Only generate new values on first mount, not on Strict Mode re-mount
+    if (!sim.params) {
+      sim.params = initParams();
+      sim.inputs = Array.from({ length: TOPOLOGY[0] }, () => Math.random());
+      sim.start = performance.now();
+      setAbsWeights(sim.params.weights.map((layer) => layer.map((row) => row.map(Math.abs))));
+    }
 
     function tick() {
       if (!running) return;
-      const elapsed = performance.now() - start;
+      const elapsed = performance.now() - sim.start;
       const cyclePos = (elapsed % CYCLE_MS) / CYCLE_MS;
 
       // Detect cycle wrap-around: previous was near end, current is near start
-      if (cyclePos < 0.05 && prevCycle > 0.85) {
-        params = initParams();
-        inputs = Array.from({ length: TOPOLOGY[0] }, () => Math.random());
-        weightsChanged = true;
+      if (cyclePos < 0.05 && sim.prevCycle > 0.85) {
+        sim.params = initParams();
+        sim.inputs = Array.from({ length: TOPOLOGY[0] }, () => Math.random());
+        setAbsWeights(sim.params.weights.map((layer) => layer.map((row) => row.map(Math.abs))));
       }
-      prevCycle = cyclePos;
-
-      if (weightsChanged) {
-        weightsChanged = false;
-        setAbsWeights(params.weights.map((layer) => layer.map((row) => row.map(Math.abs))));
-      }
+      sim.prevCycle = cyclePos;
 
       // Full forward pass: a_j = sigmoid( sum(a_i * w_ij) + b_j )
-      const fullAct = forwardPass(inputs, params);
+      const fullAct = forwardPass(sim.inputs!, sim.params!);
 
       // Quintic ease-in-out: smoother than smoothstep, no harsh starts/stops
       const ease5 = (t: number) => {

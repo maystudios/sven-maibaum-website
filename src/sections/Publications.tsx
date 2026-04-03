@@ -100,13 +100,14 @@ function NetworkGraph() {
     let running = true;
     const sim = simRef.current;
 
-    // Only generate new values on first mount, not on Strict Mode re-mount
+    // Generate params once, reuse on Strict Mode re-mount
     if (!sim.params) {
       sim.params = initParams();
       sim.inputs = Array.from({ length: TOPOLOGY[0] }, () => Math.random());
       sim.start = performance.now();
-      setAbsWeights(sim.params.weights.map((layer) => layer.map((row) => row.map(Math.abs))));
     }
+
+    let needsWeightSync = true;
 
     function tick() {
       if (!running) return;
@@ -117,9 +118,14 @@ function NetworkGraph() {
       if (cyclePos < 0.05 && sim.prevCycle > 0.85) {
         sim.params = initParams();
         sim.inputs = Array.from({ length: TOPOLOGY[0] }, () => Math.random());
-        setAbsWeights(sim.params.weights.map((layer) => layer.map((row) => row.map(Math.abs))));
+        needsWeightSync = true;
       }
       sim.prevCycle = cyclePos;
+
+      if (needsWeightSync) {
+        needsWeightSync = false;
+        setAbsWeights(sim.params!.weights.map((layer) => layer.map((row) => row.map(Math.abs))));
+      }
 
       // Full forward pass: a_j = sigmoid( sum(a_i * w_ij) + b_j )
       const fullAct = forwardPass(sim.inputs!, sim.params!);

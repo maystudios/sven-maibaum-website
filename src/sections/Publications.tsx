@@ -85,6 +85,8 @@ function NetworkGraph() {
   const [activations, setActivations] = useState<number[][]>(() => TOPOLOGY.map((c) => Array(c).fill(0)));
   // Absolute weights for render — updated in the animation loop, not via ref
   const [absWeights, setAbsWeights] = useState<number[][][]>([]);
+  // Per-layer timing envelope (0→1) — drives draw animation uniformly per layer
+  const [envelopes, setEnvelopes] = useState<number[]>(() => Array(TOPOLOGY.length).fill(0));
   const frameRef = useRef(0);
 
   useEffect(() => {
@@ -138,15 +140,20 @@ function NetworkGraph() {
         ? 1 - ease5((cyclePos - 0.78) / 0.22)
         : 1;
 
-      const visible = fullAct.map((layer, l) => {
+      // Per-layer envelope (0→1): controls timing uniformly for all neurons in a layer
+      const envelopes = TOPOLOGY.map((_, l) => {
         const t = Math.max(0, Math.min(1,
           (cyclePos - layerStarts[l]) / (layerEnds[l] - layerStarts[l])
         ));
-        const layerEase = ease5(t) * fadeOut;
-        return layer.map((a) => a * layerEase);
+        return ease5(t) * fadeOut;
       });
 
+      const visible = fullAct.map((layer, l) =>
+        layer.map((a) => a * envelopes[l])
+      );
+
       setActivations(visible);
+      setEnvelopes(envelopes);
       frameRef.current = requestAnimationFrame(tick);
     }
 
@@ -192,9 +199,11 @@ function NetworkGraph() {
         const synapseColor = synapseColors[c.fromLayer];
         const baseOpacity = 0.08;
         const activeOpacity = baseOpacity + strength * 0.55;
-        // Line length for stroke-dash draw effect
+        // Draw progress driven by source layer envelope — all connections
+        // in the same group draw simultaneously from source to target
         const len = Math.sqrt((c.x2 - c.x1) ** 2 + (c.y2 - c.y1) ** 2);
-        const dashOffset = len * (1 - strength);
+        const drawProgress = envelopes[c.fromLayer] ?? 0;
+        const dashOffset = len * (1 - drawProgress);
         return (
           <line
             key={`c-${i}`}
@@ -204,7 +213,7 @@ function NetworkGraph() {
             opacity={activeOpacity}
             strokeDasharray={len}
             strokeDashoffset={dashOffset}
-            style={{ transition: "opacity 0.5s cubic-bezier(.4,0,.2,1), stroke 0.5s cubic-bezier(.4,0,.2,1), stroke-width 0.5s cubic-bezier(.4,0,.2,1), stroke-dashoffset 0.6s cubic-bezier(.4,0,.2,1)" }}
+            style={{ transition: "opacity 0.5s cubic-bezier(.4,0,.2,1), stroke 0.5s cubic-bezier(.4,0,.2,1), stroke-width 0.5s cubic-bezier(.4,0,.2,1)" }}
           />
         );
       })}

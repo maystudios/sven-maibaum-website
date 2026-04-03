@@ -10,7 +10,7 @@ const TOPOLOGY = [3, 5, 4, 2];
 const X_POSITIONS = [40, 120, 200, 280];
 const MID_Y = 95;
 const GAP_Y = 30;
-const CYCLE_MS = 6000; // one full forward pass
+const CYCLE_MS = 12000; // one full forward pass
 
 function sigmoid(x: number) {
   return 1 / (1 + Math.exp(-x));
@@ -87,7 +87,6 @@ function NetworkGraph() {
   // drawProgress[l]: 0→1 per layer, never reverses (controls synapse draw-in)
   const [drawProgress, setDrawProgress] = useState<number[]>(() => Array(TOPOLOGY.length).fill(0));
   const [fadeAlpha, setFadeAlpha] = useState(0);
-  const [bounce, setBounce] = useState(1);
   const frameRef = useRef(0);
 
   const simRef = useRef({
@@ -116,12 +115,6 @@ function NetworkGraph() {
       const u = 1 - t;
       return 1 - 16 * u * u * u * u * u;
     };
-    // Elastic overshoot for the winner bounce
-    const elasticOut = (t: number) => {
-      if (t === 0 || t === 1) return t;
-      return Math.pow(2, -10 * t) * Math.sin((t - 0.075) * (2 * Math.PI) / 0.3) + 1;
-    };
-
     // Continuous wave: waveX travels from first to last layer x-position
     const xMin = X_POSITIONS[0];
     const xMax = X_POSITIONS[X_POSITIONS.length - 1];
@@ -135,7 +128,7 @@ function NetworkGraph() {
       const cyclePos = (elapsed % CYCLE_MS) / CYCLE_MS;
 
       // New inputs at cycle boundary
-      if (cyclePos < 0.03 && sim.prevCycle > 0.9) {
+      if (cyclePos < 0.03 && sim.prevCycle > 0.95) {
         sim.inputs = Array.from({ length: TOPOLOGY[0] }, () => Math.random());
       }
       sim.prevCycle = cyclePos;
@@ -148,15 +141,15 @@ function NetworkGraph() {
       const fullAct = forwardPass(sim.inputs!, sim.params!);
 
       // Timeline:
-      //   0.00–0.50  Wave sweeps left→right (waveX from xMin-spread to xMax+spread)
-      //   0.50–0.70  Hold (everything at full brightness)
-      //   0.70–0.95  Gentle fade (to MIN_ALPHA, never 0)
-      //   0.95–1.00  Dim, new inputs arrive smoothly
+      //   0.00–0.65  Wave sweeps left→right (slow)
+      //   0.65–0.80  Hold at full brightness
+      //   0.80–0.97  Single smooth fade out
+      //   0.97–1.00  Quick reset, new inputs
 
       // Wave front position
       let waveX: number;
-      if (cyclePos < 0.50) {
-        const wt = ease5(cyclePos / 0.50);
+      if (cyclePos < 0.65) {
+        const wt = ease5(cyclePos / 0.65);
         waveX = (xMin - spread) + (xRange + spread * 2) * wt;
       } else {
         waveX = xMax + spread; // wave has passed everything
@@ -168,21 +161,16 @@ function NetworkGraph() {
         return Math.max(0, Math.min(1, ease5(Math.max(0, Math.min(1, raw)))));
       });
 
-      // Brightness envelope: smooth fade, never fully off
+      // Brightness envelope: single smooth fade, never fully off
       let brightness: number;
-      if (cyclePos < 0.70) {
+      if (cyclePos < 0.80) {
         brightness = 1;
-      } else if (cyclePos < 0.95) {
-        brightness = MIN_ALPHA + (1 - MIN_ALPHA) * (1 - ease5((cyclePos - 0.70) / 0.25));
+      } else if (cyclePos < 0.97) {
+        const fadeT = (cyclePos - 0.80) / 0.17;
+        brightness = MIN_ALPHA + (1 - MIN_ALPHA) * (1 - fadeT * fadeT);
       } else {
-        // Gentle ramp back up for next cycle
-        const rampT = (cyclePos - 0.95) / 0.05;
-        brightness = MIN_ALPHA + rampT * (0.3 - MIN_ALPHA);
+        brightness = MIN_ALPHA;
       }
-
-      // Winner bounce: elastic overshoot when output layer fully activates
-      const outputDraw = draw[draw.length - 1];
-      const bounce = outputDraw > 0.95 ? elasticOut(Math.min(1, (outputDraw - 0.95) / 0.05 + (cyclePos < 0.55 ? (cyclePos - 0.45) / 0.10 : 1))) : 1;
 
       const visible = fullAct.map((layer, l) =>
         layer.map((a) => a * draw[l] * brightness)
@@ -191,7 +179,6 @@ function NetworkGraph() {
       setActivations(visible);
       setDrawProgress(draw);
       setFadeAlpha(brightness);
-      setBounce(bounce);
       frameRef.current = requestAnimationFrame(tick);
     }
 
@@ -267,10 +254,8 @@ function NetworkGraph() {
           const isWinner = l === outputLayer && i === winnerIdx;
           const color = isWinner ? WINNER_COLOR : LAYER_COLORS[l];
           const colorDim = isWinner ? WINNER_COLOR_DIM : LAYER_COLORS_DIM[l];
-          // Bounce: winner node scales up with elastic overshoot
-          const b = isWinner ? bounce : 1;
-          const nodeR = (isWinner ? 7 : 6) * b;
-          const glowR = ((isWinner ? 18 : 12) + act * 8) * b;
+          const nodeR = isWinner ? 7 : 6;
+          const glowR = (isWinner ? 18 : 12) + act * 8;
           return (
             <g key={`n-${l}-${i}`}>
               {/* Glow */}
@@ -287,7 +272,7 @@ function NetworkGraph() {
               />
               {/* Bright center */}
               <circle
-                cx={node.x} cy={node.y} r={(2 + act * (isWinner ? 3 : 2)) * b}
+                cx={node.x} cy={node.y} r={2 + act * (isWinner ? 3 : 2)}
                 fill="#fff"
                 opacity={act * (isWinner ? 0.85 : 0.6)}
               />

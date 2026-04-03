@@ -129,7 +129,7 @@ export const projectCards: ProjectCard[] = [
     ],
     filters: ["ai-ml", "python"],
     dataTags: ["ai-ml", "python", "onnx", "quantization", "hugging-face"],
-    image: "https://placehold.co/600x400/FFD21E/000000?text=Hugging+Face+Profil",
+    image: `${import.meta.env.BASE_URL}assets/projects/huggingface/hugging_face_logo.png.webp`,
     link: "https://huggingface.co/Svenni551",
     cta: "Zum Profil",
     accent: "text-yellow-400",

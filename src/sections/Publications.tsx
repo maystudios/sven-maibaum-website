@@ -73,9 +73,11 @@ function forwardPass(inputs: number[], params: NetworkParams) {
   return activations;
 }
 
-// Layer colors: input=green, hidden=blue, output=red
+// Layer colors: input=green, hidden=blue, output=red, winner=purple
 const LAYER_COLORS = ["#22c55e", "#3b82f6", "#3b82f6", "#ef4444"];
 const LAYER_COLORS_DIM = ["#166534", "#1e3a5f", "#1e3a5f", "#7f1d1d"];
+const WINNER_COLOR = "#a855f7";
+const WINNER_COLOR_DIM = "#581c87";
 const LABELS = ["Input", "Hidden", "Hidden", "Output"];
 
 function NetworkGraph() {
@@ -182,39 +184,48 @@ function NetworkGraph() {
       })}
 
       {/* Nodes per layer */}
-      {layers.map((layer, l) =>
-        layer.map((node, i) => {
+      {layers.map((layer, l) => {
+        // Find winning output neuron (highest activation in last layer)
+        const outputLayer = TOPOLOGY.length - 1;
+        const outputActs = activations[outputLayer] ?? [];
+        const winnerIdx = l === outputLayer && outputActs.some((a) => a > 0.05)
+          ? outputActs.indexOf(Math.max(...outputActs))
+          : -1;
+
+        return layer.map((node, i) => {
           const act = activations[l]?.[i] ?? 0;
-          const color = LAYER_COLORS[l];
-          const colorDim = LAYER_COLORS_DIM[l];
-          const glowR = 12 + act * 8;
+          const isWinner = l === outputLayer && i === winnerIdx;
+          const color = isWinner ? WINNER_COLOR : LAYER_COLORS[l];
+          const colorDim = isWinner ? WINNER_COLOR_DIM : LAYER_COLORS_DIM[l];
+          const nodeR = isWinner ? 7 : 6;
+          const glowR = (isWinner ? 16 : 12) + act * 8;
           return (
             <g key={`n-${l}-${i}`}>
               {/* Glow */}
               <circle
                 cx={node.x} cy={node.y} r={glowR}
                 fill={color}
-                opacity={act * 0.25}
+                opacity={act * (isWinner ? 0.4 : 0.25)}
                 style={{ transition: "r 0.4s, opacity 0.4s" }}
               />
               {/* Node body */}
               <circle
-                cx={node.x} cy={node.y} r="6"
+                cx={node.x} cy={node.y} r={nodeR}
                 fill={act > 0.1 ? color : colorDim}
                 opacity={0.3 + act * 0.7}
                 style={{ transition: "fill 0.4s, opacity 0.4s" }}
               />
               {/* Bright center */}
               <circle
-                cx={node.x} cy={node.y} r={2 + act * 2}
+                cx={node.x} cy={node.y} r={2 + act * (isWinner ? 3 : 2)}
                 fill="#fff"
-                opacity={act * 0.6}
+                opacity={act * (isWinner ? 0.85 : 0.6)}
                 style={{ transition: "r 0.4s, opacity 0.4s" }}
               />
             </g>
           );
-        })
-      )}
+        });
+      })}
 
       {/* Layer labels */}
       {X_POSITIONS.map((x, i) => (

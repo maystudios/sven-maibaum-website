@@ -12,6 +12,7 @@ const recoilImages = [
 ];
 
 const popupImages = [
+  { src: `${base}assets/projects/fab/popup/00.jpg`, alt: "May Popup System – Vorschaubild" },
   { src: `${base}assets/projects/fab/popup/01.jpg`, alt: "May Popup System – HUD Workflow" },
   { src: `${base}assets/projects/fab/popup/02.jpg`, alt: "May Popup System – Widget Blueprint" },
   { src: `${base}assets/projects/fab/popup/03.jpg`, alt: "May Popup System – Example Project Demo" },

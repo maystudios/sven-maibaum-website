@@ -26,31 +26,46 @@ function buildLayers() {
   });
 }
 
-function initWeights() {
+type NetworkParams = {
+  weights: number[][][]; // weights[layer][fromNode][toNode]
+  biases: number[][];    // biases[layer][node] (layers 1..n, index 0 = first hidden)
+};
+
+function initParams(): NetworkParams {
   const weights: number[][][] = [];
+  const biases: number[][] = [];
   for (let l = 0; l < TOPOLOGY.length - 1; l++) {
+    // Xavier-ish initialization: scale by 1/sqrt(fan_in)
+    const scale = 1 / Math.sqrt(TOPOLOGY[l]);
     weights[l] = [];
     for (let i = 0; i < TOPOLOGY[l]; i++) {
       weights[l][i] = [];
       for (let j = 0; j < TOPOLOGY[l + 1]; j++) {
-        weights[l][i][j] = (Math.random() - 0.5) * 2.5;
+        weights[l][i][j] = (Math.random() * 2 - 1) * scale * 2.5;
       }
     }
+    // Bias per neuron in the target layer
+    biases[l] = Array.from({ length: TOPOLOGY[l + 1] }, () => (Math.random() - 0.5) * 0.5);
   }
-  return weights;
+  return { weights, biases };
 }
 
-function forwardPass(inputs: number[], weights: number[][][]) {
+/** Full forward pass: a_j = σ( Σᵢ(aᵢ · wᵢⱼ) + bⱼ ) */
+function forwardPass(inputs: number[], params: NetworkParams) {
   const activations: number[][] = [inputs];
   let current = inputs;
-  for (let l = 0; l < weights.length; l++) {
+  for (let l = 0; l < params.weights.length; l++) {
     const next: number[] = [];
     for (let j = 0; j < TOPOLOGY[l + 1]; j++) {
-      let sum = 0;
+      // Weighted sum: z = Σ(aᵢ · wᵢⱼ)
+      let z = 0;
       for (let i = 0; i < current.length; i++) {
-        sum += current[i] * weights[l][i][j];
+        z += current[i] * params.weights[l][i][j];
       }
-      next.push(sigmoid(sum));
+      // Add bias: z += bⱼ
+      z += params.biases[l][j];
+      // Activation function: a = σ(z)
+      next.push(sigmoid(z));
     }
     activations.push(next);
     current = next;
@@ -65,7 +80,7 @@ const LABELS = ["Input", "Hidden", "Hidden", "Output"];
 
 function NetworkGraph() {
   const layers = buildLayers();
-  const weightsRef = useRef(initWeights());
+  const paramsRef = useRef(initParams());
   const [activations, setActivations] = useState<number[][]>(() => TOPOLOGY.map((c) => Array(c).fill(0)));
   const [phase, setPhase] = useState(0); // 0..1 progress through the forward pass
   const frameRef = useRef(0);
@@ -83,14 +98,14 @@ function NetworkGraph() {
       // New inference at cycle start
       if (cyclePos < 0.02 && phase > 0.9) {
         inputsRef.current = Array.from({ length: TOPOLOGY[0] }, () => Math.random());
-        weightsRef.current = initWeights();
+        paramsRef.current = initParams();
       }
 
       setPhase(cyclePos);
 
       // Compute visible activations based on phase (slow wave propagation)
       const fullAct = inputsRef.current.length > 0
-        ? forwardPass(inputsRef.current, weightsRef.current)
+        ? forwardPass(inputsRef.current, paramsRef.current)
         : TOPOLOGY.map((c) => Array(c).fill(0));
 
       const visible = fullAct.map((layer, l) => {
@@ -145,7 +160,7 @@ function NetworkGraph() {
            Input→Hidden1 = green, Hidden→Hidden = blue, Hidden2→Output = red */}
       {connections.map((c, i) => {
         const srcAct = activations[c.fromLayer]?.[c.fromIdx] ?? 0;
-        const w = Math.abs(weightsRef.current[c.fromLayer]?.[c.fromIdx]?.[c.toIdx] ?? 0);
+        const w = Math.abs(paramsRef.current.weights[c.fromLayer]?.[c.fromIdx]?.[c.toIdx] ?? 0);
         const strength = Math.min(1, srcAct * w * 1.2);
         // Synapse color by connection group
         const synapseColors = ["#22c55e", "#3b82f6", "#ef4444"]; // green, blue, red

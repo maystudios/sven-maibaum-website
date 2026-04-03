@@ -1,4 +1,67 @@
+import { useState } from "react";
 import ProjectShell from "../../components/ProjectShell";
+
+const base = import.meta.env.BASE_URL;
+
+const recoilImages = [
+  { src: `${base}assets/projects/fab/recoil/01.jpg`, alt: "May Simple Recoil – Feature-Overview" },
+  { src: `${base}assets/projects/fab/recoil/02.png`, alt: "May Simple Recoil – Editor Preview" },
+];
+
+const popupImages = [
+  { src: `${base}assets/projects/fab/popup/01.jpg`, alt: "May Popup System – HUD Workflow" },
+  { src: `${base}assets/projects/fab/popup/02.jpg`, alt: "May Popup System – Recoil Integration" },
+  { src: `${base}assets/projects/fab/popup/03.jpg`, alt: "May Popup System – Übersicht" },
+];
+
+type CarouselImage = { src: string; alt: string };
+
+function ImageCarousel({ images }: { images: CarouselImage[] }) {
+  const [index, setIndex] = useState(0);
+
+  const prev = () => setIndex((i) => (i - 1 + images.length) % images.length);
+  const next = () => setIndex((i) => (i + 1) % images.length);
+
+  return (
+    <div className="relative border border-border overflow-hidden select-none">
+      <img
+        src={images[index].src}
+        alt={images[index].alt}
+        className="w-full aspect-video object-cover"
+      />
+
+      {/* Prev / Next */}
+      <button
+        onClick={prev}
+        aria-label="Vorheriges Bild"
+        className="absolute left-2 top-1/2 -translate-y-1/2 bg-canvas/70 hover:bg-canvas/90 text-fg w-9 h-9 flex items-center justify-center text-lg transition-colors duration-200 cursor-pointer"
+      >
+        &#10094;
+      </button>
+      <button
+        onClick={next}
+        aria-label="Nächstes Bild"
+        className="absolute right-2 top-1/2 -translate-y-1/2 bg-canvas/70 hover:bg-canvas/90 text-fg w-9 h-9 flex items-center justify-center text-lg transition-colors duration-200 cursor-pointer"
+      >
+        &#10095;
+      </button>
+
+      {/* Dots */}
+      <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2">
+        {images.map((_, i) => (
+          <button
+            key={i}
+            onClick={() => setIndex(i)}
+            aria-label={`Bild ${i + 1}`}
+            className={`w-2 h-2 rounded-full transition-colors duration-200 cursor-pointer ${
+              i === index ? "bg-fg" : "bg-fg/30"
+            }`}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
 
 export default function ProjectFabStore() {
   return (
@@ -6,7 +69,7 @@ export default function ProjectFabStore() {
       hasSiteHeader
       title="Fab Store"
       subtitle="Plugins und Assets für die Unreal Engine — veröffentlicht auf Epics offiziellem Marketplace."
-      heroImage={`${import.meta.env.BASE_URL}assets/projects/fab/fab-hero.webp`}
+      heroImage={`${base}assets/projects/fab/fab-hero.webp`}
       heroAlt="Fab – Epics offizieller Marketplace für Unreal Engine Assets"
       ctaLabel="Alle Assets auf Fab.com"
       ctaLink="https://www.fab.com/sellers/May-Studios"
@@ -70,28 +133,8 @@ export default function ProjectFabStore() {
             </a>
           </div>
 
-          <div className="lg:w-1/2 flex flex-col gap-4">
-            <figure className="border border-border overflow-hidden relative group h-64 lg:h-auto">
-              <img
-                src="https://media.fab.com/image_previews/gallery_images/ebfbabfc-ffef-4682-8d4a-3c20735a45de/4dd9f875-e3b4-4075-8253-49d2440073c4.jpg"
-                alt="May Simple Recoil – Editor Preview und Recoil-Kurven"
-                className="w-full h-full object-cover"
-              />
-              <figcaption className="absolute bottom-0 left-0 right-0 bg-canvas/80 text-fg text-xs py-2 px-3 text-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                Real-Time Editor Preview mit Recoil-Kurven
-              </figcaption>
-            </figure>
-
-            <figure className="border border-border overflow-hidden h-48 relative group">
-              <img
-                src="https://media.fab.com/image_previews/gallery_images/ebfbabfc-ffef-4682-8d4a-3c20735a45de/74c16797-0625-4eb6-8d6e-ccaad633564b.jpg"
-                alt="May Simple Recoil – Blueprint Integration"
-                className="w-full h-full object-cover object-center"
-              />
-              <figcaption className="absolute bottom-0 left-0 right-0 bg-canvas/80 text-fg text-xs py-2 px-3 text-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                Blueprint-Integration und Konfiguration
-              </figcaption>
-            </figure>
+          <div className="lg:w-1/2">
+            <ImageCarousel images={recoilImages} />
           </div>
         </div>
       </div>
@@ -133,28 +176,8 @@ export default function ProjectFabStore() {
             </a>
           </div>
 
-          <div className="lg:w-1/2 flex flex-col gap-4">
-            <figure className="border border-border overflow-hidden relative group h-64 lg:h-auto">
-              <img
-                src="https://media.fab.com/image_previews/gallery_images/4b723f56-62be-4ddd-8d95-afb5b098697d/da3e4b5b-c732-42dd-afbd-453a900386dc.jpg"
-                alt="May Popup System – Popup und Notification Beispiele"
-                className="w-full h-full object-cover"
-              />
-              <figcaption className="absolute bottom-0 left-0 right-0 bg-canvas/80 text-fg text-xs py-2 px-3 text-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                Popup- und Notification-Beispiele im Dark Theme
-              </figcaption>
-            </figure>
-
-            <figure className="border border-border overflow-hidden h-48 relative group">
-              <img
-                src="https://media.fab.com/image_previews/gallery_images/4b723f56-62be-4ddd-8d95-afb5b098697d/8c6c9c4e-08ba-41d1-af87-771e81f85de3.jpg"
-                alt="May Popup System – Theme-Konfiguration"
-                className="w-full h-full object-cover object-center"
-              />
-              <figcaption className="absolute bottom-0 left-0 right-0 bg-canvas/80 text-fg text-xs py-2 px-3 text-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                Theme-Konfiguration und Settings-Menü
-              </figcaption>
-            </figure>
+          <div className="lg:w-1/2">
+            <ImageCarousel images={popupImages} />
           </div>
         </div>
       </div>

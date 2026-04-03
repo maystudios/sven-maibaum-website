@@ -99,10 +99,10 @@ export const projectCards: ProjectCard[] = [
       "inline-block bg-gradient-to-r from-purple-600 to-pink-500 hover:from-purple-700 hover:to-pink-600 text-white font-medium py-2 px-4 rounded-lg transition duration-300 transform hover:scale-105 text-sm",
   },
   {
-    id: "may-studios",
-    title: "May Studios",
+    id: "ue-assets",
+    title: "Unreal Engine Assets",
     summary:
-      "Professionelle Unreal-Engine-Assets auf Fab.com — Recoil-Systeme, UI-Komponenten und Developer-Tools für Game-Entwickler.",
+      "Professionelle Plugins und Assets auf Fab.com — Recoil-Systeme, UI-Komponenten und Developer-Tools für Game-Entwickler.",
     tags: [
       { label: "Unreal Engine", className: "tech-tag tech-tag-purple" },
       { label: "Fab.com", className: "tech-tag tech-tag-orange" },
@@ -111,7 +111,7 @@ export const projectCards: ProjectCard[] = [
     filters: ["unreal-engine"],
     dataTags: ["unreal-engine", "c++", "blueprints", "marketplace", "plugins"],
     image: "https://placehold.co/600x400/18181b/a1a1aa?text=May+Studios",
-    route: "/projekte/may-studios",
+    route: "/projekte/ue-assets",
     cta: "Mehr anzeigen",
     accent: "text-orange-400",
     buttonClass:

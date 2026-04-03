@@ -73,8 +73,8 @@ const routes = [
     image: DEFAULT_IMAGE,
   },
   {
-    path: '/projekte/may-studios',
-    title: 'May Studios – Unreal Engine Assets auf Fab.com | Sven Maibaum',
+    path: '/projekte/ue-assets',
+    title: 'Unreal Engine Assets – Plugins & Tools auf Fab.com | Sven Maibaum',
     description:
       'Professionelle Unreal-Engine-Plugins und Assets: Recoil-Systeme, Popup-Frameworks und Developer-Tools für Game-Entwickler auf Fab.com.',
     image: DEFAULT_IMAGE,

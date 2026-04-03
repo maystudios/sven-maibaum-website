@@ -88,14 +88,14 @@ const products = [
   },
 ];
 
-export default function ProjectMayStudios() {
+export default function ProjectUeAssets() {
   return (
     <ProjectShell
       hasSiteHeader
-      title="May Studios"
-      subtitle="Professionelle Unreal-Engine-Assets auf Fab.com — Recoil-Systeme, UI-Komponenten und Developer-Tools für Game-Entwickler weltweit."
-      heroImage="https://placehold.co/1200x500/18181b/a1a1aa?text=May+Studios+%E2%80%93+Unreal+Engine+Assets"
-      heroAlt="May Studios – Unreal Engine Assets auf Fab.com"
+      title="Unreal Engine Assets"
+      subtitle="Professionelle Plugins und Asset-Pakete auf Fab.com — Recoil-Systeme, UI-Komponenten und Developer-Tools für Game-Entwickler weltweit."
+      heroImage="https://placehold.co/1200x500/18181b/a1a1aa?text=Unreal+Engine+Assets+%E2%80%93+Fab.com"
+      heroAlt="Unreal Engine Assets auf Fab.com"
       ctaLabel="Zum Fab.com Store"
       ctaLink="https://www.fab.com/sellers/May-Studios"
     >
@@ -117,9 +117,9 @@ export default function ProjectMayStudios() {
       {/* Overview */}
       <div className="grid md:grid-cols-2 gap-12 items-center">
         <div className="bg-surface border border-border p-8 lg:p-10">
-          <h3 className="font-display font-bold text-fg text-lg mb-3">Über May Studios</h3>
+          <h3 className="font-display font-bold text-fg text-lg mb-3">Über den Store</h3>
           <p>
-            <strong>May Studios</strong> entwickelt professionelle Plugins und Asset-Pakete für die{" "}
+            Auf <strong>Fab.com</strong> veröffentliche ich professionelle Plugins und Asset-Pakete für die{" "}
             <strong>Unreal Engine</strong>. Der Fokus liegt auf praxisnahen Developer-Tools, die sich
             nahtlos in bestehende Projekte integrieren lassen — von Gameplay-Mechaniken wie Recoil-Systemen
             bis zu UI-Frameworks für Popups und Notifications.

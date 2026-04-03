@@ -4,28 +4,19 @@ import { publications } from "../data/publications";
 import { fadeInUp, staggerContainer, defaultViewport } from "../lib/animations";
 
 function NetworkGraph() {
-  const layers = [
-    [
-      { x: 40, y: 30 },
-      { x: 40, y: 80 },
-      { x: 40, y: 130 },
-    ],
-    [
-      { x: 110, y: 20 },
-      { x: 110, y: 57 },
-      { x: 110, y: 93 },
-      { x: 110, y: 130 },
-    ],
-    [
-      { x: 180, y: 30 },
-      { x: 180, y: 80 },
-      { x: 180, y: 130 },
-    ],
-    [
-      { x: 250, y: 55 },
-      { x: 250, y: 105 },
-    ],
-  ];
+  // All layers centered around y=90 (midpoint of viewBox height 180)
+  const mid = 90;
+  const gap = 32; // vertical spacing between nodes
+  const xPositions = [40, 110, 180, 250];
+  const nodeCounts = [3, 5, 4, 2];
+
+  const layers = nodeCounts.map((count, l) => {
+    const startY = mid - ((count - 1) * gap) / 2;
+    return Array.from({ length: count }, (_, i) => ({
+      x: xPositions[l],
+      y: startY + i * gap,
+    }));
+  });
 
   const connections: { x1: number; y1: number; x2: number; y2: number }[] = [];
   for (let l = 0; l < layers.length - 1; l++) {
@@ -36,12 +27,22 @@ function NetworkGraph() {
     }
   }
 
+  const labels = ["Input", "Hidden", "Hidden", "Output"];
+
   return (
     <svg
-      viewBox="0 0 290 160"
-      className="w-full max-w-[260px] mx-auto"
+      viewBox="0 0 290 200"
+      className="w-full max-w-[280px] mx-auto"
       aria-hidden="true"
     >
+      <defs>
+        <radialGradient id="nodeGlow">
+          <stop offset="0%" stopColor="var(--sw-accent)" stopOpacity="0.3" />
+          <stop offset="100%" stopColor="var(--sw-accent)" stopOpacity="0" />
+        </radialGradient>
+      </defs>
+
+      {/* Connections */}
       {connections.map((c, i) => (
         <line
           key={`c-${i}`}
@@ -50,19 +51,49 @@ function NetworkGraph() {
           x2={c.x2}
           y2={c.y2}
           stroke="var(--sw-border)"
-          strokeWidth="0.8"
-          opacity="0.5"
+          strokeWidth="0.7"
+          opacity="0.4"
         />
       ))}
+
+      {/* Node glows */}
+      {layers.flat().map((node, i) => (
+        <circle
+          key={`g-${i}`}
+          cx={node.x}
+          cy={node.y}
+          r="14"
+          fill="url(#nodeGlow)"
+        />
+      ))}
+
+      {/* Nodes */}
       {layers.flat().map((node, i) => (
         <circle
           key={`n-${i}`}
           cx={node.x}
           cy={node.y}
-          r="5"
+          r="5.5"
           fill="var(--sw-accent)"
-          opacity="0.7"
+          opacity="0.8"
         />
+      ))}
+
+      {/* Layer labels */}
+      {xPositions.map((x, i) => (
+        <text
+          key={`l-${i}`}
+          x={x}
+          y={190}
+          textAnchor="middle"
+          fontSize="8"
+          fill="var(--sw-muted)"
+          opacity="0.5"
+          fontFamily="'Space Grotesk', sans-serif"
+          letterSpacing="0.5"
+        >
+          {labels[i]}
+        </text>
       ))}
     </svg>
   );

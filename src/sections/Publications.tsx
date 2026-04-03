@@ -83,12 +83,13 @@ const LABELS = ["Input", "Hidden", "Hidden", "Output"];
 function NetworkGraph() {
   const layers = buildLayers();
   const [activations, setActivations] = useState<number[][]>(() => TOPOLOGY.map((c) => Array(c).fill(0)));
-  // Absolute weights for render — updated in the animation loop, not via ref
   const [absWeights, setAbsWeights] = useState<number[][][]>([]);
-  // Per-layer timing envelope (0→1) — drives draw animation uniformly per layer
-  const [envelopes, setEnvelopes] = useState<number[]>(() => Array(TOPOLOGY.length).fill(0));
+  // drawProgress[l]: 0→1 per layer, never reverses (controls synapse draw-in)
+  const [drawProgress, setDrawProgress] = useState<number[]>(() => Array(TOPOLOGY.length).fill(0));
+  // Global fade alpha: 1 during active, 0 during fade-out (controls opacity only)
+  const [fadeAlpha, setFadeAlpha] = useState(0);
   const frameRef = useRef(0);
-  // Persist animation state across Strict Mode re-mounts
+
   const simRef = useRef({
     params: null as NetworkParams | null,
     inputs: null as number[] | null,
@@ -100,7 +101,7 @@ function NetworkGraph() {
     let running = true;
     const sim = simRef.current;
 
-    // Generate params once, reuse on Strict Mode re-mount
+    // Weights are generated ONCE and never change
     if (!sim.params) {
       sim.params = initParams();
       sim.inputs = Array.from({ length: TOPOLOGY[0] }, () => Math.random());
@@ -109,16 +110,21 @@ function NetworkGraph() {
 
     let needsWeightSync = true;
 
+    // Quintic ease-in-out
+    const ease5 = (t: number) => {
+      if (t < 0.5) return 16 * t * t * t * t * t;
+      const u = 1 - t;
+      return 1 - 16 * u * u * u * u * u;
+    };
+
     function tick() {
       if (!running) return;
       const elapsed = performance.now() - sim.start;
       const cyclePos = (elapsed % CYCLE_MS) / CYCLE_MS;
 
-      // Detect cycle wrap-around: previous was near end, current is near start
-      if (cyclePos < 0.05 && sim.prevCycle > 0.85) {
-        sim.params = initParams();
+      // New inputs only — weights stay the same
+      if (cyclePos < 0.03 && sim.prevCycle > 0.9) {
         sim.inputs = Array.from({ length: TOPOLOGY[0] }, () => Math.random());
-        needsWeightSync = true;
       }
       sim.prevCycle = cyclePos;
 
@@ -127,45 +133,39 @@ function NetworkGraph() {
         setAbsWeights(sim.params!.weights.map((layer) => layer.map((row) => row.map(Math.abs))));
       }
 
-      // Full forward pass: a_j = sigmoid( sum(a_i * w_ij) + b_j )
       const fullAct = forwardPass(sim.inputs!, sim.params!);
 
-      // Quintic ease-in-out: smoother than smoothstep, no harsh starts/stops
-      const ease5 = (t: number) => {
-        if (t < 0.5) return 16 * t * t * t * t * t;
-        const u = 1 - t;
-        return 1 - 16 * u * u * u * u * u;
-      };
-
-      // Phase layout with overlap and hold:
-      //   0.00–0.15  Input eases in
-      //   0.08–0.30  Hidden 1 eases in
-      //   0.22–0.48  Hidden 2 eases in
-      //   0.38–0.62  Output eases in
-      //   0.62–0.78  Hold (everything fully lit)
-      //   0.78–1.00  Global fade-out
-      const layerStarts = [0.0, 0.08, 0.22, 0.38];
-      const layerEnds   = [0.15, 0.30, 0.48, 0.62];
-
-      // Global fade-out in the last ~22% of the cycle
-      const fadeOut = cyclePos > 0.78
-        ? 1 - ease5((cyclePos - 0.78) / 0.22)
-        : 1;
-
-      // Per-layer envelope (0→1): controls timing uniformly for all neurons in a layer
-      const envelopes = TOPOLOGY.map((_, l) => {
-        const t = Math.max(0, Math.min(1,
-          (cyclePos - layerStarts[l]) / (layerEnds[l] - layerStarts[l])
-        ));
-        return ease5(t) * fadeOut;
+      // Flowing wave — each layer starts right when the previous finishes
+      //   0.00–0.12  Layer 0 (Input)
+      //   0.12–0.24  Layer 1 (Hidden 1)
+      //   0.24–0.36  Layer 2 (Hidden 2)
+      //   0.36–0.48  Layer 3 (Output)
+      //   0.48–0.72  Hold
+      //   0.72–0.92  Fade out (opacity only, lines stay drawn)
+      //   0.92–1.00  Dark pause before next cycle
+      const waveLen = 0.12;
+      const draw = TOPOLOGY.map((_, l) => {
+        const t = Math.max(0, Math.min(1, (cyclePos - l * waveLen) / waveLen));
+        return ease5(t);
       });
 
+      // Fade alpha: 1 during wave+hold, eases to 0 during fade-out
+      let alpha: number;
+      if (cyclePos < 0.72) {
+        alpha = 1;
+      } else if (cyclePos < 0.92) {
+        alpha = 1 - ease5((cyclePos - 0.72) / 0.20);
+      } else {
+        alpha = 0;
+      }
+
       const visible = fullAct.map((layer, l) =>
-        layer.map((a) => a * envelopes[l])
+        layer.map((a) => a * draw[l] * alpha)
       );
 
       setActivations(visible);
-      setEnvelopes(envelopes);
+      setDrawProgress(draw);
+      setFadeAlpha(alpha);
       frameRef.current = requestAnimationFrame(tick);
     }
 
@@ -206,16 +206,14 @@ function NetworkGraph() {
         const srcAct = activations[c.fromLayer]?.[c.fromIdx] ?? 0;
         const w = absWeights[c.fromLayer]?.[c.fromIdx]?.[c.toIdx] ?? 0;
         const strength = Math.min(1, srcAct * w * 1.2);
-        // Synapse color by connection group
         const synapseColors = ["#22c55e", "#3b82f6", "#ef4444"];
         const synapseColor = synapseColors[c.fromLayer];
-        const baseOpacity = 0.08;
-        const activeOpacity = baseOpacity + strength * 0.55;
-        // Draw progress driven by source layer envelope — all connections
-        // in the same group draw simultaneously from source to target
+        // Draw-in from source to target (never reverses)
         const len = Math.sqrt((c.x2 - c.x1) ** 2 + (c.y2 - c.y1) ** 2);
-        const drawProgress = envelopes[c.fromLayer] ?? 0;
-        const dashOffset = len * (1 - drawProgress);
+        const draw = drawProgress[c.fromLayer] ?? 0;
+        const dashOffset = len * (1 - draw);
+        // Opacity: base + strength, multiplied by fadeAlpha for fade-out
+        const activeOpacity = (0.08 + strength * 0.55) * fadeAlpha;
         return (
           <line
             key={`c-${i}`}
@@ -225,7 +223,6 @@ function NetworkGraph() {
             opacity={activeOpacity}
             strokeDasharray={len}
             strokeDashoffset={dashOffset}
-            style={{ transition: "opacity 0.5s cubic-bezier(.4,0,.2,1), stroke 0.5s cubic-bezier(.4,0,.2,1), stroke-width 0.5s cubic-bezier(.4,0,.2,1)" }}
           />
         );
       })}
@@ -253,21 +250,18 @@ function NetworkGraph() {
                 cx={node.x} cy={node.y} r={glowR}
                 fill={color}
                 opacity={act * (isWinner ? 0.4 : 0.25)}
-                style={{ transition: "r 0.6s cubic-bezier(.4,0,.2,1), opacity 0.6s cubic-bezier(.4,0,.2,1)" }}
               />
               {/* Node body */}
               <circle
                 cx={node.x} cy={node.y} r={nodeR}
                 fill={act > 0.1 ? color : colorDim}
-                opacity={0.3 + act * 0.7}
-                style={{ transition: "fill 0.6s cubic-bezier(.4,0,.2,1), opacity 0.6s cubic-bezier(.4,0,.2,1)" }}
+                opacity={(0.3 + act * 0.7) * Math.max(fadeAlpha, 0.15)}
               />
               {/* Bright center */}
               <circle
                 cx={node.x} cy={node.y} r={2 + act * (isWinner ? 3 : 2)}
                 fill="#fff"
                 opacity={act * (isWinner ? 0.85 : 0.6)}
-                style={{ transition: "r 0.6s cubic-bezier(.4,0,.2,1), opacity 0.6s cubic-bezier(.4,0,.2,1)" }}
               />
             </g>
           );

@@ -1,98 +1,215 @@
+import { useEffect, useRef, useState } from "react";
 import { motion } from "motion/react";
 import SectionHeading from "../components/SectionHeading";
 import { publications } from "../data/publications";
 import { fadeInUp, staggerContainer, defaultViewport } from "../lib/animations";
 
-function NetworkGraph() {
-  // All layers centered around y=90 (midpoint of viewBox height 180)
-  const mid = 90;
-  const gap = 32; // vertical spacing between nodes
-  const xPositions = [40, 110, 180, 250];
-  const nodeCounts = [3, 5, 4, 2];
+// ─── Neural network simulation ──────────────────────────────────────────────
 
-  const layers = nodeCounts.map((count, l) => {
-    const startY = mid - ((count - 1) * gap) / 2;
+const TOPOLOGY = [3, 5, 4, 2];
+const X_POSITIONS = [40, 120, 200, 280];
+const MID_Y = 95;
+const GAP_Y = 30;
+const CYCLE_MS = 6000; // one full forward pass
+
+function sigmoid(x: number) {
+  return 1 / (1 + Math.exp(-x));
+}
+
+function buildLayers() {
+  return TOPOLOGY.map((count, l) => {
+    const startY = MID_Y - ((count - 1) * GAP_Y) / 2;
     return Array.from({ length: count }, (_, i) => ({
-      x: xPositions[l],
-      y: startY + i * gap,
+      x: X_POSITIONS[l],
+      y: startY + i * GAP_Y,
     }));
   });
+}
 
-  const connections: { x1: number; y1: number; x2: number; y2: number }[] = [];
+function initWeights() {
+  const weights: number[][][] = [];
+  for (let l = 0; l < TOPOLOGY.length - 1; l++) {
+    weights[l] = [];
+    for (let i = 0; i < TOPOLOGY[l]; i++) {
+      weights[l][i] = [];
+      for (let j = 0; j < TOPOLOGY[l + 1]; j++) {
+        weights[l][i][j] = (Math.random() - 0.5) * 2.5;
+      }
+    }
+  }
+  return weights;
+}
+
+function forwardPass(inputs: number[], weights: number[][][]) {
+  const activations: number[][] = [inputs];
+  let current = inputs;
+  for (let l = 0; l < weights.length; l++) {
+    const next: number[] = [];
+    for (let j = 0; j < TOPOLOGY[l + 1]; j++) {
+      let sum = 0;
+      for (let i = 0; i < current.length; i++) {
+        sum += current[i] * weights[l][i][j];
+      }
+      next.push(sigmoid(sum));
+    }
+    activations.push(next);
+    current = next;
+  }
+  return activations;
+}
+
+// Layer colors: input=green, hidden=blue, output=red
+const LAYER_COLORS = ["#22c55e", "#3b82f6", "#3b82f6", "#ef4444"];
+const LAYER_COLORS_DIM = ["#166534", "#1e3a5f", "#1e3a5f", "#7f1d1d"];
+const LABELS = ["Input", "Hidden", "Hidden", "Output"];
+
+function NetworkGraph() {
+  const layers = buildLayers();
+  const weightsRef = useRef(initWeights());
+  const [activations, setActivations] = useState<number[][]>(() => TOPOLOGY.map((c) => Array(c).fill(0)));
+  const [phase, setPhase] = useState(0); // 0..1 progress through the forward pass
+  const frameRef = useRef(0);
+  const startRef = useRef(Date.now());
+  const inputsRef = useRef<number[]>([]);
+
+  useEffect(() => {
+    let running = true;
+
+    function tick() {
+      if (!running) return;
+      const elapsed = Date.now() - startRef.current;
+      const cyclePos = (elapsed % CYCLE_MS) / CYCLE_MS;
+
+      // New inference at cycle start
+      if (cyclePos < 0.02 && phase > 0.9) {
+        inputsRef.current = Array.from({ length: TOPOLOGY[0] }, () => Math.random());
+        weightsRef.current = initWeights();
+      }
+
+      setPhase(cyclePos);
+
+      // Compute visible activations based on phase (slow wave propagation)
+      const fullAct = inputsRef.current.length > 0
+        ? forwardPass(inputsRef.current, weightsRef.current)
+        : TOPOLOGY.map((c) => Array(c).fill(0));
+
+      const visible = fullAct.map((layer, l) => {
+        // Each layer activates at a different phase offset
+        const layerStart = l * 0.22;
+        const layerEnd = layerStart + 0.25;
+        const t = Math.max(0, Math.min(1, (cyclePos - layerStart) / (layerEnd - layerStart)));
+        // Smooth easing
+        const ease = t * t * (3 - 2 * t);
+        return layer.map((a) => a * ease);
+      });
+
+      setActivations(visible);
+      frameRef.current = requestAnimationFrame(tick);
+    }
+
+    // Kick off first inputs
+    inputsRef.current = Array.from({ length: TOPOLOGY[0] }, () => Math.random());
+    startRef.current = Date.now();
+    frameRef.current = requestAnimationFrame(tick);
+
+    return () => {
+      running = false;
+      cancelAnimationFrame(frameRef.current);
+    };
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Build connection data with activation info
+  const connections: {
+    x1: number; y1: number; x2: number; y2: number;
+    fromLayer: number; fromIdx: number; toIdx: number;
+  }[] = [];
   for (let l = 0; l < layers.length - 1; l++) {
-    for (const from of layers[l]) {
-      for (const to of layers[l + 1]) {
-        connections.push({ x1: from.x, y1: from.y, x2: to.x, y2: to.y });
+    for (let i = 0; i < layers[l].length; i++) {
+      for (let j = 0; j < layers[l + 1].length; j++) {
+        connections.push({
+          x1: layers[l][i].x, y1: layers[l][i].y,
+          x2: layers[l + 1][j].x, y2: layers[l + 1][j].y,
+          fromLayer: l, fromIdx: i, toIdx: j,
+        });
       }
     }
   }
 
-  const labels = ["Input", "Hidden", "Hidden", "Output"];
-
   return (
     <svg
-      viewBox="0 0 290 200"
-      className="w-full max-w-[280px] mx-auto"
+      viewBox="0 0 320 210"
+      className="w-full max-w-[300px] mx-auto"
       aria-hidden="true"
     >
-      <defs>
-        <radialGradient id="nodeGlow">
-          <stop offset="0%" stopColor="var(--sw-accent)" stopOpacity="0.3" />
-          <stop offset="100%" stopColor="var(--sw-accent)" stopOpacity="0" />
-        </radialGradient>
-      </defs>
+      {/* Connections — brightness = source activation * |weight| */}
+      {connections.map((c, i) => {
+        const srcAct = activations[c.fromLayer]?.[c.fromIdx] ?? 0;
+        const w = Math.abs(weightsRef.current[c.fromLayer]?.[c.fromIdx]?.[c.toIdx] ?? 0);
+        const strength = Math.min(1, srcAct * w * 1.2);
+        const fromColor = LAYER_COLORS[c.fromLayer];
+        const toColor = LAYER_COLORS[c.fromLayer + 1];
+        const baseOpacity = 0.08;
+        const activeOpacity = baseOpacity + strength * 0.55;
+        return (
+          <line
+            key={`c-${i}`}
+            x1={c.x1} y1={c.y1} x2={c.x2} y2={c.y2}
+            stroke={strength > 0.15 ? (strength > 0.5 ? toColor : fromColor) : "var(--sw-border)"}
+            strokeWidth={0.6 + strength * 1.4}
+            opacity={activeOpacity}
+            style={{ transition: "opacity 0.3s, stroke 0.3s, stroke-width 0.3s" }}
+          />
+        );
+      })}
 
-      {/* Connections */}
-      {connections.map((c, i) => (
-        <line
-          key={`c-${i}`}
-          x1={c.x1}
-          y1={c.y1}
-          x2={c.x2}
-          y2={c.y2}
-          stroke="var(--sw-border)"
-          strokeWidth="0.7"
-          opacity="0.4"
-        />
-      ))}
-
-      {/* Node glows */}
-      {layers.flat().map((node, i) => (
-        <circle
-          key={`g-${i}`}
-          cx={node.x}
-          cy={node.y}
-          r="14"
-          fill="url(#nodeGlow)"
-        />
-      ))}
-
-      {/* Nodes */}
-      {layers.flat().map((node, i) => (
-        <circle
-          key={`n-${i}`}
-          cx={node.x}
-          cy={node.y}
-          r="5.5"
-          fill="var(--sw-accent)"
-          opacity="0.8"
-        />
-      ))}
+      {/* Nodes per layer */}
+      {layers.map((layer, l) =>
+        layer.map((node, i) => {
+          const act = activations[l]?.[i] ?? 0;
+          const color = LAYER_COLORS[l];
+          const colorDim = LAYER_COLORS_DIM[l];
+          const glowR = 12 + act * 8;
+          return (
+            <g key={`n-${l}-${i}`}>
+              {/* Glow */}
+              <circle
+                cx={node.x} cy={node.y} r={glowR}
+                fill={color}
+                opacity={act * 0.25}
+                style={{ transition: "r 0.4s, opacity 0.4s" }}
+              />
+              {/* Node body */}
+              <circle
+                cx={node.x} cy={node.y} r="6"
+                fill={act > 0.1 ? color : colorDim}
+                opacity={0.3 + act * 0.7}
+                style={{ transition: "fill 0.4s, opacity 0.4s" }}
+              />
+              {/* Bright center */}
+              <circle
+                cx={node.x} cy={node.y} r={2 + act * 2}
+                fill="#fff"
+                opacity={act * 0.6}
+                style={{ transition: "r 0.4s, opacity 0.4s" }}
+              />
+            </g>
+          );
+        })
+      )}
 
       {/* Layer labels */}
-      {xPositions.map((x, i) => (
+      {X_POSITIONS.map((x, i) => (
         <text
           key={`l-${i}`}
-          x={x}
-          y={190}
+          x={x} y={200}
           textAnchor="middle"
           fontSize="8"
-          fill="var(--sw-muted)"
+          fill={LAYER_COLORS[i]}
           opacity="0.5"
           fontFamily="'Space Grotesk', sans-serif"
           letterSpacing="0.5"
         >
-          {labels[i]}
+          {LABELS[i]}
         </text>
       ))}
     </svg>

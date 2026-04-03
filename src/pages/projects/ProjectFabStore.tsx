@@ -88,14 +88,14 @@ const products = [
   },
 ];
 
-export default function ProjectUeAssets() {
+export default function ProjectFabStore() {
   return (
     <ProjectShell
       hasSiteHeader
-      title="Unreal Engine Assets"
-      subtitle="Professionelle Plugins und Asset-Pakete auf Fab.com — Recoil-Systeme, UI-Komponenten und Developer-Tools für Game-Entwickler weltweit."
-      heroImage="https://placehold.co/1200x500/18181b/a1a1aa?text=Unreal+Engine+Assets+%E2%80%93+Fab.com"
-      heroAlt="Unreal Engine Assets auf Fab.com"
+      title="Fab Store"
+      subtitle="Professionelle Unreal-Engine-Plugins und Assets auf Epics offiziellem Marketplace — Recoil-Systeme, UI-Komponenten und Developer-Tools."
+      heroImage={`${import.meta.env.BASE_URL}assets/projects/fab/fab-hero.webp`}
+      heroAlt="Fab – Epics offizieller Marketplace für Unreal Engine Assets"
       ctaLabel="Zum Fab.com Store"
       ctaLink="https://www.fab.com/sellers/May-Studios"
     >

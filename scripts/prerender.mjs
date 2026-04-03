@@ -73,11 +73,11 @@ const routes = [
     image: DEFAULT_IMAGE,
   },
   {
-    path: '/projekte/ue-assets',
-    title: 'Unreal Engine Assets – Plugins & Tools auf Fab.com | Sven Maibaum',
+    path: '/projekte/fab-store',
+    title: 'Fab Store – Unreal Engine Plugins & Assets | Sven Maibaum',
     description:
-      'Professionelle Unreal-Engine-Plugins und Assets: Recoil-Systeme, Popup-Frameworks und Developer-Tools für Game-Entwickler auf Fab.com.',
-    image: DEFAULT_IMAGE,
+      'Professionelle Unreal-Engine-Plugins und Assets auf Fab.com: Recoil-Systeme, Popup-Frameworks und Developer-Tools für Game-Entwickler.',
+    image: `${BASE_URL}/assets/projects/fab/fab-hero.webp`,
   },
   {
     path: '/impressum',

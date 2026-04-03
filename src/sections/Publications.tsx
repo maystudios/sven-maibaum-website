@@ -86,8 +86,8 @@ function NetworkGraph() {
   const [absWeights, setAbsWeights] = useState<number[][][]>([]);
   // drawProgress[l]: 0→1 per layer, never reverses (controls synapse draw-in)
   const [drawProgress, setDrawProgress] = useState<number[]>(() => Array(TOPOLOGY.length).fill(0));
-  // Global fade alpha: 1 during active, 0 during fade-out (controls opacity only)
   const [fadeAlpha, setFadeAlpha] = useState(0);
+  const [bounce, setBounce] = useState(1);
   const frameRef = useRef(0);
 
   const simRef = useRef({
@@ -110,19 +110,31 @@ function NetworkGraph() {
 
     let needsWeightSync = true;
 
-    // Quintic ease-in-out
+    // Easing helpers
     const ease5 = (t: number) => {
       if (t < 0.5) return 16 * t * t * t * t * t;
       const u = 1 - t;
       return 1 - 16 * u * u * u * u * u;
     };
+    // Elastic overshoot for the winner bounce
+    const elasticOut = (t: number) => {
+      if (t === 0 || t === 1) return t;
+      return Math.pow(2, -10 * t) * Math.sin((t - 0.075) * (2 * Math.PI) / 0.3) + 1;
+    };
+
+    // Continuous wave: waveX travels from first to last layer x-position
+    const xMin = X_POSITIONS[0];
+    const xMax = X_POSITIONS[X_POSITIONS.length - 1];
+    const xRange = xMax - xMin;
+    const spread = xRange * 0.35; // wide spread for natural overlap
+    const MIN_ALPHA = 0.12; // never fully dark — soft cross-fade
 
     function tick() {
       if (!running) return;
       const elapsed = performance.now() - sim.start;
       const cyclePos = (elapsed % CYCLE_MS) / CYCLE_MS;
 
-      // New inputs only — weights stay the same
+      // New inputs at cycle boundary
       if (cyclePos < 0.03 && sim.prevCycle > 0.9) {
         sim.inputs = Array.from({ length: TOPOLOGY[0] }, () => Math.random());
       }
@@ -135,37 +147,51 @@ function NetworkGraph() {
 
       const fullAct = forwardPass(sim.inputs!, sim.params!);
 
-      // Flowing wave — each layer starts right when the previous finishes
-      //   0.00–0.12  Layer 0 (Input)
-      //   0.12–0.24  Layer 1 (Hidden 1)
-      //   0.24–0.36  Layer 2 (Hidden 2)
-      //   0.36–0.48  Layer 3 (Output)
-      //   0.48–0.72  Hold
-      //   0.72–0.92  Fade out (opacity only, lines stay drawn)
-      //   0.92–1.00  Dark pause before next cycle
-      const waveLen = 0.12;
-      const draw = TOPOLOGY.map((_, l) => {
-        const t = Math.max(0, Math.min(1, (cyclePos - l * waveLen) / waveLen));
-        return ease5(t);
-      });
+      // Timeline:
+      //   0.00–0.50  Wave sweeps left→right (waveX from xMin-spread to xMax+spread)
+      //   0.50–0.70  Hold (everything at full brightness)
+      //   0.70–0.95  Gentle fade (to MIN_ALPHA, never 0)
+      //   0.95–1.00  Dim, new inputs arrive smoothly
 
-      // Fade alpha: 1 during wave+hold, eases to 0 during fade-out
-      let alpha: number;
-      if (cyclePos < 0.72) {
-        alpha = 1;
-      } else if (cyclePos < 0.92) {
-        alpha = 1 - ease5((cyclePos - 0.72) / 0.20);
+      // Wave front position
+      let waveX: number;
+      if (cyclePos < 0.50) {
+        const wt = ease5(cyclePos / 0.50);
+        waveX = (xMin - spread) + (xRange + spread * 2) * wt;
       } else {
-        alpha = 0;
+        waveX = xMax + spread; // wave has passed everything
       }
 
+      // Per-layer draw: how far the wave front has passed each layer's x
+      const draw = X_POSITIONS.map((x) => {
+        const raw = (waveX - x + spread * 0.5) / spread;
+        return Math.max(0, Math.min(1, ease5(Math.max(0, Math.min(1, raw)))));
+      });
+
+      // Brightness envelope: smooth fade, never fully off
+      let brightness: number;
+      if (cyclePos < 0.70) {
+        brightness = 1;
+      } else if (cyclePos < 0.95) {
+        brightness = MIN_ALPHA + (1 - MIN_ALPHA) * (1 - ease5((cyclePos - 0.70) / 0.25));
+      } else {
+        // Gentle ramp back up for next cycle
+        const rampT = (cyclePos - 0.95) / 0.05;
+        brightness = MIN_ALPHA + rampT * (0.3 - MIN_ALPHA);
+      }
+
+      // Winner bounce: elastic overshoot when output layer fully activates
+      const outputDraw = draw[draw.length - 1];
+      const bounce = outputDraw > 0.95 ? elasticOut(Math.min(1, (outputDraw - 0.95) / 0.05 + (cyclePos < 0.55 ? (cyclePos - 0.45) / 0.10 : 1))) : 1;
+
       const visible = fullAct.map((layer, l) =>
-        layer.map((a) => a * draw[l] * alpha)
+        layer.map((a) => a * draw[l] * brightness)
       );
 
       setActivations(visible);
       setDrawProgress(draw);
-      setFadeAlpha(alpha);
+      setFadeAlpha(brightness);
+      setBounce(bounce);
       frameRef.current = requestAnimationFrame(tick);
     }
 
@@ -241,25 +267,27 @@ function NetworkGraph() {
           const isWinner = l === outputLayer && i === winnerIdx;
           const color = isWinner ? WINNER_COLOR : LAYER_COLORS[l];
           const colorDim = isWinner ? WINNER_COLOR_DIM : LAYER_COLORS_DIM[l];
-          const nodeR = isWinner ? 7 : 6;
-          const glowR = (isWinner ? 16 : 12) + act * 8;
+          // Bounce: winner node scales up with elastic overshoot
+          const b = isWinner ? bounce : 1;
+          const nodeR = (isWinner ? 7 : 6) * b;
+          const glowR = ((isWinner ? 18 : 12) + act * 8) * b;
           return (
             <g key={`n-${l}-${i}`}>
               {/* Glow */}
               <circle
                 cx={node.x} cy={node.y} r={glowR}
                 fill={color}
-                opacity={act * (isWinner ? 0.4 : 0.25)}
+                opacity={act * (isWinner ? 0.45 : 0.25)}
               />
-              {/* Node body */}
+              {/* Node body — always slightly visible via fadeAlpha min */}
               <circle
                 cx={node.x} cy={node.y} r={nodeR}
                 fill={act > 0.1 ? color : colorDim}
-                opacity={(0.3 + act * 0.7) * Math.max(fadeAlpha, 0.15)}
+                opacity={0.3 + act * 0.7}
               />
               {/* Bright center */}
               <circle
-                cx={node.x} cy={node.y} r={2 + act * (isWinner ? 3 : 2)}
+                cx={node.x} cy={node.y} r={(2 + act * (isWinner ? 3 : 2)) * b}
                 fill="#fff"
                 opacity={act * (isWinner ? 0.85 : 0.6)}
               />

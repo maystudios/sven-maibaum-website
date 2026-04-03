@@ -15,8 +15,8 @@ export default function Contact() {
           >
             <SectionHeading eyebrow="Kontakt" title="Nehmen Sie Kontakt auf" align="left" className="mb-8" />
             <p className="swiss-body mb-10 max-w-md">
-              Ich freue mich auf Ihre Anfrage! Füllen Sie einfach das Formular
-              aus oder kontaktieren Sie mich direkt.
+              Ich freue mich auf Ihre Anfrage! Schreiben Sie mir einfach
+              eine E-Mail oder kontaktieren Sie mich über die sozialen Netzwerke.
             </p>
 
             <nav className="space-y-4" aria-label="Kontakt-Links">
@@ -66,69 +66,34 @@ export default function Contact() {
             </nav>
           </motion.div>
 
-          {/* Right column – form */}
+          {/* Right column – email CTA */}
           <motion.div
             initial={{ opacity: 0, x: 16 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, amount: 0.3 }}
             transition={{ duration: 0.5, ease: "easeOut", delay: 0.1 }}
+            className="flex flex-col items-center justify-center rounded-2xl border border-border bg-surface p-10 md:p-14 text-center"
           >
-            <form
-              action="https://formspree.io/f/xvgrpazj"
-              className="fs-form"
-              target="_top"
-              method="POST"
+            <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-brand/10">
+              <svg className="h-8 w-8 text-brand" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24" aria-hidden="true">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+              </svg>
+            </div>
+            <h3 className="text-xl font-semibold text-fg mb-2">E-Mail schreiben</h3>
+            <p className="swiss-body mb-8 max-w-sm">
+              Klicken Sie auf den Button, um mir direkt eine E-Mail zu senden.
+            </p>
+            <a
+              href="mailto:contact@sven-maibaum.com?subject=Kontaktanfrage%20%E2%80%93%20sven-maibaum.com"
+              className="inline-flex items-center gap-2 rounded-lg bg-brand px-8 py-3.5 text-base font-medium text-white shadow-glow transition-all hover:brightness-110 active:scale-[0.97]"
+              aria-label="E-Mail an Sven Maibaum senden"
             >
-              <div className="fs-field">
-                <label className="fs-label" htmlFor="name">
-                  Ihr Name
-                </label>
-                <input
-                  className="fs-input"
-                  id="name"
-                  name="name"
-                  type="text"
-                  placeholder="Max Mustermann"
-                  required
-                />
-              </div>
-              <div className="fs-field">
-                <label className="fs-label" htmlFor="email">
-                  Ihre E-Mail
-                </label>
-                <input
-                  className="fs-input"
-                  id="email"
-                  name="email"
-                  type="email"
-                  placeholder="max.mustermann@example.com"
-                  required
-                />
-                <p className="fs-description">
-                  Damit ich Ihnen per E-Mail antworten kann.
-                </p>
-              </div>
-              <div className="fs-field">
-                <label className="fs-label" htmlFor="message">
-                  Ihre Nachricht
-                </label>
-                <textarea
-                  className="fs-textarea"
-                  id="message"
-                  name="message"
-                  placeholder="Ihre Anfrage..."
-                  required
-                />
-                <p className="fs-description">
-                  Was möchten Sie besprechen?
-                </p>
-              </div>
-              <div className="fs-button-group">
-                <button className="fs-button" type="submit">
-                  Nachricht Senden
-                </button>
-              </div>
-            </form>
+              <svg className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" aria-hidden="true">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
+              </svg>
+              Nachricht senden
+            </a>
+            <p className="mt-4 text-sm text-muted">contact@sven-maibaum.com</p>
           </motion.div>
         </div>
       </div>

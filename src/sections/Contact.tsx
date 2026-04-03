@@ -122,26 +122,26 @@ export default function Contact() {
                 className="grid gap-6"
               >
                 <div className="flex flex-col gap-2">
-                  <label className="text-xs font-medium uppercase tracking-wider text-muted" htmlFor="user_name">
+                  <label className="text-xs font-medium uppercase tracking-wider text-muted" htmlFor="name">
                     Ihr Name
                   </label>
                   <input
                     className="h-12 rounded-md border border-border bg-surface px-4 text-[0.9375rem] text-fg placeholder:text-muted/50 transition-colors focus:border-brand focus:outline-none"
-                    id="user_name"
-                    name="user_name"
+                    id="name"
+                    name="name"
                     type="text"
                     placeholder="Max Mustermann"
                     required
                   />
                 </div>
                 <div className="flex flex-col gap-2">
-                  <label className="text-xs font-medium uppercase tracking-wider text-muted" htmlFor="user_email">
+                  <label className="text-xs font-medium uppercase tracking-wider text-muted" htmlFor="email">
                     Ihre E-Mail
                   </label>
                   <input
                     className="h-12 rounded-md border border-border bg-surface px-4 text-[0.9375rem] text-fg placeholder:text-muted/50 transition-colors focus:border-brand focus:outline-none"
-                    id="user_email"
-                    name="user_email"
+                    id="email"
+                    name="email"
                     type="email"
                     placeholder="max.mustermann@example.com"
                     required

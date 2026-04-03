@@ -188,10 +188,13 @@ function NetworkGraph() {
         const w = absWeights[c.fromLayer]?.[c.fromIdx]?.[c.toIdx] ?? 0;
         const strength = Math.min(1, srcAct * w * 1.2);
         // Synapse color by connection group
-        const synapseColors = ["#22c55e", "#3b82f6", "#ef4444"]; // green, blue, red
+        const synapseColors = ["#22c55e", "#3b82f6", "#ef4444"];
         const synapseColor = synapseColors[c.fromLayer];
         const baseOpacity = 0.08;
         const activeOpacity = baseOpacity + strength * 0.55;
+        // Line length for stroke-dash draw effect
+        const len = Math.sqrt((c.x2 - c.x1) ** 2 + (c.y2 - c.y1) ** 2);
+        const dashOffset = len * (1 - strength);
         return (
           <line
             key={`c-${i}`}
@@ -199,7 +202,9 @@ function NetworkGraph() {
             stroke={strength > 0.1 ? synapseColor : "var(--sw-border)"}
             strokeWidth={0.6 + strength * 1.4}
             opacity={activeOpacity}
-            style={{ transition: "opacity 0.5s cubic-bezier(.4,0,.2,1), stroke 0.5s cubic-bezier(.4,0,.2,1), stroke-width 0.5s cubic-bezier(.4,0,.2,1)" }}
+            strokeDasharray={len}
+            strokeDashoffset={dashOffset}
+            style={{ transition: "opacity 0.5s cubic-bezier(.4,0,.2,1), stroke 0.5s cubic-bezier(.4,0,.2,1), stroke-width 0.5s cubic-bezier(.4,0,.2,1), stroke-dashoffset 0.6s cubic-bezier(.4,0,.2,1)" }}
           />
         );
       })}

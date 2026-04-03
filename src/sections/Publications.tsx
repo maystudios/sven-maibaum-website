@@ -80,41 +80,46 @@ const LABELS = ["Input", "Hidden", "Hidden", "Output"];
 
 function NetworkGraph() {
   const layers = buildLayers();
-  const paramsRef = useRef(initParams());
   const [activations, setActivations] = useState<number[][]>(() => TOPOLOGY.map((c) => Array(c).fill(0)));
-  const [phase, setPhase] = useState(0); // 0..1 progress through the forward pass
+  // Absolute weights for render — updated in the animation loop, not via ref
+  const [absWeights, setAbsWeights] = useState<number[][][]>([]);
   const frameRef = useRef(0);
-  const startRef = useRef(Date.now());
-  const inputsRef = useRef<number[]>([]);
 
   useEffect(() => {
     let running = true;
+    let params = initParams();
+    let inputs = Array.from({ length: TOPOLOGY[0] }, () => Math.random());
+    let prevCycle = 0;
+    let weightsChanged = true;
+    const start = performance.now();
 
     function tick() {
       if (!running) return;
-      const elapsed = Date.now() - startRef.current;
+      const elapsed = performance.now() - start;
       const cyclePos = (elapsed % CYCLE_MS) / CYCLE_MS;
 
-      // New inference at cycle start
-      if (cyclePos < 0.02 && phase > 0.9) {
-        inputsRef.current = Array.from({ length: TOPOLOGY[0] }, () => Math.random());
-        paramsRef.current = initParams();
+      // Detect cycle wrap-around: previous was near end, current is near start
+      if (cyclePos < 0.05 && prevCycle > 0.85) {
+        params = initParams();
+        inputs = Array.from({ length: TOPOLOGY[0] }, () => Math.random());
+        weightsChanged = true;
+      }
+      prevCycle = cyclePos;
+
+      if (weightsChanged) {
+        weightsChanged = false;
+        setAbsWeights(params.weights.map((layer) => layer.map((row) => row.map(Math.abs))));
       }
 
-      setPhase(cyclePos);
+      // Full forward pass: a_j = sigmoid( sum(a_i * w_ij) + b_j )
+      const fullAct = forwardPass(inputs, params);
 
-      // Compute visible activations based on phase (slow wave propagation)
-      const fullAct = inputsRef.current.length > 0
-        ? forwardPass(inputsRef.current, paramsRef.current)
-        : TOPOLOGY.map((c) => Array(c).fill(0));
-
+      // Slow wave: each layer fades in at a staggered offset
       const visible = fullAct.map((layer, l) => {
-        // Each layer activates at a different phase offset
         const layerStart = l * 0.22;
         const layerEnd = layerStart + 0.25;
         const t = Math.max(0, Math.min(1, (cyclePos - layerStart) / (layerEnd - layerStart)));
-        // Smooth easing
-        const ease = t * t * (3 - 2 * t);
+        const ease = t * t * (3 - 2 * t); // smoothstep
         return layer.map((a) => a * ease);
       });
 
@@ -122,16 +127,13 @@ function NetworkGraph() {
       frameRef.current = requestAnimationFrame(tick);
     }
 
-    // Kick off first inputs
-    inputsRef.current = Array.from({ length: TOPOLOGY[0] }, () => Math.random());
-    startRef.current = Date.now();
     frameRef.current = requestAnimationFrame(tick);
 
     return () => {
       running = false;
       cancelAnimationFrame(frameRef.current);
     };
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, []);
 
   // Build connection data with activation info
   const connections: {
@@ -160,7 +162,7 @@ function NetworkGraph() {
            Input→Hidden1 = green, Hidden→Hidden = blue, Hidden2→Output = red */}
       {connections.map((c, i) => {
         const srcAct = activations[c.fromLayer]?.[c.fromIdx] ?? 0;
-        const w = Math.abs(paramsRef.current.weights[c.fromLayer]?.[c.fromIdx]?.[c.toIdx] ?? 0);
+        const w = absWeights[c.fromLayer]?.[c.fromIdx]?.[c.toIdx] ?? 0;
         const strength = Math.min(1, srcAct * w * 1.2);
         // Synapse color by connection group
         const synapseColors = ["#22c55e", "#3b82f6", "#ef4444"]; // green, blue, red

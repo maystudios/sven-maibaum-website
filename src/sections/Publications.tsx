@@ -116,13 +116,34 @@ function NetworkGraph() {
       // Full forward pass: a_j = sigmoid( sum(a_i * w_ij) + b_j )
       const fullAct = forwardPass(inputs, params);
 
-      // Slow wave: each layer fades in at a staggered offset
+      // Quintic ease-in-out: smoother than smoothstep, no harsh starts/stops
+      const ease5 = (t: number) => {
+        if (t < 0.5) return 16 * t * t * t * t * t;
+        const u = 1 - t;
+        return 1 - 16 * u * u * u * u * u;
+      };
+
+      // Phase layout with overlap and hold:
+      //   0.00–0.15  Input eases in
+      //   0.08–0.30  Hidden 1 eases in
+      //   0.22–0.48  Hidden 2 eases in
+      //   0.38–0.62  Output eases in
+      //   0.62–0.78  Hold (everything fully lit)
+      //   0.78–1.00  Global fade-out
+      const layerStarts = [0.0, 0.08, 0.22, 0.38];
+      const layerEnds   = [0.15, 0.30, 0.48, 0.62];
+
+      // Global fade-out in the last ~22% of the cycle
+      const fadeOut = cyclePos > 0.78
+        ? 1 - ease5((cyclePos - 0.78) / 0.22)
+        : 1;
+
       const visible = fullAct.map((layer, l) => {
-        const layerStart = l * 0.22;
-        const layerEnd = layerStart + 0.25;
-        const t = Math.max(0, Math.min(1, (cyclePos - layerStart) / (layerEnd - layerStart)));
-        const ease = t * t * (3 - 2 * t); // smoothstep
-        return layer.map((a) => a * ease);
+        const t = Math.max(0, Math.min(1,
+          (cyclePos - layerStarts[l]) / (layerEnds[l] - layerStarts[l])
+        ));
+        const layerEase = ease5(t) * fadeOut;
+        return layer.map((a) => a * layerEase);
       });
 
       setActivations(visible);
@@ -178,7 +199,7 @@ function NetworkGraph() {
             stroke={strength > 0.1 ? synapseColor : "var(--sw-border)"}
             strokeWidth={0.6 + strength * 1.4}
             opacity={activeOpacity}
-            style={{ transition: "opacity 0.3s, stroke 0.3s, stroke-width 0.3s" }}
+            style={{ transition: "opacity 0.5s cubic-bezier(.4,0,.2,1), stroke 0.5s cubic-bezier(.4,0,.2,1), stroke-width 0.5s cubic-bezier(.4,0,.2,1)" }}
           />
         );
       })}
@@ -206,21 +227,21 @@ function NetworkGraph() {
                 cx={node.x} cy={node.y} r={glowR}
                 fill={color}
                 opacity={act * (isWinner ? 0.4 : 0.25)}
-                style={{ transition: "r 0.4s, opacity 0.4s" }}
+                style={{ transition: "r 0.6s cubic-bezier(.4,0,.2,1), opacity 0.6s cubic-bezier(.4,0,.2,1)" }}
               />
               {/* Node body */}
               <circle
                 cx={node.x} cy={node.y} r={nodeR}
                 fill={act > 0.1 ? color : colorDim}
                 opacity={0.3 + act * 0.7}
-                style={{ transition: "fill 0.4s, opacity 0.4s" }}
+                style={{ transition: "fill 0.6s cubic-bezier(.4,0,.2,1), opacity 0.6s cubic-bezier(.4,0,.2,1)" }}
               />
               {/* Bright center */}
               <circle
                 cx={node.x} cy={node.y} r={2 + act * (isWinner ? 3 : 2)}
                 fill="#fff"
                 opacity={act * (isWinner ? 0.85 : 0.6)}
-                style={{ transition: "r 0.4s, opacity 0.4s" }}
+                style={{ transition: "r 0.6s cubic-bezier(.4,0,.2,1), opacity 0.6s cubic-bezier(.4,0,.2,1)" }}
               />
             </g>
           );

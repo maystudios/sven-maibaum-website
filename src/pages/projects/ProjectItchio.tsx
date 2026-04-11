@@ -100,7 +100,89 @@ export default function ProjectItchio() {
         </div>
       </div>
 
-      <h3>Weitere Projekte folgen...</h3>
+      {/* Disk Inserted */}
+      <div className="bg-surface border border-border p-6 lg:p-8">
+        <div className="flex flex-col lg:flex-row gap-8">
+          <div className="lg:w-1/2">
+            <div className="flex items-center flex-wrap gap-3 mb-4">
+              <h3 className="font-display font-bold text-fg text-xl m-0">Disk Inserted</h3>
+              <span className="tech-tag tech-tag-red flex items-center">
+                First-Person Horror
+              </span>
+            </div>
+
+            <p className="mb-4">
+              Zweites Projekt vom Team „Vegan & Natural" beim <strong>HHU Game Jam 2026</strong> (Sommersemester).
+              Entwickelt in 56 Stunden an der Heinrich-Heine-Universität Düsseldorf, April 2026.
+            </p>
+            <p className="mb-4">
+              <strong>Das Konzept:</strong> Eine mysteriöse Floppy Disk landet auf dem Schreibtisch. Was als
+              normaler Tag beginnt, kippt nach dem Einlegen der Diskette ins Unheimliche. Retro-Gaming-Elemente
+              verschmelzen mit modernem Horror. Dunkle Wälder, ein verlassener Jahrmarkt und atmosphärische
+              Innenräume bilden die Kulisse, während sich die Grenze zwischen Spiel-im-Spiel und Realität auflöst.
+            </p>
+            <p className="mb-4">
+              Technisch setzt das Projekt auf <strong>Unreal Engine 5.7</strong> mit Lumen Global Illumination,
+              prozeduraler Audio-Generierung und einem eigens entwickelten Interaktionssystem mit Drag-basierter
+              Objektinspektion.
+            </p>
+
+            <div className="mb-6">
+              <span className="tech-tag tech-tag-purple">Unreal Engine 5.7</span>
+              <span className="tech-tag tech-tag-red">Horror</span>
+              <span className="tech-tag tech-tag-gray">3D / First-Person</span>
+              <span className="tech-tag tech-tag-blue">Team Project</span>
+              <span className="tech-tag tech-tag-orange">Game Jam</span>
+            </div>
+
+            <a
+              href="https://maystudios.itch.io/disk-inserted"
+              target="_blank"
+              rel="noreferrer"
+              className="swiss-btn-primary inline-flex items-center px-6 py-3 text-sm min-h-[44px]"
+            >
+              Disk Inserted auf itch.io ansehen
+            </a>
+          </div>
+
+          <div className="lg:w-1/2 flex flex-col gap-4">
+            <figure className="border border-border overflow-hidden relative group h-64 lg:h-auto">
+              <img
+                src={`${import.meta.env.BASE_URL}assets/projects/itchio/disk-inserted.svg`}
+                alt="Disk Inserted – First-Person Horror Game"
+                className="w-full h-full object-cover"
+              />
+              <figcaption className="absolute bottom-0 left-0 right-0 bg-canvas/80 text-fg text-xs py-2 px-3 text-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                Disk Inserted – HHU Game Jam 2026
+              </figcaption>
+            </figure>
+
+            <div className="bg-surface2 border border-border p-4">
+              <p className="text-xs uppercase tracking-widest text-faint mb-2">Team & Tech</p>
+              <div className="grid grid-cols-2 gap-3 text-xs">
+                <div>
+                  <p className="text-faint">Team</p>
+                  <p className="text-fg font-medium">Vegan & Natural</p>
+                </div>
+                <div>
+                  <p className="text-faint">Engine</p>
+                  <p className="text-fg font-medium">UE 5.7 + Lumen</p>
+                </div>
+                <div>
+                  <p className="text-faint">Zeitraum</p>
+                  <p className="text-fg font-medium">56 Stunden</p>
+                </div>
+                <div>
+                  <p className="text-faint">Plattform</p>
+                  <p className="text-fg font-medium">Windows (DX12)</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <h3>Weitere Projekte</h3>
       <p>
         Diese Seite wird stetig erweitert, sobald neue Jam-Games oder Prototypen veröffentlicht werden. Ich
         experimentiere regelmäßig mit neuen Engines und Tools.

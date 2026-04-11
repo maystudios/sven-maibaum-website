@@ -62,11 +62,12 @@ export const projectCards: ProjectCard[] = [
     id: "itchio",
     title: "Game Jams & itch.io",
     summary:
-      "Sammlung meiner Game-Jam-Projekte (z.B. Terrafix) und Rapid-Prototyping-Experimente.",
+      "Sammlung meiner Game-Jam-Projekte (Terrafix, Disk Inserted) und Rapid-Prototyping-Experimente.",
     tags: [
       { label: "itch.io", className: "tech-tag tech-tag-red" },
       { label: "Game Jam", className: "tech-tag tech-tag-orange" },
       { label: "Terrafix", className: "tech-tag tech-tag-green" },
+      { label: "Disk Inserted", className: "tech-tag tech-tag-purple" },
     ],
     filters: ["unreal-engine"],
     dataTags: ["game-dev", "indie", "prototyping", "unreal-engine"],

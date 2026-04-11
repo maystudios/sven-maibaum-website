@@ -55,7 +55,7 @@ const routes = [
     path: '/projekte/itchio',
     title: 'Game Jams & itch.io – Indie-Spieleprojekte | Sven Maibaum',
     description:
-      'Sammlung von Game-Jam-Projekten und Rapid-Prototyping-Experimenten, darunter der Game-Jam-Gewinner Terrafix.',
+      'Sammlung von Game-Jam-Projekten und Rapid-Prototyping-Experimenten: Terrafix (1. Platz HHU Game Jam) und Disk Inserted (First-Person Horror, HHU Game Jam 2026).',
     image: `${BASE_URL}/assets/projects/itchio/gamejam-winner.jpg`,
   },
   {

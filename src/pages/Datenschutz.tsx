@@ -183,7 +183,19 @@ export default function Datenschutz() {
         </a>
       </p>
 
-      <h2>7. Browser-Speicher (localStorage)</h2>
+      <h2>7. Cookies</h2>
+      <p>
+        Diese Website setzt keine eigenen Cookies und keine Tracking-Cookies. Es werden weder Analyse- noch
+        Werbe-Cookies, weder Re-Targeting- noch Profilbildungs-Cookies eingesetzt. Eine Einwilligung über ein
+        Cookie-Banner ist daher nach § 25 TDDDG nicht erforderlich.
+      </p>
+      <p>
+        Cookies, die ausschließlich der Übertragung einer Nachricht über ein öffentliches Telekommunikationsnetz
+        dienen oder unbedingt erforderlich sind, um einen vom Nutzer ausdrücklich gewünschten Dienst bereitzustellen,
+        wären nach § 25 Abs. 2 Nr. 2 TDDDG einwilligungsfrei zulässig. Solche Cookies werden derzeit nicht eingesetzt.
+      </p>
+
+      <h2>8. Browser-Speicher (localStorage)</h2>
       <p>
         Diese Website speichert Ihre Darstellungseinstellung (helles oder dunkles Farbschema) im localStorage Ihres
         Browsers. Der Eintrag dient ausschließlich dazu, Ihre Einstellung beim nächsten Besuch beizubehalten.
@@ -195,7 +207,7 @@ export default function Datenschutz() {
       </p>
       <p>Sie können diese Daten jederzeit über die Einstellungen Ihres Browsers löschen.</p>
 
-      <h2>8. Externe Links</h2>
+      <h2>9. Externe Links</h2>
       <p>
         Diese Website enthält Links zu externen Seiten, etwa GitHub und LinkedIn. Bei einem Klick werden Sie zur Seite
         des jeweiligen Betreibers weitergeleitet. Für den Datenschutz auf diesen Seiten ist ausschließlich der jeweilige
@@ -206,7 +218,7 @@ export default function Datenschutz() {
         ohne Social-Plugins oder Tracking-Integrationen.
       </p>
 
-      <h2>9. Datenübermittlung in Drittländer</h2>
+      <h2>10. Datenübermittlung in Drittländer</h2>
       <p>
         Einige der eingesetzten Dienste übermitteln personenbezogene Daten in die USA. Die folgende Übersicht zeigt
         Anbieter und Übertragungsgrundlage:
@@ -232,14 +244,14 @@ export default function Datenschutz() {
         aber politisch anfechtbar. Wo zusätzlich SCCs eingesetzt werden, besteht ein doppeltes Schutzfundament.
       </p>
 
-      <h2>10. SSL/TLS-Verschlüsselung</h2>
+      <h2>11. SSL/TLS-Verschlüsselung</h2>
       <p>
         Diese Website wird vollständig über HTTPS ausgeliefert und nutzt eine SSL- bzw. TLS-Verschlüsselung nach Art. 32
         Abs. 1 lit. a DSGVO. Die verschlüsselte Verbindung erkennen Sie am Schloss-Symbol und am Präfix „https://“ in
         der Adresszeile. Übermittelte Daten können von Dritten nicht mitgelesen werden.
       </p>
 
-      <h2>11. Speicherdauer und Löschung</h2>
+      <h2>12. Speicherdauer und Löschung</h2>
       <p>
         Personenbezogene Daten werden nur so lange verarbeitet, wie es für den jeweiligen Zweck erforderlich ist oder
         gesetzliche Aufbewahrungspflichten bestehen.
@@ -261,7 +273,7 @@ export default function Datenschutz() {
         </li>
       </ul>
 
-      <h2>12. Ihre Rechte als betroffene Person</h2>
+      <h2>13. Ihre Rechte als betroffene Person</h2>
       <p>Sie haben gegenüber mir als Verantwortlichem folgende Rechte:</p>
 
       <h3>Auskunftsrecht (Art. 15 DSGVO)</h3>
@@ -307,7 +319,7 @@ export default function Datenschutz() {
         <a href="mailto:contact@sven-maibaum.com" className="footer-link">contact@sven-maibaum.com</a>
       </p>
 
-      <h2>13. Beschwerderecht bei der Aufsichtsbehörde</h2>
+      <h2>14. Beschwerderecht bei der Aufsichtsbehörde</h2>
       <p>
         Wenn Sie der Ansicht sind, dass die Verarbeitung Ihrer personenbezogenen Daten gegen die DSGVO verstößt, können
         Sie sich bei einer Datenschutz-Aufsichtsbehörde beschweren (Art. 77 DSGVO).
@@ -333,11 +345,28 @@ export default function Datenschutz() {
         </a>
       </p>
 
-      <h2>14. Aktualität dieser Datenschutzerklärung</h2>
+      <h2>14. Hinweis zur unverlangten Zusendung von Werbung</h2>
       <p>
-        Stand: <time dateTime="2026-05-08">08.05.2026</time>. Bei einer Weiterentwicklung dieser Website oder
-        Änderungen der Rechtslage kann eine Anpassung dieser Datenschutzerklärung notwendig werden. Die jeweils aktuelle
-        Version finden Sie auf dieser Seite.
+        Der Nutzung der in dieser Datenschutzerklärung und im Impressum veröffentlichten Kontaktdaten zur Übersendung
+        nicht ausdrücklich angeforderter Werbung und Informationsmaterialien wird widersprochen. Der Betreiber behält
+        sich rechtliche Schritte für den Fall der unverlangten Zusendung von Werbung, etwa durch Spam-Mails, ausdrücklich
+        vor.
+      </p>
+
+      <h2>15. Aktualität dieser Datenschutzerklärung</h2>
+      <p>
+        Diese Datenschutzerklärung hat den Stand vom <time dateTime="2026-05-08">8. Mai 2026</time>. Bei einer
+        Weiterentwicklung dieser Website oder bei Änderungen der gesetzlichen oder behördlichen Vorgaben kann eine
+        Anpassung dieser Datenschutzerklärung notwendig werden. Die jeweils aktuelle Version ist auf dieser Seite
+        abrufbar.
+      </p>
+
+      <hr className="my-8 border-border" />
+
+      <p className="text-sm footer-text-muted">
+        © 2026 Sven Maibaum. Alle Rechte vorbehalten.
+        <br />
+        Zuletzt aktualisiert: <time dateTime="2026-05-08">08.05.2026</time>
       </p>
     </main>
   );

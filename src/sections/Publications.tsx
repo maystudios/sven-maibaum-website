@@ -1,68 +1,300 @@
+import { useEffect, useRef, useState } from "react";
 import { motion } from "motion/react";
 import SectionHeading from "../components/SectionHeading";
 import { publications } from "../data/publications";
 import { fadeInUp, staggerContainer, defaultViewport } from "../lib/animations";
 
-function NetworkGraph() {
-  const layers = [
-    [
-      { x: 40, y: 30 },
-      { x: 40, y: 80 },
-      { x: 40, y: 130 },
-    ],
-    [
-      { x: 110, y: 20 },
-      { x: 110, y: 57 },
-      { x: 110, y: 93 },
-      { x: 110, y: 130 },
-    ],
-    [
-      { x: 180, y: 30 },
-      { x: 180, y: 80 },
-      { x: 180, y: 130 },
-    ],
-    [
-      { x: 250, y: 55 },
-      { x: 250, y: 105 },
-    ],
-  ];
+// ─── Neural network simulation ──────────────────────────────────────────────
 
-  const connections: { x1: number; y1: number; x2: number; y2: number }[] = [];
+const TOPOLOGY = [3, 5, 4, 2];
+const X_POSITIONS = [40, 120, 200, 280];
+const MID_Y = 95;
+const GAP_Y = 30;
+const CYCLE_MS = 12000; // one full forward pass
+
+function sigmoid(x: number) {
+  return 1 / (1 + Math.exp(-x));
+}
+
+function buildLayers() {
+  return TOPOLOGY.map((count, l) => {
+    const startY = MID_Y - ((count - 1) * GAP_Y) / 2;
+    return Array.from({ length: count }, (_, i) => ({
+      x: X_POSITIONS[l],
+      y: startY + i * GAP_Y,
+    }));
+  });
+}
+
+type NetworkParams = {
+  weights: number[][][]; // weights[layer][fromNode][toNode]
+  biases: number[][];    // biases[layer][node] (layers 1..n, index 0 = first hidden)
+};
+
+function initParams(): NetworkParams {
+  const weights: number[][][] = [];
+  const biases: number[][] = [];
+  for (let l = 0; l < TOPOLOGY.length - 1; l++) {
+    // Xavier-ish initialization: scale by 1/sqrt(fan_in)
+    const scale = 1 / Math.sqrt(TOPOLOGY[l]);
+    weights[l] = [];
+    for (let i = 0; i < TOPOLOGY[l]; i++) {
+      weights[l][i] = [];
+      for (let j = 0; j < TOPOLOGY[l + 1]; j++) {
+        weights[l][i][j] = (Math.random() * 2 - 1) * scale * 2.5;
+      }
+    }
+    // Bias per neuron in the target layer
+    biases[l] = Array.from({ length: TOPOLOGY[l + 1] }, () => (Math.random() - 0.5) * 0.5);
+  }
+  return { weights, biases };
+}
+
+/** Full forward pass: a_j = σ( Σᵢ(aᵢ · wᵢⱼ) + bⱼ ) */
+function forwardPass(inputs: number[], params: NetworkParams) {
+  const activations: number[][] = [inputs];
+  let current = inputs;
+  for (let l = 0; l < params.weights.length; l++) {
+    const next: number[] = [];
+    for (let j = 0; j < TOPOLOGY[l + 1]; j++) {
+      // Weighted sum: z = Σ(aᵢ · wᵢⱼ)
+      let z = 0;
+      for (let i = 0; i < current.length; i++) {
+        z += current[i] * params.weights[l][i][j];
+      }
+      // Add bias: z += bⱼ
+      z += params.biases[l][j];
+      // Activation function: a = σ(z)
+      next.push(sigmoid(z));
+    }
+    activations.push(next);
+    current = next;
+  }
+  return activations;
+}
+
+// Layer colors: input=green, hidden=blue, output=red, winner=purple
+const LAYER_COLORS = ["#22c55e", "#3b82f6", "#3b82f6", "#ef4444"];
+const LAYER_COLORS_DIM = ["#166534", "#1e3a5f", "#1e3a5f", "#7f1d1d"];
+const WINNER_COLOR = "#a855f7";
+const WINNER_COLOR_DIM = "#581c87";
+const LABELS = ["Input", "Hidden", "Hidden", "Output"];
+
+function NetworkGraph() {
+  const layers = buildLayers();
+  const [activations, setActivations] = useState<number[][]>(() => TOPOLOGY.map((c) => Array(c).fill(0)));
+  const [absWeights, setAbsWeights] = useState<number[][][]>([]);
+  // drawProgress[l]: 0→1 per layer, never reverses (controls synapse draw-in)
+  const [drawProgress, setDrawProgress] = useState<number[]>(() => Array(TOPOLOGY.length).fill(0));
+  const [fadeAlpha, setFadeAlpha] = useState(0);
+  const frameRef = useRef(0);
+
+  const simRef = useRef({
+    params: null as NetworkParams | null,
+    inputs: null as number[] | null,
+    prevCycle: 0,
+    start: 0,
+  });
+
+  useEffect(() => {
+    let running = true;
+    const sim = simRef.current;
+
+    // Weights are generated ONCE and never change
+    if (!sim.params) {
+      sim.params = initParams();
+      sim.inputs = Array.from({ length: TOPOLOGY[0] }, () => Math.random());
+      sim.start = performance.now();
+    }
+
+    let needsWeightSync = true;
+
+    // Cosine ease-in-out: naturally smooth S-curve, zero velocity at endpoints
+    const cosEase = (t: number) => (1 - Math.cos(t * Math.PI)) / 2;
+
+    // Continuous wave: waveX travels from first to last layer x-position
+    const xMin = X_POSITIONS[0];
+    const xMax = X_POSITIONS[X_POSITIONS.length - 1];
+    const xRange = xMax - xMin;
+    const spread = xRange * 0.4; // wide spread for flowing overlap between layers
+
+    function tick() {
+      if (!running) return;
+      const elapsed = performance.now() - sim.start;
+      const cyclePos = (elapsed % CYCLE_MS) / CYCLE_MS;
+
+      // New inputs at cycle boundary
+      if (cyclePos < 0.03 && sim.prevCycle > 0.95) {
+        sim.inputs = Array.from({ length: TOPOLOGY[0] }, () => Math.random());
+      }
+      sim.prevCycle = cyclePos;
+
+      if (needsWeightSync) {
+        needsWeightSync = false;
+        setAbsWeights(sim.params!.weights.map((layer) => layer.map((row) => row.map(Math.abs))));
+      }
+
+      const fullAct = forwardPass(sim.inputs!, sim.params!);
+
+      // Timeline:
+      //   0.00–0.10  Ramp globalFade 0→1 (gentle start from idle)
+      //   0.00–0.70  Wave sweeps left→right (cosine eased, overlaps with ramp)
+      //   0.70–0.80  Hold at full brightness
+      //   0.80–0.96  Fade 1→0 (back to dim idle state)
+      //   0.96–1.00  Idle baseline, new inputs arrive
+
+      // Wave front position (cosine ease-in-out)
+      let waveX: number;
+      if (cyclePos < 0.70) {
+        const wt = cosEase(cyclePos / 0.70);
+        waveX = (xMin - spread) + (xRange + spread * 2) * wt;
+      } else {
+        waveX = xMax + spread;
+      }
+
+      // Per-layer draw: smooth activation as wave passes each layer
+      const draw = X_POSITIONS.map((x) => {
+        const raw = (waveX - x + spread * 0.5) / spread;
+        return cosEase(Math.max(0, Math.min(1, raw)));
+      });
+
+      // Global fade: cosine ease for smooth ramp-in and fade-out
+      let globalFade: number;
+      if (cyclePos < 0.10) {
+        globalFade = cosEase(cyclePos / 0.10);
+      } else if (cyclePos < 0.80) {
+        globalFade = 1;
+      } else if (cyclePos < 0.96) {
+        globalFade = 1 - cosEase((cyclePos - 0.80) / 0.16);
+      } else {
+        globalFade = 0;
+      }
+
+      // Activations reflect wave draw-in only (fade is applied uniformly in render)
+      const visible = fullAct.map((layer, l) =>
+        layer.map((a) => a * draw[l])
+      );
+
+      setActivations(visible);
+      setDrawProgress(draw);
+      setFadeAlpha(globalFade);
+      frameRef.current = requestAnimationFrame(tick);
+    }
+
+    frameRef.current = requestAnimationFrame(tick);
+
+    return () => {
+      running = false;
+      cancelAnimationFrame(frameRef.current);
+    };
+  }, []);
+
+  // Build connection data with activation info
+  const connections: {
+    x1: number; y1: number; x2: number; y2: number;
+    fromLayer: number; fromIdx: number; toIdx: number;
+  }[] = [];
   for (let l = 0; l < layers.length - 1; l++) {
-    for (const from of layers[l]) {
-      for (const to of layers[l + 1]) {
-        connections.push({ x1: from.x, y1: from.y, x2: to.x, y2: to.y });
+    for (let i = 0; i < layers[l].length; i++) {
+      for (let j = 0; j < layers[l + 1].length; j++) {
+        connections.push({
+          x1: layers[l][i].x, y1: layers[l][i].y,
+          x2: layers[l + 1][j].x, y2: layers[l + 1][j].y,
+          fromLayer: l, fromIdx: i, toIdx: j,
+        });
       }
     }
   }
 
   return (
     <svg
-      viewBox="0 0 290 160"
-      className="w-full max-w-[260px] mx-auto"
+      viewBox="0 0 320 210"
+      className="w-full max-w-[300px] mx-auto"
       aria-hidden="true"
     >
-      {connections.map((c, i) => (
-        <line
-          key={`c-${i}`}
-          x1={c.x1}
-          y1={c.y1}
-          x2={c.x2}
-          y2={c.y2}
-          stroke="var(--sw-border)"
-          strokeWidth="0.8"
+      {/* Connections — color matches the connection group:
+           Input→Hidden1 = green, Hidden→Hidden = blue, Hidden2→Output = red */}
+      {connections.map((c, i) => {
+        const srcAct = activations[c.fromLayer]?.[c.fromIdx] ?? 0;
+        const w = absWeights[c.fromLayer]?.[c.fromIdx]?.[c.toIdx] ?? 0;
+        const strength = Math.min(1, srcAct * w * 1.2);
+        const synapseColors = ["#22c55e", "#3b82f6", "#ef4444"];
+        const synapseColor = synapseColors[c.fromLayer];
+        // Draw-in from source to target (never reverses)
+        const len = Math.sqrt((c.x2 - c.x1) ** 2 + (c.y2 - c.y1) ** 2);
+        const draw = drawProgress[c.fromLayer] ?? 0;
+        const dashOffset = len * (1 - draw);
+        // Base dim line + activation-driven brightness
+        const activeOpacity = 0.03 + strength * 0.55 * fadeAlpha;
+        return (
+          <line
+            key={`c-${i}`}
+            x1={c.x1} y1={c.y1} x2={c.x2} y2={c.y2}
+            stroke={strength > 0.1 ? synapseColor : "var(--sw-border)"}
+            strokeWidth={0.6 + strength * 1.4}
+            opacity={activeOpacity}
+            strokeDasharray={len}
+            strokeDashoffset={dashOffset}
+          />
+        );
+      })}
+
+      {/* Nodes per layer */}
+      {layers.map((layer, l) => {
+        // Find winning output neuron (highest activation in last layer)
+        const outputLayer = TOPOLOGY.length - 1;
+        const outputActs = activations[outputLayer] ?? [];
+        const winnerIdx = l === outputLayer && outputActs.some((a) => a > 0.05)
+          ? outputActs.indexOf(Math.max(...outputActs))
+          : -1;
+
+        return layer.map((node, i) => {
+          const act = activations[l]?.[i] ?? 0;
+          const displayAct = act * fadeAlpha; // combines activation + fade
+          const isWinner = l === outputLayer && i === winnerIdx;
+          const color = isWinner ? WINNER_COLOR : LAYER_COLORS[l];
+          const colorDim = isWinner ? WINNER_COLOR_DIM : LAYER_COLORS_DIM[l];
+          const nodeR = isWinner ? 7 : 6;
+          const glowR = (isWinner ? 18 : 12) + displayAct * 8;
+          return (
+            <g key={`n-${l}-${i}`}>
+              {/* Glow — only when active */}
+              <circle
+                cx={node.x} cy={node.y} r={glowR}
+                fill={color}
+                opacity={displayAct * (isWinner ? 0.45 : 0.25)}
+              />
+              {/* Node body — base always visible, activation adds brightness */}
+              <circle
+                cx={node.x} cy={node.y} r={nodeR}
+                fill={displayAct > 0.1 ? color : colorDim}
+                opacity={0.2 + displayAct * 0.7}
+              />
+              {/* Bright center — only when active */}
+              <circle
+                cx={node.x} cy={node.y} r={2 + displayAct * (isWinner ? 3 : 2)}
+                fill="#fff"
+                opacity={displayAct * (isWinner ? 0.85 : 0.6)}
+              />
+            </g>
+          );
+        });
+      })}
+
+      {/* Layer labels */}
+      {X_POSITIONS.map((x, i) => (
+        <text
+          key={`l-${i}`}
+          x={x} y={200}
+          textAnchor="middle"
+          fontSize="8"
+          fill={LAYER_COLORS[i]}
           opacity="0.5"
-        />
-      ))}
-      {layers.flat().map((node, i) => (
-        <circle
-          key={`n-${i}`}
-          cx={node.x}
-          cy={node.y}
-          r="5"
-          fill="var(--sw-accent)"
-          opacity="0.7"
-        />
+          fontFamily="'Space Grotesk', sans-serif"
+          letterSpacing="0.5"
+        >
+          {LABELS[i]}
+        </text>
       ))}
     </svg>
   );

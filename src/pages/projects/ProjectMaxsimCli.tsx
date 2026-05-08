@@ -1,794 +1,312 @@
-import { useState, useRef } from "react";
-import { Link } from "react-router-dom";
-import { motion, useInView } from "motion/react";
+import ProjectShell from "../../components/ProjectShell";
 
-// ─── Data ────────────────────────────────────────────────────────────────────
-
-const COMMANDS = [
-  { cmd: "/maxsim:new-project",      desc: "Projekt initialisieren: Fragen → Research → Roadmap" },
-  { cmd: "/maxsim:discuss-phase [N]",desc: "Implementierungsentscheidungen vor dem Planen festhalten" },
-  { cmd: "/maxsim:plan-phase [N]",   desc: "Research + atomare Pläne + Verifikation" },
-  { cmd: "/maxsim:execute-phase <N>",desc: "Pläne in parallelen Wellen mit frischem Kontext ausführen" },
-  { cmd: "/maxsim:verify-work [N]",  desc: "UAT: Testbare Deliverables einzeln durchgehen" },
-  { cmd: "/maxsim:complete-milestone",desc: "Meilenstein archivieren, Release taggen" },
-  { cmd: "/maxsim:new-milestone",    desc: "Nächste Version starten" },
-  { cmd: "/maxsim:progress",         desc: "Aktueller Stand — was kommt als nächstes?" },
-  { cmd: "/maxsim:quick",            desc: "Ad-hoc Task mit atomaren Commits" },
-  { cmd: "/maxsim:debug [desc]",     desc: "Systematisches Debugging mit persistentem State" },
-  { cmd: "/maxsim:resume-work",      desc: "Von der letzten Session nahtlos wiederherstellen" },
-];
-
-const RUNTIMES = [
-  { name: "Claude Code", flag: "--claude",   verify: "/maxsim:help",  accent: "var(--sw-accent)" },
-  { name: "OpenCode",    flag: "--opencode", verify: "/maxsim-help",  accent: "#10b981" },
-  { name: "Gemini CLI",  flag: "--gemini",   verify: "/maxsim:help",  accent: "#f59e0b" },
-  { name: "Codex",       flag: "--codex",    verify: "$maxsim-help",  accent: "#8b5cf6" },
-];
-
-const WORKFLOW_STEPS = [
-  { n: "01", cmd: "/maxsim:new-project",     title: "Initialisieren",  desc: "Fragen → Research → Anforderungen → Roadmap. Idee in einen phasierten Buildplan überführen." },
-  { n: "02", cmd: "/maxsim:discuss-phase 1", title: "Besprechen",      desc: "Implementierung formen bevor etwas gebaut wird. Graubereiche klären, Vision schärfen." },
-  { n: "03", cmd: "/maxsim:plan-phase 1",    title: "Planen",          desc: "Research, atomare Task-Pläne erstellen und gegen Anforderungen verifizieren." },
-  { n: "04", cmd: "/maxsim:execute-phase 1", title: "Ausführen",       desc: "Pläne in parallelen Wellen. Frischer Kontext pro Plan. Jeder Task → eigener atomarer Commit." },
-  { n: "05", cmd: "/maxsim:verify-work 1",   title: "Verifizieren",    desc: "Testbare Deliverables durchgehen. Bei Problemen erstellt das System automatisch Fix-Pläne." },
-  { n: "06", cmd: "/maxsim:complete-milestone", title: "Shippen",      desc: "Meilenstein archivieren, Release taggen. Loop: discuss → plan → execute → verify." },
-];
-
-const DASHBOARD_FEATURES = [
-  "Animated Progress Bars", "Phase Drill-Down", "CodeMirror Editor",
-  "Todos Panel", "Blockers Panel", "Swiss Style Dark Theme",
-  "WebSocket Live-Updates", "Auto-öffnet Browser",
-];
-
-// ─── Primitives ───────────────────────────────────────────────────────────────
-
-/** Swiss eyebrow label */
-function Eyebrow({ children, accent = false }: { children: React.ReactNode; accent?: boolean }) {
-  return (
-    <p
-      className="swiss-eyebrow mb-3"
-      style={accent ? { color: "var(--sw-accent)" } : undefined}
-    >
-      {children}
-    </p>
-  );
-}
-
-/** Section heading with bottom rule */
-function SectionHeading({ children }: { children: React.ReactNode }) {
-  return (
-    <h2
-      className="font-display font-bold text-fg pb-4 mb-8"
-      style={{
-        fontSize: "clamp(1.25rem, 3vw, 1.75rem)",
-        letterSpacing: "-0.02em",
-        borderBottom: "1px solid var(--sw-border)",
-        color: "var(--sw-fg)",
-      }}
-    >
-      {children}
-    </h2>
-  );
-}
-
-/** Theme-aware terminal block */
-function Terminal({ title = "Terminal", children }: { title?: string; children: React.ReactNode }) {
-  return (
-    <div
-      className="overflow-hidden text-sm font-mono"
-      style={{
-        background: "var(--sw-surface)",
-        border: "1px solid var(--sw-border)",
-        borderRadius: "2px",
-      }}
-    >
-      {/* Title bar */}
-      <div
-        className="flex items-center gap-2 px-4 py-2.5"
-        style={{ borderBottom: "1px solid var(--sw-border)", background: "var(--sw-surface)" }}
-      >
-        <span className="w-3 h-3 rounded-full bg-red-500/60" />
-        <span className="w-3 h-3 rounded-full bg-yellow-500/60" />
-        <span className="w-3 h-3 rounded-full bg-green-500/60" />
-        <span className="ml-2 swiss-eyebrow" style={{ fontSize: "0.65rem" }}>{title}</span>
-      </div>
-      {/* Content */}
-      <div className="p-4 space-y-1.5 overflow-x-auto">{children}</div>
-    </div>
-  );
-}
-
-function TLine({ prompt = "$", command, comment }: { prompt?: string; command: string; comment?: string }) {
-  return (
-    <div className="flex gap-2 items-start">
-      <span className="shrink-0 select-none" style={{ color: "var(--sw-accent)" }}>{prompt}</span>
-      <span style={{ color: "#86efac" }}>{command}</span>
-      {comment && <span className="ml-1" style={{ color: "var(--sw-text-faint)" }}># {comment}</span>}
-    </div>
-  );
-}
-
-function TComment({ children }: { children: React.ReactNode }) {
-  return (
-    <p className="pl-5 text-xs" style={{ color: "var(--sw-text-faint)" }}>
-      {children}
-    </p>
-  );
-}
-
-// ─── Animate-when-in-view wrapper ────────────────────────────────────────────
-
-function FadeIn({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-60px" });
-  return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0, y: 20 }}
-      animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.5, delay, ease: "easeOut" }}
-    >
-      {children}
-    </motion.div>
-  );
-}
-
-// ─── Hero ─────────────────────────────────────────────────────────────────────
-
-function Hero() {
-  return (
-    <div
-      className="relative overflow-hidden"
-      style={{ borderBottom: "1px solid var(--sw-border)", minHeight: 460 }}
-    >
-      {/* Swiss grid background — theme-aware */}
-      <div
-        aria-hidden
-        className="absolute inset-0"
-        style={{
-          backgroundImage: `
-            linear-gradient(to right, var(--grid-line-v) 1px, transparent 1px),
-            linear-gradient(to bottom, var(--grid-line-h) 1px, transparent 1px)
-          `,
-          backgroundSize: "48px 48px",
-        }}
-      />
-
-      {/* Subtle radial accent */}
-      <div
-        aria-hidden
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          background: "radial-gradient(ellipse 55% 45% at 50% 55%, rgba(59,130,246,0.08) 0%, transparent 70%)",
-        }}
-      />
-
-      {/* Subtle vignette edges */}
-      <div
-        aria-hidden
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          background: "radial-gradient(ellipse 110% 100% at 0% 50%, rgba(9,9,11,0.35) 0%, transparent 55%), radial-gradient(ellipse 110% 100% at 100% 50%, rgba(9,9,11,0.35) 0%, transparent 55%)",
-        }}
-      />
-
-      {/* Hero content */}
-      <div className="relative z-10 max-w-5xl mx-auto px-6 sm:px-10 py-20 sm:py-28">
-        {/* Badge */}
-        <motion.div
-          initial={{ opacity: 0, y: -8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.45 }}
-          className="inline-flex items-center gap-2 mb-6"
-          style={{
-            border: "1px solid var(--sw-border-light)",
-            background: "rgba(59,130,246,0.06)",
-            padding: "0.3rem 0.875rem",
-            borderRadius: "2px",
-          }}
-        >
-          <span
-            className="w-1.5 h-1.5 rounded-full animate-pulse"
-            style={{ background: "var(--sw-accent)" }}
-          />
-          <span className="swiss-eyebrow" style={{ marginBottom: 0 }}>Open Source · MIT License</span>
-        </motion.div>
-
-        {/* Title */}
-        <motion.h1
-          initial={{ opacity: 0, y: 18 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.08 }}
-          className="font-display font-bold"
-          style={{
-            fontSize: "clamp(3.5rem, 12vw, 7rem)",
-            letterSpacing: "-0.04em",
-            lineHeight: 0.95,
-            background: "linear-gradient(145deg, var(--sw-fg) 20%, var(--sw-accent-light) 100%)",
-            WebkitBackgroundClip: "text",
-            WebkitTextFillColor: "transparent",
-            backgroundClip: "text",
-          }}
-        >
-          maxsim
-        </motion.h1>
-
-        {/* Subtitle */}
-        <motion.p
-          initial={{ opacity: 0, y: 18 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.18 }}
-          className="mt-5 max-w-2xl"
-          style={{ color: "var(--sw-text-muted)", fontSize: "1.0625rem", lineHeight: 1.65 }}
-        >
-          Meta-prompting & spec-driven development für{" "}
-          <strong style={{ color: "var(--sw-fg)", fontWeight: 600 }}>
-            Claude Code, OpenCode, Gemini CLI und Codex.
-          </strong>{" "}
-          Löst <em>Context Rot</em> — die Qualitätsdegradation, wenn der Kontext voll wird.
-        </motion.p>
-
-        {/* Install snippet + CTAs */}
-        <motion.div
-          initial={{ opacity: 0, y: 18 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.28 }}
-          className="mt-9 flex flex-wrap items-center gap-3"
-        >
-          {/* Primary install command */}
-          <div
-            className="flex items-center gap-3 font-mono text-sm"
-            style={{
-              background: "var(--sw-surface)",
-              border: "1px solid var(--sw-border-light)",
-              padding: "0.7rem 1.25rem",
-              borderRadius: "2px",
-              boxShadow: "0 0 0 1px transparent",
-            }}
-          >
-            <span style={{ color: "var(--sw-accent)", userSelect: "none" }}>$</span>
-            <span className="select-all" style={{ color: "#86efac" }}>npx maxsimcli@latest</span>
-          </div>
-
-          <a
-            href="https://maxsimcli.dev"
-            target="_blank" rel="noopener noreferrer"
-            className="swiss-btn-primary"
-          >
-            maxsimcli.dev
-          </a>
-          <a
-            href="https://github.com/maystudios/maxsim"
-            target="_blank" rel="noopener noreferrer"
-            className="swiss-btn-secondary"
-          >
-            GitHub
-          </a>
-          <a
-            href="https://www.npmjs.com/package/maxsimcli"
-            target="_blank" rel="noopener noreferrer"
-            className="swiss-btn-secondary"
-          >
-            npm
-          </a>
-        </motion.div>
-
-        {/* Platform pills */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.45 }}
-          className="mt-6 flex gap-2"
-        >
-          {["Mac", "Windows", "Linux"].map((p) => (
-            <span
-              key={p}
-              className="swiss-eyebrow"
-              style={{
-                border: "1px solid var(--sw-border)",
-                padding: "0.2rem 0.65rem",
-                borderRadius: "2px",
-                marginBottom: 0,
-              }}
-            >
-              {p}
-            </span>
-          ))}
-        </motion.div>
-      </div>
-    </div>
-  );
-}
-
-// ─── Stats bar ────────────────────────────────────────────────────────────────
-
-function StatsBar() {
-  const stats = [
-    { label: "Typ",      value: "CLI Tool" },
-    { label: "Sprache",  value: "TypeScript" },
-    { label: "Lizenz",   value: "MIT" },
-    { label: "Status",   value: "Aktiv" },
-  ];
-  return (
-    <div
-      className="grid grid-cols-2 md:grid-cols-4"
-      style={{ borderBottom: "1px solid var(--sw-border)" }}
-    >
-      {stats.map((s, i) => (
-        <div
-          key={s.label}
-          className="px-6 py-5"
-          style={{
-            borderRight: i < stats.length - 1 ? "1px solid var(--sw-border)" : undefined,
-          }}
-        >
-          <p className="swiss-eyebrow">{s.label}</p>
-          <p className="font-display font-bold text-sm" style={{ color: "var(--sw-fg)" }}>{s.value}</p>
-        </div>
-      ))}
-    </div>
-  );
-}
-
-// ─── Main page ────────────────────────────────────────────────────────────────
+const base = import.meta.env.BASE_URL;
 
 export default function ProjectMaxsimCli() {
-  const [copiedCmd, setCopiedCmd] = useState<string | null>(null);
-
-  const copy = (text: string) => {
-    void navigator.clipboard.writeText(text).then(() => {
-      setCopiedCmd(text);
-      setTimeout(() => setCopiedCmd(null), 1800);
-    });
-  };
-
   return (
-    <div className="bg-canvas min-h-screen pt-16">
-      {/* Back */}
-      <Link
-        to="/#projects"
-        className="back-to-portfolio fixed left-4 top-[72px] z-40"
-        aria-label="Zurück zur Projektübersicht"
-      >
-        ← Alle Projekte
-      </Link>
-
-      {/* Hero */}
-      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.4 }}>
-        <Hero />
-      </motion.div>
-
+    <ProjectShell
+      hasSiteHeader
+      title="maxsimcli"
+      subtitle="Meta-Prompting und Context Engineering für Claude Code. Strukturierte Prompts, dedizierte Agenten und spec-driven Planning. Jeder Task bekommt einen eigenen Subagenten mit frischem Kontext."
+      heroImage={`${base}assets/projects/maxsimcli/banner.svg`}
+      heroAlt="maxsimcli – Meta-prompting CLI für strukturiertes Agentic Coding"
+      ctaLabel="Dokumentation auf maxsimcli.dev"
+      ctaLink="https://maxsimcli.dev"
+    >
       {/* Stats */}
-      <StatsBar />
-
-      {/* ── Content ───────────────────────────────────────────────────────── */}
-      <div className="max-w-5xl mx-auto px-6 sm:px-10 py-16 space-y-20">
-
-        {/* 1. Problem / Solution */}
-        <FadeIn>
-          <section>
-            <Eyebrow>Kontext</Eyebrow>
-            <SectionHeading>Was ist maxsim?</SectionHeading>
-
-            <div className="grid md:grid-cols-2 gap-0" style={{ border: "1px solid var(--sw-border)" }}>
-              {/* Problem */}
-              <div
-                className="p-7"
-                style={{
-                  borderRight: "1px solid var(--sw-border)",
-                  borderLeft: "3px solid #ef4444",
-                }}
-              >
-                <Eyebrow>Das Problem</Eyebrow>
-                <h3 className="font-display font-bold text-base mb-3" style={{ color: "var(--sw-fg)" }}>
-                  Context Rot
-                </h3>
-                <p className="text-sm leading-relaxed" style={{ color: "var(--sw-text-muted)" }}>
-                  Je länger eine KI-Session dauert, desto schlechter wird die Qualität. Der Kontext füllt
-                  sich, Anweisungen werden vergessen, Inkonsistenzen häufen sich.
-                </p>
-              </div>
-              {/* Solution */}
-              <div
-                className="p-7"
-                style={{ borderLeft: "3px solid #22c55e" }}
-              >
-                <Eyebrow>Die Lösung</Eyebrow>
-                <h3 className="font-display font-bold text-base mb-3" style={{ color: "var(--sw-fg)" }}>
-                  Strukturiertes Agentic Coding
-                </h3>
-                <p className="text-sm leading-relaxed" style={{ color: "var(--sw-text-muted)" }}>
-                  maxsim teilt Projekte in klar abgegrenzte Phasen mit <strong style={{ color: "var(--sw-fg)" }}>frischem Kontext</strong> pro
-                  Plan, <strong style={{ color: "var(--sw-fg)" }}>atomaren Commits</strong> und
-                  spezialisierten Agent-Teams.
-                </p>
-              </div>
-            </div>
-          </section>
-        </FadeIn>
-
-        {/* 2. Installation */}
-        <FadeIn>
-          <section>
-            <Eyebrow>Getting Started</Eyebrow>
-            <SectionHeading>Installation</SectionHeading>
-
-            {/* Main command — featured */}
-            <div
-              className="p-6 mb-6 relative overflow-hidden"
-              style={{
-                background: "var(--sw-surface)",
-                border: "1px solid var(--sw-border-light)",
-                borderLeft: "3px solid var(--sw-accent)",
-                borderRadius: "2px",
-              }}
-            >
-              {/* Subtle glow behind the block */}
-              <div
-                aria-hidden
-                className="absolute inset-0 pointer-events-none"
-                style={{
-                  background: "radial-gradient(ellipse 60% 80% at 0% 50%, rgba(59,130,246,0.05) 0%, transparent 70%)",
-                }}
-              />
-              <p className="swiss-eyebrow mb-3" style={{ color: "var(--sw-accent)" }}>Interaktiv</p>
-              <Terminal title="bash">
-                <TLine command="npx maxsimcli@latest" />
-                <TComment>→ Wähle Runtime: Claude Code · OpenCode · Gemini · Codex · All</TComment>
-                <TComment>→ Wähle Ort: Global (alle Projekte) oder Local (dieses Projekt)</TComment>
-              </Terminal>
-            </div>
-
-            {/* Non-interactive */}
-            <div className="mb-6">
-              <p className="swiss-eyebrow mb-3">Non-interactive — CI / Docker / Scripts</p>
-              <Terminal>
-                <TLine command="npx maxsimcli --claude   --global" comment="Claude Code → ~/.claude/" />
-                <TLine command="npx maxsimcli --opencode --global" comment="OpenCode → ~/.config/opencode/" />
-                <TLine command="npx maxsimcli --gemini   --global" comment="Gemini CLI → ~/.gemini/" />
-                <TLine command="npx maxsimcli --codex    --global" comment="Codex → ~/.codex/" />
-                <TLine command="npx maxsimcli --all      --global" comment="Alle Runtimes gleichzeitig" />
-              </Terminal>
-              <p className="text-xs mt-2" style={{ color: "var(--sw-text-faint)" }}>
-                Ersetze <code style={{ color: "var(--sw-accent-light)" }}>--global</code> durch{" "}
-                <code style={{ color: "var(--sw-accent-light)" }}>--local</code> für projektbezogene Installation.
-              </p>
-            </div>
-
-            {/* Runtimes */}
-            <div
-              className="grid grid-cols-2 sm:grid-cols-4 gap-px"
-              style={{ background: "var(--sw-border)" }}
-            >
-              {RUNTIMES.map((rt) => (
-                <div
-                  key={rt.name}
-                  className="p-5"
-                  style={{ background: "var(--sw-surface)", borderTop: `2px solid ${rt.accent}` }}
-                >
-                  <p className="font-display font-bold text-sm mb-1" style={{ color: rt.accent }}>
-                    {rt.name}
-                  </p>
-                  <p className="font-mono text-xs mb-3" style={{ color: "var(--sw-text-faint)" }}>{rt.flag}</p>
-                  <p className="swiss-eyebrow" style={{ marginBottom: "0.25rem", fontSize: "0.6rem" }}>Verify</p>
-                  <code className="font-mono text-xs" style={{ color: "var(--sw-text-muted)" }}>{rt.verify}</code>
-                </div>
-              ))}
-            </div>
-          </section>
-        </FadeIn>
-
-        {/* 3. Workflow */}
-        <FadeIn>
-          <section>
-            <Eyebrow>Workflow</Eyebrow>
-            <SectionHeading>Sechs Schritte zum Release</SectionHeading>
-
-            <div className="relative">
-              {/* Connecting line */}
-              <div
-                className="absolute left-[2.375rem] top-4 bottom-4 hidden sm:block"
-                style={{ width: "1px", background: "var(--sw-border)" }}
-              />
-
-              <div className="space-y-2">
-                {WORKFLOW_STEPS.map((step, i) => (
-                  <motion.div
-                    key={step.n}
-                    initial={{ opacity: 0, x: -12 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true, margin: "-40px" }}
-                    transition={{ duration: 0.4, delay: i * 0.06 }}
-                    className="flex gap-5 group relative"
-                  >
-                    {/* Step number */}
-                    <div
-                      className="shrink-0 w-[4.75rem] h-[4.75rem] hidden sm:flex items-center justify-center z-10"
-                      style={{
-                        background: "var(--sw-surface)",
-                        border: "1px solid var(--sw-border)",
-                        borderRadius: "2px",
-                        transition: "border-color 0.2s",
-                      }}
-                    >
-                      <span
-                        className="font-display font-bold text-xl"
-                        style={{ color: "var(--sw-accent)", letterSpacing: "-0.02em" }}
-                      >
-                        {step.n}
-                      </span>
-                    </div>
-
-                    {/* Content */}
-                    <div
-                      className="flex-1 p-5 transition-colors"
-                      style={{
-                        background: "var(--sw-surface)",
-                        border: "1px solid var(--sw-border)",
-                        borderRadius: "2px",
-                      }}
-                    >
-                      <div className="flex flex-wrap items-baseline gap-3 mb-1">
-                        <span
-                          className="sm:hidden font-display font-bold text-base"
-                          style={{ color: "var(--sw-accent)" }}
-                        >
-                          {step.n}
-                        </span>
-                        <h3 className="font-display font-bold text-sm" style={{ color: "var(--sw-fg)" }}>
-                          {step.title}
-                        </h3>
-                        <code
-                          className="font-mono text-xs"
-                          style={{ color: "var(--sw-accent-light)" }}
-                        >
-                          {step.cmd}
-                        </code>
-                      </div>
-                      <p className="text-xs leading-relaxed" style={{ color: "var(--sw-text-muted)" }}>
-                        {step.desc}
-                      </p>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-            </div>
-          </section>
-        </FadeIn>
-
-        {/* 4. Dashboard — Aceternity bento card */}
-        <FadeIn>
-          <section>
-            <Eyebrow>Live Dashboard</Eyebrow>
-            <div
-              className="relative overflow-hidden p-8 sm:p-10"
-              style={{
-                background: "var(--sw-surface)",
-                border: "1px solid var(--sw-border-light)",
-                borderRadius: "2px",
-                boxShadow: "inset 0 0 60px rgba(59,130,246,0.04)",
-              }}
-            >
-              {/* Faint grid inside card */}
-              <div
-                aria-hidden
-                className="absolute inset-0 pointer-events-none"
-                style={{
-                  backgroundImage: `
-                    linear-gradient(to right, var(--grid-line-v) 1px, transparent 1px),
-                    linear-gradient(to bottom, var(--grid-line-h) 1px, transparent 1px)
-                  `,
-                  backgroundSize: "32px 32px",
-                  opacity: 0.6,
-                }}
-              />
-              {/* Accent top border */}
-              <div
-                className="absolute top-0 left-0 right-0 h-px"
-                style={{ background: "linear-gradient(to right, transparent, var(--sw-accent), transparent)" }}
-              />
-
-              <div className="relative z-10 flex flex-col sm:flex-row gap-8">
-                <div className="flex-1">
-                  <h2
-                    className="font-display font-bold mb-3"
-                    style={{ fontSize: "1.375rem", color: "var(--sw-fg)", letterSpacing: "-0.02em" }}
-                  >
-                    Live Dashboard
-                  </h2>
-                  <p className="text-sm leading-relaxed mb-5" style={{ color: "var(--sw-text-muted)" }}>
-                    Echtzeit-Web-Dashboard mit Phase-Progress, offenen Tasks, Blockern und inline
-                    Plan-Editor. Startet automatisch während{" "}
-                    <code style={{ color: "var(--sw-accent-light)" }}>/maxsim:execute-phase</code>.
-                  </p>
-                  <Terminal title="bash">
-                    <TLine command="npx maxsimcli dashboard" />
-                    <TComment>→ Öffnet Browser automatisch · Port ab 3333 · WebSocket Live-Updates</TComment>
-                  </Terminal>
-                </div>
-
-                <div className="sm:w-56 shrink-0">
-                  <p className="swiss-eyebrow mb-3">Features</p>
-                  <ul className="space-y-2">
-                    {DASHBOARD_FEATURES.map((f) => (
-                      <li key={f} className="flex items-start gap-2">
-                        <span style={{ color: "var(--sw-accent)", marginTop: "2px", fontSize: "0.6rem" }}>▸</span>
-                        <span className="text-xs" style={{ color: "var(--sw-text-muted)" }}>{f}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </section>
-        </FadeIn>
-
-        {/* 5. Commands reference */}
-        <FadeIn>
-          <section>
-            <Eyebrow>Befehlsreferenz</Eyebrow>
-            <SectionHeading>Alle Befehle</SectionHeading>
-            <p className="text-sm mb-6" style={{ color: "var(--sw-text-muted)" }}>
-              Klick auf einen Befehl zum Kopieren.
-            </p>
-
-            <div style={{ border: "1px solid var(--sw-border)" }}>
-              {/* Header */}
-              <div
-                className="grid grid-cols-[1fr_1fr_auto] gap-4 px-5 py-3"
-                style={{
-                  borderBottom: "1px solid var(--sw-border)",
-                  background: "var(--sw-surface)",
-                }}
-              >
-                <span className="swiss-eyebrow" style={{ marginBottom: 0 }}>Befehl</span>
-                <span className="swiss-eyebrow hidden sm:block" style={{ marginBottom: 0 }}>Beschreibung</span>
-                <span />
-              </div>
-
-              {COMMANDS.map((item, i) => (
-                <button
-                  key={item.cmd}
-                  type="button"
-                  onClick={() => copy(item.cmd)}
-                  className="w-full grid grid-cols-[1fr_auto] sm:grid-cols-[1fr_1fr_auto] gap-4 items-center px-5 py-3.5 text-left group"
-                  style={{
-                    borderBottom: i < COMMANDS.length - 1 ? "1px solid var(--sw-border)" : undefined,
-                    background: "transparent",
-                    transition: "background 0.15s",
-                  }}
-                  onMouseEnter={(e) => (e.currentTarget.style.background = "var(--sw-surface)")}
-                  onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
-                >
-                  <span
-                    className="font-mono text-xs"
-                    style={{ color: "var(--sw-accent-light)" }}
-                  >
-                    {item.cmd}
-                  </span>
-                  <span
-                    className="hidden sm:block text-xs"
-                    style={{ color: "var(--sw-text-muted)" }}
-                  >
-                    {item.desc}
-                  </span>
-                  <span
-                    className="font-mono text-xs shrink-0 opacity-0 group-hover:opacity-100 transition-opacity"
-                    style={{ color: "var(--sw-text-faint)" }}
-                  >
-                    {copiedCmd === item.cmd ? "✓" : "↗"}
-                  </span>
-                </button>
-              ))}
-            </div>
-          </section>
-        </FadeIn>
-
-        {/* 6. Model Profiles */}
-        <FadeIn>
-          <section>
-            <Eyebrow>Konfiguration</Eyebrow>
-            <SectionHeading>Model Profile</SectionHeading>
-
-            <div style={{ border: "1px solid var(--sw-border)" }}>
-              {/* Header */}
-              <div
-                className="grid grid-cols-4 gap-px"
-                style={{ background: "var(--sw-border)" }}
-              >
-                {["Profil", "Planung", "Ausführung", "Verifikation"].map((h) => (
-                  <div
-                    key={h}
-                    className="px-5 py-3"
-                    style={{ background: "var(--sw-surface)" }}
-                  >
-                    <span className="swiss-eyebrow" style={{ marginBottom: 0 }}>{h}</span>
-                  </div>
-                ))}
-              </div>
-
-              {[
-                { profile: "quality",  planning: "Opus",   exec: "Opus",   verify: "Sonnet" },
-                { profile: "balanced", planning: "Opus",   exec: "Sonnet", verify: "Sonnet", default: true },
-                { profile: "budget",   planning: "Sonnet", exec: "Sonnet", verify: "Haiku" },
-              ].map((row) => (
-                <div
-                  key={row.profile}
-                  className="grid grid-cols-4 gap-px"
-                  style={{ background: "var(--sw-border)", borderTop: "1px solid var(--sw-border)" }}
-                >
-                  <div className="px-5 py-4 flex items-center gap-2" style={{ background: "var(--sw-surface)" }}>
-                    <span className="font-mono text-xs" style={{ color: "var(--sw-fg)" }}>{row.profile}</span>
-                    {row.default && (
-                      <span
-                        className="tech-tag tech-tag-blue"
-                        style={{ fontSize: "0.6rem", marginRight: 0, marginBottom: 0 }}
-                      >
-                        default
-                      </span>
-                    )}
-                  </div>
-                  {[row.planning, row.exec, row.verify].map((val, j) => (
-                    <div
-                      key={j}
-                      className="px-5 py-4"
-                      style={{ background: "var(--sw-surface)", color: "var(--sw-text-muted)", fontFamily: "monospace", fontSize: "0.75rem" }}
-                    >
-                      {val}
-                    </div>
-                  ))}
-                </div>
-              ))}
-            </div>
-
-            <p className="text-xs mt-3" style={{ color: "var(--sw-text-faint)" }}>
-              Wechseln mit:{" "}
-              <code style={{ color: "var(--sw-accent-light)" }}>/maxsim:set-profile &lt;profile&gt;</code>
-            </p>
-          </section>
-        </FadeIn>
-
-        {/* 7. Links */}
-        <FadeIn>
-          <section>
-            <Eyebrow>Links</Eyebrow>
-            <div
-              className="grid sm:grid-cols-3 gap-px"
-              style={{ background: "var(--sw-border)", border: "1px solid var(--sw-border)" }}
-            >
-              {[
-                { label: "GitHub",  href: "https://github.com/maystudios/maxsim",      sub: "github.com/maystudios/maxsim",    accentHover: "var(--sw-fg)" },
-                { label: "npm",     href: "https://www.npmjs.com/package/maxsimcli",   sub: "npmjs.com/package/maxsimcli",     accentHover: "#f87171" },
-                { label: "Website", href: "https://maxsimcli.dev",                     sub: "maxsimcli.dev",                   accentHover: "var(--sw-accent-light)" },
-              ].map((link) => (
-                <a
-                  key={link.label}
-                  href={link.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block p-6 group"
-                  style={{
-                    background: "var(--sw-surface)",
-                    textDecoration: "none",
-                    transition: "background 0.2s",
-                  }}
-                  onMouseEnter={(e) => (e.currentTarget.style.background = "var(--sw-bg)")}
-                  onMouseLeave={(e) => (e.currentTarget.style.background = "var(--sw-surface)")}
-                >
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="font-display font-bold text-sm" style={{ color: "var(--sw-fg)" }}>
-                      {link.label}
-                    </span>
-                    <span style={{ color: "var(--sw-text-faint)", transition: "color 0.2s" }}>↗</span>
-                  </div>
-                  <p className="font-mono text-xs" style={{ color: "var(--sw-text-faint)" }}>{link.sub}</p>
-                </a>
-              ))}
-            </div>
-          </section>
-        </FadeIn>
-
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-px bg-surface2 mb-8">
+        {[
+          { label: "Typ", value: "CLI / Slash Commands" },
+          { label: "Sprache", value: "TypeScript" },
+          { label: "Lizenz", value: "MIT" },
+          { label: "Status", value: "Aktiv" },
+        ].map((stat) => (
+          <div key={stat.label} className="bg-surface p-4">
+            <p className="text-xs uppercase tracking-widest text-faint mb-1">{stat.label}</p>
+            <p className="font-display font-semibold text-fg text-sm">{stat.value}</p>
+          </div>
+        ))}
       </div>
-    </div>
+
+      {/* Overview */}
+      <h2>Das Problem: Context Rot</h2>
+      <p>
+        Je länger eine KI-Session dauert, desto schlechter wird die Qualität. Der Kontext füllt
+        sich, architektonische Entscheidungen gehen verloren, Fehler wiederholen sich.
+        <strong> maxsimcli</strong> löst das durch Context Engineering: Arbeit wird in Phasen
+        aufgeteilt und jeder Task an einen eigenen Subagenten mit frischem Kontext delegiert.
+        GitHub Issues dienen als Single Source of Truth, damit nichts zwischen Sessions verloren geht.
+      </p>
+      <p>
+        Das Tool installiert 14 Slash Commands, 4 spezialisierte Agenten, 15 Skills und 18 Workflows
+        direkt in das <code>.claude/</code>-Verzeichnis. Kein separater API-Key nötig, keine
+        zusätzlichen Kosten neben dem bestehenden Claude-Code-Abo.
+      </p>
+
+      {/* How It Works */}
+      <h2>Workflow: Vier Schritte zum Feature</h2>
+      <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        {[
+          {
+            step: "01",
+            title: "Installieren",
+            cmd: "npx maxsimcli@latest",
+            desc: "Commands, Workflows und Agenten landen im .claude/-Verzeichnis. Ein Befehl, fertig.",
+          },
+          {
+            step: "02",
+            title: "Initialisieren",
+            cmd: "/maxsim:init",
+            desc: "Erstellt ein GitHub Project Board, Issue-Labels und Milestones. Sammelt Projektkontext.",
+          },
+          {
+            step: "03",
+            title: "Planen",
+            cmd: "/maxsim:plan",
+            desc: "Researcher-Agent untersucht die Codebase. Planner-Agent erstellt strukturierte Task-Issues auf GitHub.",
+          },
+          {
+            step: "04",
+            title: "Ausführen",
+            cmd: "/maxsim:execute",
+            desc: "Executor-Agenten setzen Pläne in parallelen Wellen um. Jeder Plan bekommt einen atomaren Commit.",
+          },
+        ].map((step) => (
+          <div key={step.step} className="bg-surface border border-border p-6">
+            <div className="flex items-baseline gap-3 mb-2">
+              <span className="font-display font-bold text-brandLight text-lg">{step.step}</span>
+              <h3 className="font-display font-bold text-fg text-base">{step.title}</h3>
+            </div>
+            <code className="text-xs text-brandLight block mb-2">{step.cmd}</code>
+            <p>{step.desc}</p>
+          </div>
+        ))}
+      </div>
+
+      {/* 4 Agents */}
+      <h2>Vier spezialisierte Agenten</h2>
+      <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        {[
+          {
+            name: "Researcher",
+            desc: "Untersucht die Codebase, sammelt technischen Kontext. Kann optional Brave Search für externe Recherche nutzen.",
+            color: "border-t-emerald-400",
+          },
+          {
+            name: "Planner",
+            desc: "Verwandelt Research in strukturierte GitHub Issues mit Task-Abhängigkeiten und Wellen-Gruppierung.",
+            color: "border-t-blue-400",
+          },
+          {
+            name: "Executor",
+            desc: "Liest Pläne, implementiert Änderungen, committet atomar. Unabhängige Pläne laufen parallel in Git Worktrees.",
+            color: "border-t-amber-400",
+          },
+          {
+            name: "Verifier",
+            desc: "Prüft gegen 5 Quality Gates: Tests, Build, Lint, Spec Compliance und Code Review.",
+            color: "border-t-violet-400",
+          },
+        ].map((agent) => (
+          <div key={agent.name} className={`bg-surface border border-border border-t-2 ${agent.color} p-5`}>
+            <h3 className="font-display font-bold text-fg text-sm mb-2">{agent.name}</h3>
+            <p className="text-muted text-xs leading-relaxed">{agent.desc}</p>
+          </div>
+        ))}
+      </div>
+
+      {/* Key Features */}
+      <h2>Features</h2>
+      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {[
+          {
+            title: "Context Engineering",
+            desc: "Jeder Task wird an einen Subagenten mit frischem Kontext delegiert. Die Hauptsession bleibt sauber.",
+          },
+          {
+            title: "Spec-Driven Development",
+            desc: "Phasen, Research, Verifikation und UAT. Jeder Schritt landet in Markdown und überlebt Session-Wechsel.",
+          },
+          {
+            title: "Wave-Based Parallelization",
+            desc: "Tasks werden in Abhängigkeitswellen gruppiert und parallel ausgeführt. Jede Welle nutzt isolierte Subagenten.",
+          },
+          {
+            title: "5 Verification Gates",
+            desc: "Tests, Build, Lint, Spec Compliance und Code Review prüfen jede Phase vor dem Abschluss. Strict Mode konfigurierbar.",
+          },
+          {
+            title: "GitHub als Single Source of Truth",
+            desc: "Project Board mit 5 Spalten, Issue-Tracking, Labels und Milestones. Kein lokaler State, der verloren gehen kann.",
+          },
+          {
+            title: "3 Model Profile",
+            desc: "Quality (Opus), Balanced (Mix) und Budget (Sonnet/Haiku). Pro Agent und Projekt überschreibbar.",
+          },
+          {
+            title: "15 Skills & 18 Workflows",
+            desc: "TDD, Code Review, Debugging, Brainstorming, Security Audits. Eigene Skills in .claude/skills/ überleben Upgrades.",
+          },
+          {
+            title: "Branching Strategies",
+            desc: "Erstellt automatisch Git-Branches pro Phase. Templates wie maxsim/phase-{N}-task-{id} halten das Repo aufgeräumt.",
+          },
+          {
+            title: "Self-Improvement Loop",
+            desc: "Erfasst Learnings aus jeder Session. Autoresearch misst Metriken, behält Verbesserungen und verwirft Regressionen.",
+          },
+        ].map((feature) => (
+          <div
+            key={feature.title}
+            className="bg-surface border border-border p-5 hover:border-brand transition-colors duration-200"
+          >
+            <h4 className="font-display font-semibold text-fg text-sm mb-2">{feature.title}</h4>
+            <p className="text-muted text-xs leading-relaxed">{feature.desc}</p>
+          </div>
+        ))}
+      </div>
+
+      {/* Commands */}
+      <h2>Befehle</h2>
+      <div className="grid md:grid-cols-2 gap-8">
+        <div className="bg-surface border border-border p-6">
+          <h3 className="font-display font-bold text-fg text-lg mb-3">Kern-Workflow</h3>
+          <ul className="space-y-2">
+            {[
+              { cmd: "/maxsim:go", desc: "Auto-Erkennung: macht das Richtige basierend auf Projektstatus" },
+              { cmd: "/maxsim:init", desc: "GitHub-Integration und Project Board aufsetzen" },
+              { cmd: "/maxsim:plan", desc: "Phase planen mit Research und Task-Breakdown" },
+              { cmd: "/maxsim:execute", desc: "Pläne mit parallelen Agenten ausführen" },
+              { cmd: "/maxsim:quick", desc: "Schnelle Tasks ohne formale Phase" },
+              { cmd: "/maxsim:progress", desc: "Status vom GitHub Board mit Empfehlung" },
+            ].map((item) => (
+              <li key={item.cmd} className="flex gap-3 items-start">
+                <code className="text-xs text-brandLight shrink-0 mt-0.5">{item.cmd}</code>
+                <span className="text-xs text-muted">{item.desc}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div className="bg-surface border border-border p-6">
+          <h3 className="font-display font-bold text-fg text-lg mb-3">Autonome Loops & Tools</h3>
+          <ul className="space-y-2">
+            {[
+              { cmd: "/maxsim:debug", desc: "Systematisches Debugging: Reproduzieren, Hypothese, Isolieren, Fix" },
+              { cmd: "/maxsim:fix-loop", desc: "Autonome Fehlerreparatur bis null Fehler" },
+              { cmd: "/maxsim:debug-loop", desc: "Autonomes Bug-Hunting mit Hypothesis-Testing" },
+              { cmd: "/maxsim:improve", desc: "Optimierungsloop gegen beliebige Metrik" },
+              { cmd: "/maxsim:security", desc: "STRIDE + OWASP Security Audit (read-only)" },
+              { cmd: "/maxsim:settings", desc: "Konfiguration anpassen" },
+            ].map((item) => (
+              <li key={item.cmd} className="flex gap-3 items-start">
+                <code className="text-xs text-brandLight shrink-0 mt-0.5">{item.cmd}</code>
+                <span className="text-xs text-muted">{item.desc}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+
+      {/* Model Profiles */}
+      <h2>Model Profile</h2>
+      <div className="bg-surface border border-border overflow-hidden">
+        <div className="grid grid-cols-5 gap-px bg-border">
+          {["Profil", "Planner", "Executor", "Researcher", "Verifier"].map((h) => (
+            <div key={h} className="bg-surface px-4 py-3">
+              <span className="text-xs uppercase tracking-widest text-faint">{h}</span>
+            </div>
+          ))}
+        </div>
+        {[
+          { profile: "quality", planner: "Opus", executor: "Opus", researcher: "Sonnet", verifier: "Opus" },
+          { profile: "balanced", planner: "Opus", executor: "Sonnet", researcher: "Sonnet", verifier: "Sonnet", isDefault: true },
+          { profile: "budget", planner: "Sonnet", executor: "Sonnet", researcher: "Haiku", verifier: "Sonnet" },
+        ].map((row) => (
+          <div key={row.profile} className="grid grid-cols-5 gap-px bg-border">
+            <div className="bg-surface px-4 py-3 flex items-center gap-2">
+              <span className="font-mono text-xs text-fg">{row.profile}</span>
+              {row.isDefault && <span className="tech-tag tech-tag-blue text-[0.6rem] !mb-0 !mr-0">default</span>}
+            </div>
+            {[row.planner, row.executor, row.researcher, row.verifier].map((val, j) => (
+              <div key={j} className="bg-surface px-4 py-3 font-mono text-xs text-muted">
+                {val}
+              </div>
+            ))}
+          </div>
+        ))}
+      </div>
+
+      {/* Installation */}
+      <h2>Installation</h2>
+      <div className="bg-surface border border-border p-6 lg:p-8">
+        <p className="mb-4">
+          Ein Befehl installiert alles ins <code>.claude/</code>-Verzeichnis. Kein globales Binary nötig.
+        </p>
+        <div className="bg-canvas border border-border p-4 font-mono text-sm mb-4">
+          <span className="text-brandLight select-none">$ </span>
+          <span className="select-all text-green-400">npx maxsimcli@latest</span>
+        </div>
+        <p className="mb-4">
+          Danach im Projektverzeichnis:
+        </p>
+        <div className="bg-canvas border border-border p-4 font-mono text-sm">
+          <span className="text-brandLight select-none">$ </span>
+          <span className="text-green-400">/maxsim:init</span>
+        </div>
+        <div className="grid sm:grid-cols-2 gap-4 mt-6">
+          <div>
+            <p className="text-xs uppercase tracking-widest text-faint mb-2">Voraussetzungen</p>
+            <ul className="space-y-1 text-xs text-muted">
+              <li>Node.js 22+</li>
+              <li>Claude Code</li>
+              <li>Git</li>
+              <li>GitHub CLI (gh)</li>
+            </ul>
+          </div>
+          <div>
+            <p className="text-xs uppercase tracking-widest text-faint mb-2">Was installiert wird</p>
+            <ul className="space-y-1 text-xs text-muted">
+              <li>14 Slash Commands</li>
+              <li>4 Agent-Definitionen</li>
+              <li>15 Skills, 18 Workflows</li>
+              <li>8 Hooks, Tool-Binary</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      {/* Tech Stack */}
+      <h3>Technologien</h3>
+      <div className="my-4">
+        <span className="tech-tag tech-tag-blue">TypeScript</span>
+        <span className="tech-tag tech-tag-purple">Claude Code</span>
+        <span className="tech-tag tech-tag-teal">Open Source</span>
+        <span className="tech-tag tech-tag-green">Node.js</span>
+        <span className="tech-tag tech-tag-orange">Markdown Prompts</span>
+        <span className="tech-tag tech-tag-gray">GitHub API</span>
+        <span className="tech-tag tech-tag-red">npm</span>
+      </div>
+
+      {/* Links */}
+      <h2>Links</h2>
+      <div className="grid sm:grid-cols-3 gap-6">
+        {[
+          { label: "GitHub", href: "https://github.com/maystudios/maxsim", sub: "Source Code & Issues" },
+          { label: "npm", href: "https://www.npmjs.com/package/maxsimcli", sub: "Package Registry" },
+          { label: "Website", href: "https://maxsimcli.dev", sub: "Dokumentation & Guides" },
+        ].map((link) => (
+          <a
+            key={link.label}
+            href={link.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="bg-surface border border-border p-6 hover:border-brand transition-colors duration-200 block no-underline"
+          >
+            <h3 className="font-display font-bold text-fg text-sm mb-1">{link.label}</h3>
+            <p className="text-xs text-faint">{link.sub}</p>
+          </a>
+        ))}
+      </div>
+    </ProjectShell>
   );
 }

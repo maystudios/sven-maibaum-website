@@ -1,7 +1,30 @@
+import { useRef, useState } from "react";
+import type { FormEvent } from "react";
 import { motion } from "motion/react";
+import emailjs from "@emailjs/browser";
 import SectionHeading from "../components/SectionHeading";
 
+const SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID as string;
+const TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID as string;
+const PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY as string;
+
 export default function Contact() {
+  const formRef = useRef<HTMLFormElement>(null);
+  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
+
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    if (!formRef.current) return;
+    setStatus("sending");
+    try {
+      await emailjs.sendForm(SERVICE_ID, TEMPLATE_ID, formRef.current, PUBLIC_KEY);
+      setStatus("sent");
+      formRef.current.reset();
+    } catch {
+      setStatus("error");
+    }
+  };
+
   return (
     <section id="contact" className="swiss-section">
       <div className="swiss-container">
@@ -15,8 +38,8 @@ export default function Contact() {
           >
             <SectionHeading eyebrow="Kontakt" title="Nehmen Sie Kontakt auf" align="left" className="mb-8" />
             <p className="swiss-body mb-10 max-w-md">
-              Ich freue mich auf Ihre Anfrage! Füllen Sie einfach das Formular
-              aus oder kontaktieren Sie mich direkt.
+              Ich freue mich auf Ihre Anfrage! Nutzen Sie das Formular
+              oder kontaktieren Sie mich direkt.
             </p>
 
             <nav className="space-y-4" aria-label="Kontakt-Links">
@@ -66,69 +89,102 @@ export default function Contact() {
             </nav>
           </motion.div>
 
-          {/* Right column – form */}
+          {/* Right column – contact form */}
           <motion.div
             initial={{ opacity: 0, x: 16 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, amount: 0.3 }}
             transition={{ duration: 0.5, ease: "easeOut", delay: 0.1 }}
           >
-            <form
-              action="https://formspree.io/f/xvgrpazj"
-              className="fs-form"
-              target="_top"
-              method="POST"
-            >
-              <div className="fs-field">
-                <label className="fs-label" htmlFor="name">
-                  Ihr Name
-                </label>
-                <input
-                  className="fs-input"
-                  id="name"
-                  name="name"
-                  type="text"
-                  placeholder="Max Mustermann"
-                  required
-                />
-              </div>
-              <div className="fs-field">
-                <label className="fs-label" htmlFor="email">
-                  Ihre E-Mail
-                </label>
-                <input
-                  className="fs-input"
-                  id="email"
-                  name="email"
-                  type="email"
-                  placeholder="max.mustermann@example.com"
-                  required
-                />
-                <p className="fs-description">
-                  Damit ich Ihnen per E-Mail antworten kann.
+            {status === "sent" ? (
+              <div className="flex flex-col items-center justify-center rounded-2xl border border-brand/30 bg-brand/5 p-10 md:p-14 text-center">
+                <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-brand/10">
+                  <svg className="h-7 w-7 text-brand" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" aria-hidden="true">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                  </svg>
+                </div>
+                <h3 className="text-xl font-semibold text-fg mb-2">Nachricht gesendet!</h3>
+                <p className="swiss-body max-w-sm mb-6">
+                  Vielen Dank für Ihre Nachricht. Ich melde mich so schnell wie möglich bei Ihnen.
                 </p>
-              </div>
-              <div className="fs-field">
-                <label className="fs-label" htmlFor="message">
-                  Ihre Nachricht
-                </label>
-                <textarea
-                  className="fs-textarea"
-                  id="message"
-                  name="message"
-                  placeholder="Ihre Anfrage..."
-                  required
-                />
-                <p className="fs-description">
-                  Was möchten Sie besprechen?
-                </p>
-              </div>
-              <div className="fs-button-group">
-                <button className="fs-button" type="submit">
-                  Nachricht Senden
+                <button
+                  type="button"
+                  onClick={() => setStatus("idle")}
+                  className="text-sm font-medium text-brand hover:text-brand/80 transition-colors"
+                >
+                  Weitere Nachricht senden
                 </button>
               </div>
-            </form>
+            ) : (
+              <form
+                ref={formRef}
+                onSubmit={handleSubmit}
+                className="grid gap-6"
+              >
+                <div className="flex flex-col gap-2">
+                  <label className="text-xs font-medium uppercase tracking-wider text-muted" htmlFor="name">
+                    Ihr Name
+                  </label>
+                  <input
+                    className="h-12 rounded-md border border-border bg-surface px-4 text-[0.9375rem] text-fg placeholder:text-muted/50 transition-colors focus:border-brand focus:outline-none"
+                    id="name"
+                    name="name"
+                    type="text"
+                    placeholder="Max Mustermann"
+                    required
+                  />
+                </div>
+                <div className="flex flex-col gap-2">
+                  <label className="text-xs font-medium uppercase tracking-wider text-muted" htmlFor="email">
+                    Ihre E-Mail
+                  </label>
+                  <input
+                    className="h-12 rounded-md border border-border bg-surface px-4 text-[0.9375rem] text-fg placeholder:text-muted/50 transition-colors focus:border-brand focus:outline-none"
+                    id="email"
+                    name="email"
+                    type="email"
+                    placeholder="max.mustermann@example.com"
+                    required
+                  />
+                </div>
+                <div className="flex flex-col gap-2">
+                  <label className="text-xs font-medium uppercase tracking-wider text-muted" htmlFor="message">
+                    Ihre Nachricht
+                  </label>
+                  <textarea
+                    className="min-h-[8rem] resize-vertical rounded-md border border-border bg-surface px-4 py-3 text-[0.9375rem] text-fg placeholder:text-muted/50 transition-colors focus:border-brand focus:outline-none"
+                    id="message"
+                    name="message"
+                    placeholder="Ihre Anfrage..."
+                    required
+                  />
+                </div>
+
+                {status === "error" && (
+                  <p className="text-sm text-red-500">
+                    Beim Senden ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut oder schreiben Sie direkt an contact@sven-maibaum.com.
+                  </p>
+                )}
+
+                <button
+                  type="submit"
+                  disabled={status === "sending"}
+                  className="inline-flex h-12 items-center justify-center gap-2 rounded-md bg-brand px-8 text-sm font-semibold uppercase tracking-wider text-white transition-all hover:brightness-110 active:scale-[0.98] disabled:opacity-60 disabled:pointer-events-none"
+                >
+                  {status === "sending" ? (
+                    <>
+                      <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                      </svg>
+                      Wird gesendet...
+                    </>
+                  ) : (
+                    "Nachricht senden"
+                  )}
+                </button>
+              </form>
+            )}
           </motion.div>
         </div>
       </div>

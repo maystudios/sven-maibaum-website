@@ -55,7 +55,7 @@ const routes = [
     path: '/projekte/itchio',
     title: 'Game Jams & itch.io – Indie-Spieleprojekte | Sven Maibaum',
     description:
-      'Sammlung von Game-Jam-Projekten und Rapid-Prototyping-Experimenten, darunter der Game-Jam-Gewinner Terrafix.',
+      'Sammlung von Game-Jam-Projekten und Rapid-Prototyping-Experimenten: Terrafix (1. Platz HHU Game Jam) und Disk Inserted (First-Person Horror, HHU Game Jam 2026).',
     image: `${BASE_URL}/assets/projects/itchio/gamejam-winner.jpg`,
   },
   {
@@ -71,6 +71,13 @@ const routes = [
     description:
       'Skills, Agents, Hooks und Commands für Claude Code mit einem einzigen npx-Befehl installieren. Open-Source-Katalog für Agentic Coding.',
     image: DEFAULT_IMAGE,
+  },
+  {
+    path: '/projekte/fab-store',
+    title: 'Fab Store – Unreal Engine Plugins & Assets | Sven Maibaum',
+    description:
+      'Professionelle Unreal-Engine-Plugins und Assets auf Fab.com: Recoil-Systeme, Popup-Frameworks und Developer-Tools für Game-Entwickler.',
+    image: `${BASE_URL}/assets/projects/fab/fab-hero.webp`,
   },
   {
     path: '/impressum',

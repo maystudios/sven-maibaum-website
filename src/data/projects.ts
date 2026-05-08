@@ -62,11 +62,12 @@ export const projectCards: ProjectCard[] = [
     id: "itchio",
     title: "Game Jams & itch.io",
     summary:
-      "Sammlung meiner Game-Jam-Projekte (z.B. Terrafix) und Rapid-Prototyping-Experimente.",
+      "Sammlung meiner Game-Jam-Projekte (Terrafix, Disk Inserted) und Rapid-Prototyping-Experimente.",
     tags: [
       { label: "itch.io", className: "tech-tag tech-tag-red" },
       { label: "Game Jam", className: "tech-tag tech-tag-orange" },
       { label: "Terrafix", className: "tech-tag tech-tag-green" },
+      { label: "Disk Inserted", className: "tech-tag tech-tag-purple" },
     ],
     filters: ["unreal-engine"],
     dataTags: ["game-dev", "indie", "prototyping", "unreal-engine"],
@@ -99,6 +100,25 @@ export const projectCards: ProjectCard[] = [
       "inline-block bg-gradient-to-r from-purple-600 to-pink-500 hover:from-purple-700 hover:to-pink-600 text-white font-medium py-2 px-4 rounded-lg transition duration-300 transform hover:scale-105 text-sm",
   },
   {
+    id: "fab-store",
+    title: "Fab Store",
+    summary:
+      "Meine Unreal-Engine-Plugins und Assets auf Fab.com.",
+    tags: [
+      { label: "Unreal Engine", className: "tech-tag tech-tag-purple" },
+      { label: "Fab.com", className: "tech-tag tech-tag-orange" },
+      { label: "C++", className: "tech-tag tech-tag-blue" },
+    ],
+    filters: ["unreal-engine"],
+    dataTags: ["unreal-engine", "c++", "blueprints", "marketplace", "plugins"],
+    image: `${import.meta.env.BASE_URL}assets/projects/fab/fab-hero.webp`,
+    route: "/projekte/fab-store",
+    cta: "Mehr anzeigen",
+    accent: "text-orange-400",
+    buttonClass:
+      "inline-block bg-orange-500 hover:bg-orange-600 text-white font-medium py-2 px-4 rounded-lg transition duration-300 transform hover:scale-105 text-sm",
+  },
+  {
     id: "huggingface",
     title: "Hugging Face & AI Research",
     summary:
@@ -110,7 +130,7 @@ export const projectCards: ProjectCard[] = [
     ],
     filters: ["ai-ml", "python"],
     dataTags: ["ai-ml", "python", "onnx", "quantization", "hugging-face"],
-    image: "https://placehold.co/600x400/FFD21E/000000?text=Hugging+Face+Profil",
+    image: `${import.meta.env.BASE_URL}assets/projects/huggingface/hugging_face_logo.png.webp`,
     link: "https://huggingface.co/Svenni551",
     cta: "Zum Profil",
     accent: "text-yellow-400",
@@ -121,7 +141,7 @@ export const projectCards: ProjectCard[] = [
     id: "maxsimcli",
     title: "maxsimcli",
     summary:
-      "Open-Source-CLI für KI-gestütztes Software-Engineering. Strukturierte Phasen, atomare Commits und spezialisierte Agent-Teams direkt im Terminal.",
+      "Meta-Prompting und Context Engineering für Claude Code. Strukturierte Prompts, 4 dedizierte Agenten und spec-driven Planning mit frischem Kontext pro Task.",
     tags: [
       { label: "Open Source", className: "tech-tag tech-tag-teal" },
       { label: "Claude Code", className: "tech-tag tech-tag-purple" },
@@ -129,7 +149,7 @@ export const projectCards: ProjectCard[] = [
     ],
     filters: ["typescript", "ai-ml"],
     dataTags: ["cli", "typescript", "ai-ml", "open-source", "developer-tools"],
-    image: `${import.meta.env.BASE_URL}assets/projects/maxsimcli/preview-v3.svg`,
+    image: `${import.meta.env.BASE_URL}assets/projects/maxsimcli/card.svg`,
     route: "/projekte/maxsimcli",
     cta: "Mehr anzeigen",
     accent: "text-blue-400",

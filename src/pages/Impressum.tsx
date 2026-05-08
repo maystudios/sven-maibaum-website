@@ -47,16 +47,11 @@ export default function Impressum() {
         Regelungen.
       </p>
 
-      <h2>4. Steuerliche Angaben</h2>
+      <h2>4. Umsatzsteuer-Identifikationsnummer</h2>
       <p>
         Umsatzsteuer-Identifikationsnummer gemäß § 27a UStG:
         <br />
-        [USt-IdNr., z. B. DE123456789, falls vorhanden]
-      </p>
-      <p>
-        Steuernummer:
-        <br />
-        [Steuernummer im Format 214/xxxx/xxxx, Finanzamt NRW]
+        DE362434207
       </p>
 
       <h2>5. Verantwortlich für den Inhalt</h2>

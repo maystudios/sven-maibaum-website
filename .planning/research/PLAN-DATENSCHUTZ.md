@@ -69,7 +69,7 @@ Wenn Sie das Kontaktformular auf dieser Website nutzen, werden Ihre Angaben — 
 
 **Drittlandübermittlung:** Formspree verarbeitet Daten auf Servern in den USA (Amazon Web Services). Eine DPF-Zertifizierung von Formspree ist nach aktuellem Stand nicht bestätigt. Die Datenübermittlung erfolgt daher auf Grundlage von EU-Standardvertragsklauseln (SCCs) gemäß Art. 46 Abs. 2 lit. c DSGVO als geeignete Garantie nach Art. 44 ff. DSGVO.
 
-**Speicherdauer:** Die übermittelten Daten verbleiben, bis die Anfrage abschließend bearbeitet ist. Auf Ihren Wunsch hin werden Ihre Daten unverzüglich gelöscht, sofern keine gesetzliche Aufbewahrungspflicht entgegensteht.
+**Speicherdauer:** Die übermittelten Daten verbleiben, bis die Anfrage abschließend bearbeitet ist (in der Regel innerhalb von drei Monaten nach der letzten Antwort). Auf Ihren Wunsch hin werden Ihre Daten unverzüglich gelöscht, sofern keine gesetzliche Aufbewahrungspflicht entgegensteht.
 
 **Hinweis:** Das Kontaktformular selbst speichert keine Daten im Browser (keine Cookies, kein localStorage durch das Formular).
 

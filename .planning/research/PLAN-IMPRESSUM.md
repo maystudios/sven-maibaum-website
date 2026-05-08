@@ -46,6 +46,8 @@ Der Berufsbezeichnung „Software-Architekt" unterliegt keiner gesetzlichen Regu
 **Steuernummer:**
 [Steuernummer im Format 214/xxxx/xxxx (Finanzamt NRW) — bei Kleinunternehmer nach § 19 UStG]
 
+> **Hinweis:** Entweder USt-IdNr. ODER Steuernummer eintragen, nicht beides gleichzeitig. Wer eine USt-IdNr. hat, gibt diese an. Wer Kleinunternehmer nach § 19 UStG ist, gibt stattdessen die Steuernummer an. Wer weder noch hat: beide Zeilen streichen.
+
 ---
 
 ## Verantwortlich für den Inhalt
@@ -70,7 +72,7 @@ Ich bin nicht bereit und nicht verpflichtet, an Streitbeilegungsverfahren vor ei
 
 Die auf dieser Website enthaltenen Inhalte und Werke (Texte, Grafiken, Code, Design) sind urheberrechtlich geschützt. Eine Vervielfältigung, Bearbeitung oder Verbreitung bedarf der vorherigen schriftlichen Zustimmung des Urhebers.
 
-© 2025 Sven Maibaum
+© [Jahr eintragen — vor Go-Live aktualisieren] Sven Maibaum
 
 ---
 

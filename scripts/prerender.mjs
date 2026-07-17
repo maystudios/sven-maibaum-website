@@ -38,25 +38,18 @@ const routes = [
     image: `${BASE_URL}/assets/projects/mrdork/mrdork3.png`,
   },
   {
-    path: '/projekte/shapes-puzzle-escape',
-    title: 'Shapes · Puzzle Escape – Mobile Game | Sven Maibaum',
+    path: '/projekte/mobile-games',
+    title: 'Mobile Games – Puzzle-Releases und Projekte | Sven Maibaum',
     description:
-      'Auf Android veröffentlichtes Schiebepuzzle mit acht Schwierigkeitsstufen, Silhouetten-Modus und garantiert lösbaren Levels. Die iOS-Version ist in Prüfung.',
+      'Sammlung der Mobile-Spiele Shapes · Puzzle Escape, Tiles · Logic Puzzle und HydroLoop als Working Title.',
     image: `${BASE_URL}/assets/projects/mobile-games/shapes/banner.webp`,
   },
   {
-    path: '/projekte/tiles-logic-puzzle',
-    title: 'Tiles · Logic Puzzle – Mobile Game | Sven Maibaum',
+    path: '/projekte/app-entwicklung',
+    title: 'App-Entwicklung – kommende Anwendungen | Sven Maibaum',
     description:
-      'Logik-Puzzle mit 1.000 eindeutig lösbaren Levels, acht Welten und Rastern von 5 × 5 bis 12 × 12.',
-    image: `${BASE_URL}/assets/projects/mobile-games/tiles/banner.webp`,
-  },
-  {
-    path: '/projekte/hydroloop',
-    title: 'HydroLoop – 3D-Puzzle für Mobile | Sven Maibaum',
-    description:
-      'Mobile-3D-Puzzle in Entwicklung. Rohrsegmente drehen, Leitungen verbinden und einen geschlossenen Kreislauf bauen.',
-    image: `${BASE_URL}/assets/projects/mobile-games/hydroloop/banner.png`,
+      'Vorbereiteter Bereich für eigenständige Apps, Store-Releases und kommende Produktprojekte.',
+    image: DEFAULT_IMAGE,
   },
   {
     path: '/projekte/liketik',

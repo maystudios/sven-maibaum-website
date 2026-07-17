@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">Mobile Games</title>
+  <desc id="desc">Abstrakte Übersicht der Mobile-Games-Sammlung</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#071915"/>
+      <stop offset="0.5" stop-color="#0d403b"/>
+      <stop offset="1" stop-color="#164f68"/>
+    </linearGradient>
+    <pattern id="grid" width="60" height="60" patternUnits="userSpaceOnUse">
+      <path d="M60 0H0V60" fill="none" stroke="#d8ffef" stroke-opacity="0.08"/>
+    </pattern>
+  </defs>
+  <rect width="1600" height="900" fill="url(#bg)"/>
+  <rect width="1600" height="900" fill="url(#grid)"/>
+  <g transform="translate(930 110)">
+    <rect width="360" height="650" rx="54" fill="#06100f" stroke="#b8fff0" stroke-opacity="0.45" stroke-width="4"/>
+    <rect x="24" y="68" width="312" height="500" rx="18" fill="#f3eadc"/>
+    <g transform="translate(52 110)">
+      <rect width="72" height="72" rx="14" fill="#f2c94c"/>
+      <rect x="84" width="72" height="72" rx="14" fill="#8dd7c4"/>
+      <rect x="168" width="72" height="72" rx="14" fill="#ee8e9b"/>
+      <rect y="84" width="72" height="72" rx="14" fill="#9ba7e5"/>
+      <rect x="84" y="84" width="72" height="72" rx="14" fill="#f0a65f"/>
+      <rect x="168" y="84" width="72" height="72" rx="14" fill="#89c66d"/>
+      <path d="M22 120l26-26m-26 0 26 26M106 22l26 26m-26 0 26-26" stroke="#173b39" stroke-width="7" stroke-linecap="round"/>
+      <circle cx="204" cy="120" r="18" fill="none" stroke="#173b39" stroke-width="7"/>
+    </g>
+    <rect x="112" y="26" width="136" height="12" rx="6" fill="#d8ffef" fill-opacity="0.35"/>
+    <circle cx="180" cy="610" r="20" fill="none" stroke="#d8ffef" stroke-opacity="0.35" stroke-width="4"/>
+  </g>
+  <g font-family="Geist, sans-serif" fill="#f7fffc">
+    <text x="200" y="300" font-size="34" font-weight="700" letter-spacing="8" fill="#92e8d5">PORTFOLIO COLLECTION</text>
+    <text x="192" y="425" font-size="112" font-weight="800" letter-spacing="-5">MOBILE</text>
+    <text x="192" y="530" font-size="112" font-weight="800" letter-spacing="-5">GAMES</text>
+    <text x="200" y="620" font-size="28" font-weight="650" letter-spacing="4" fill="#b5ddd8">02 RELEASES · 01 WORKING TITLE</text>
+  </g>
+</svg>

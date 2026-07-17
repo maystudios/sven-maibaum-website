@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">App-Entwicklung</title>
+  <desc id="desc">Vorbereiteter Bereich für kommende App-Projekte</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#11131a"/>
+      <stop offset="1" stop-color="#202535"/>
+    </linearGradient>
+    <pattern id="grid" width="72" height="72" patternUnits="userSpaceOnUse">
+      <path d="M72 0H0V72" fill="none" stroke="#a7b6d9" stroke-opacity="0.08"/>
+    </pattern>
+  </defs>
+  <rect width="1600" height="900" fill="url(#bg)"/>
+  <rect width="1600" height="900" fill="url(#grid)"/>
+  <g transform="translate(930 120)" fill="none" stroke="#8aa7e8" stroke-opacity="0.55" stroke-width="3">
+    <rect width="500" height="600" rx="22"/>
+    <path d="M0 92h500M56 148h178M56 190h310"/>
+    <rect x="56" y="260" width="180" height="180" rx="12"/>
+    <rect x="264" y="260" width="180" height="82" rx="12"/>
+    <rect x="264" y="358" width="180" height="82" rx="12"/>
+    <path d="M56 506h388M56 548h254"/>
+    <circle cx="56" cy="48" r="8" fill="#8aa7e8" stroke="none"/>
+    <circle cx="84" cy="48" r="8" fill="#8aa7e8" fill-opacity="0.55" stroke="none"/>
+    <circle cx="112" cy="48" r="8" fill="#8aa7e8" fill-opacity="0.25" stroke="none"/>
+  </g>
+  <g font-family="Geist, sans-serif" fill="#f8faff">
+    <text x="200" y="292" font-size="32" font-weight="700" letter-spacing="8" fill="#9db7f0">BEREICH VORBEREITET</text>
+    <text x="192" y="425" font-size="100" font-weight="800" letter-spacing="-4">APP-</text>
+    <text x="192" y="520" font-size="100" font-weight="800" letter-spacing="-4">ENTWICKLUNG</text>
+    <text x="200" y="620" font-size="28" font-weight="650" letter-spacing="5" fill="#afbad4">00 PROJEKTE · NEUE EINTRÄGE FOLGEN</text>
+  </g>
+</svg>

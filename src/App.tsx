@@ -1,11 +1,10 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import Layout from "./components/Layout";
 import Home from "./pages/Home";
 import ProjectHeistLine from "./pages/projects/ProjectHeistLine";
 import ProjectMrDork3 from "./pages/projects/ProjectMrDork3";
-import ProjectShapesPuzzleEscape from "./pages/projects/ProjectShapesPuzzleEscape";
-import ProjectTilesLogicPuzzle from "./pages/projects/ProjectTilesLogicPuzzle";
-import ProjectHydroLoop from "./pages/projects/ProjectHydroLoop";
+import ProjectMobileGames from "./pages/projects/ProjectMobileGames";
+import ProjectAppDevelopment from "./pages/projects/ProjectAppDevelopment";
 import ProjectLikeTik from "./pages/projects/ProjectLikeTik";
 import ProjectExambyte from "./pages/projects/ProjectExambyte";
 import ProjectItchio from "./pages/projects/ProjectItchio";
@@ -27,9 +26,20 @@ export default function App() {
           <Route path="/" element={<Home />} />
           <Route path="/projekte/heistline" element={<ProjectHeistLine />} />
           <Route path="/projekte/mr-dork-3" element={<ProjectMrDork3 />} />
-          <Route path="/projekte/shapes-puzzle-escape" element={<ProjectShapesPuzzleEscape />} />
-          <Route path="/projekte/tiles-logic-puzzle" element={<ProjectTilesLogicPuzzle />} />
-          <Route path="/projekte/hydroloop" element={<ProjectHydroLoop />} />
+          <Route path="/projekte/mobile-games" element={<ProjectMobileGames />} />
+          <Route path="/projekte/app-entwicklung" element={<ProjectAppDevelopment />} />
+          <Route
+            path="/projekte/shapes-puzzle-escape"
+            element={<Navigate to="/projekte/mobile-games#shapes" replace />}
+          />
+          <Route
+            path="/projekte/tiles-logic-puzzle"
+            element={<Navigate to="/projekte/mobile-games#tiles" replace />}
+          />
+          <Route
+            path="/projekte/hydroloop"
+            element={<Navigate to="/projekte/mobile-games#hydroloop" replace />}
+          />
           <Route path="/projekte/liketik" element={<ProjectLikeTik />} />
           <Route path="/projekte/exambyte" element={<ProjectExambyte />} />
           <Route path="/projekte/itchio" element={<ProjectItchio />} />

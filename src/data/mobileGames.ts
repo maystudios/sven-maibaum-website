@@ -14,6 +14,7 @@ export type MobileGameStoreLink = {
 };
 
 export type MobileGame = {
+  id: string;
   title: string;
   subtitle: string;
   overview: string;
@@ -22,8 +23,8 @@ export type MobileGame = {
   platform: string;
   genre: string;
   studio: string;
-  heroImage: string;
-  heroAlt: string;
+  heroImage?: string;
+  heroAlt?: string;
   screenshots: MobileGameScreenshot[];
   features: MobileGameFeature[];
   storeLinks: MobileGameStoreLink[];
@@ -35,6 +36,7 @@ const base = import.meta.env.BASE_URL;
 
 export const mobileGames = {
   shapes: {
+    id: "shapes",
     title: "Shapes · Puzzle Escape",
     subtitle: "Ein ruhiges Schiebepuzzle mit acht Schwierigkeitsstufen und einem eigenen Silhouetten-Modus.",
     overview:
@@ -89,6 +91,7 @@ export const mobileGames = {
     sourceUrl: "https://maystudios.net/games/shapes-puzzle-escape",
   },
   tiles: {
+    id: "tiles",
     title: "Tiles · Logic Puzzle",
     subtitle: "Ein Logikspiel mit 1.000 eindeutig lösbaren Levels, acht Welten und wachsender Rastergröße.",
     overview:
@@ -143,6 +146,7 @@ export const mobileGames = {
     sourceUrl: "https://maystudios.net/games/tiles-logic-puzzle",
   },
   hydroLoop: {
+    id: "hydroloop",
     title: "HydroLoop",
     subtitle: "Ein räumliches Rohr-Puzzle, bei dem einzelne Segmente zu einem geschlossenen Wasserkreislauf verbunden werden.",
     overview:
@@ -152,8 +156,6 @@ export const mobileGames = {
     platform: "Android · iOS geplant",
     genre: "3D-Puzzle",
     studio: "Wega Studios × MAY STUDIOS",
-    heroImage: `${base}assets/projects/mobile-games/hydroloop/banner.svg`,
-    heroAlt: "Abstrakte Rohrschleife für HydroLoop",
     screenshots: [],
     features: [
       {

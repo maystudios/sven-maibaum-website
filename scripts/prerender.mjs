@@ -38,6 +38,27 @@ const routes = [
     image: `${BASE_URL}/assets/projects/mrdork/mrdork3.png`,
   },
   {
+    path: '/projekte/shapes-puzzle-escape',
+    title: 'Shapes · Puzzle Escape – Mobile Game | Sven Maibaum',
+    description:
+      'Auf Android veröffentlichtes Schiebepuzzle mit acht Schwierigkeitsstufen, Silhouetten-Modus und garantiert lösbaren Levels. Die iOS-Version ist in Prüfung.',
+    image: `${BASE_URL}/assets/projects/mobile-games/shapes/banner.webp`,
+  },
+  {
+    path: '/projekte/tiles-logic-puzzle',
+    title: 'Tiles · Logic Puzzle – Mobile Game | Sven Maibaum',
+    description:
+      'Logik-Puzzle mit 1.000 eindeutig lösbaren Levels, acht Welten und Rastern von 5 × 5 bis 12 × 12.',
+    image: `${BASE_URL}/assets/projects/mobile-games/tiles/banner.webp`,
+  },
+  {
+    path: '/projekte/hydroloop',
+    title: 'HydroLoop – 3D-Puzzle für Mobile | Sven Maibaum',
+    description:
+      'Mobile-3D-Puzzle in Entwicklung. Rohrsegmente drehen, Leitungen verbinden und einen geschlossenen Kreislauf bauen.',
+    image: `${BASE_URL}/assets/projects/mobile-games/hydroloop/banner.png`,
+  },
+  {
     path: '/projekte/liketik',
     title: 'LikeTik – KI-gestützte Social Commerce Plattform | Sven Maibaum',
     description:

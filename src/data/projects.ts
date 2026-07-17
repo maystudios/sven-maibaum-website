@@ -59,24 +59,61 @@ export const projectCards: ProjectCard[] = [
       "inline-block bg-teal-500 hover:bg-teal-600 text-white font-medium py-2 px-4 rounded-lg transition duration-300 transform hover:scale-105 text-sm",
   },
   {
-    id: "itchio",
-    title: "Game Jams & itch.io",
+    id: "shapes-puzzle-escape",
+    title: "Shapes · Puzzle Escape",
     summary:
-      "Sammlung meiner Game-Jam-Projekte (Terrafix, Disk Inserted) und Rapid-Prototyping-Experimente.",
+      "Entspanntes Schiebepuzzle mit acht Schwierigkeitsstufen, Silhouetten-Modus und garantiert lösbaren Levels.",
     tags: [
-      { label: "itch.io", className: "tech-tag tech-tag-red" },
-      { label: "Game Jam", className: "tech-tag tech-tag-orange" },
-      { label: "Terrafix", className: "tech-tag tech-tag-green" },
-      { label: "Disk Inserted", className: "tech-tag tech-tag-purple" },
+      { label: "Google Play", className: "tech-tag tech-tag-green" },
+      { label: "Puzzle", className: "tech-tag tech-tag-teal" },
+      { label: "iOS in Prüfung", className: "tech-tag tech-tag-blue" },
     ],
-    filters: ["unreal-engine"],
-    dataTags: ["game-dev", "indie", "prototyping", "unreal-engine"],
-    image: `${import.meta.env.BASE_URL}assets/projects/itchio/itchio.png`,
-    route: "/projekte/itchio",
-    cta: "Mehr anzeigen",
-    accent: "text-red-400",
+    filters: ["mobile-games", "app-releases"],
+    dataTags: ["mobile-game", "app-release", "android", "ios", "puzzle"],
+    image: `${import.meta.env.BASE_URL}assets/projects/mobile-games/shapes/banner.webp`,
+    route: "/projekte/shapes-puzzle-escape",
+    cta: "Projekt ansehen",
+    accent: "text-green-400",
     buttonClass:
-      "inline-block bg-red-500 hover:bg-red-600 text-white font-medium py-2 px-4 rounded-lg transition duration-300 transform hover:scale-105 text-sm",
+      "inline-block bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-lg transition duration-300 transform hover:scale-105 text-sm",
+  },
+  {
+    id: "tiles-logic-puzzle",
+    title: "Tiles · Logic Puzzle",
+    summary:
+      "Logikspiel mit 1.000 eindeutig lösbaren Levels, acht Welten und Rastern von 5 × 5 bis 12 × 12.",
+    tags: [
+      { label: "Google Play", className: "tech-tag tech-tag-green" },
+      { label: "Logic Puzzle", className: "tech-tag tech-tag-yellow" },
+      { label: "iOS geplant", className: "tech-tag tech-tag-blue" },
+    ],
+    filters: ["mobile-games", "app-releases"],
+    dataTags: ["mobile-game", "app-release", "android", "ios", "logic-puzzle"],
+    image: `${import.meta.env.BASE_URL}assets/projects/mobile-games/tiles/banner.webp`,
+    route: "/projekte/tiles-logic-puzzle",
+    cta: "Projekt ansehen",
+    accent: "text-yellow-400",
+    buttonClass:
+      "inline-block bg-yellow-500 hover:bg-yellow-600 text-black font-medium py-2 px-4 rounded-lg transition duration-300 transform hover:scale-105 text-sm",
+  },
+  {
+    id: "hydroloop",
+    title: "HydroLoop",
+    summary:
+      "3D-Rohr-Puzzle für Mobile. Segmente drehen, Leitungen verbinden und einen geschlossenen Kreislauf bauen.",
+    tags: [
+      { label: "In Entwicklung", className: "tech-tag tech-tag-blue" },
+      { label: "3D-Puzzle", className: "tech-tag tech-tag-teal" },
+      { label: "Android / iOS geplant", className: "tech-tag tech-tag-gray" },
+    ],
+    filters: ["mobile-games"],
+    dataTags: ["mobile-game", "android", "ios", "3d-puzzle", "in-development"],
+    image: `${import.meta.env.BASE_URL}assets/projects/mobile-games/hydroloop/banner.svg`,
+    route: "/projekte/hydroloop",
+    cta: "Projekt ansehen",
+    accent: "text-blue-400",
+    buttonClass:
+      "inline-block bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition duration-300 transform hover:scale-105 text-sm",
   },
   {
     id: "liketik",
@@ -117,6 +154,26 @@ export const projectCards: ProjectCard[] = [
     accent: "text-orange-400",
     buttonClass:
       "inline-block bg-orange-500 hover:bg-orange-600 text-white font-medium py-2 px-4 rounded-lg transition duration-300 transform hover:scale-105 text-sm",
+  },
+  {
+    id: "itchio",
+    title: "Game Jams & itch.io",
+    summary:
+      "Sammlung meiner Game-Jam-Projekte (Terrafix, Disk Inserted) und Rapid-Prototyping-Experimente.",
+    tags: [
+      { label: "itch.io", className: "tech-tag tech-tag-red" },
+      { label: "Game Jam", className: "tech-tag tech-tag-orange" },
+      { label: "Terrafix", className: "tech-tag tech-tag-green" },
+      { label: "Disk Inserted", className: "tech-tag tech-tag-purple" },
+    ],
+    filters: ["unreal-engine"],
+    dataTags: ["game-dev", "indie", "prototyping", "unreal-engine"],
+    image: `${import.meta.env.BASE_URL}assets/projects/itchio/itchio.png`,
+    route: "/projekte/itchio",
+    cta: "Mehr anzeigen",
+    accent: "text-red-400",
+    buttonClass:
+      "inline-block bg-red-500 hover:bg-red-600 text-white font-medium py-2 px-4 rounded-lg transition duration-300 transform hover:scale-105 text-sm",
   },
   {
     id: "huggingface",
@@ -198,6 +255,8 @@ export const projectCards: ProjectCard[] = [
 
 export const projectFilters = [
   { id: "all", label: "Alle" },
+  { id: "mobile-games", label: "Mobile Games" },
+  { id: "app-releases", label: "App Releases" },
   { id: "unreal-engine", label: "Unreal Engine" },
   { id: "ai-ml", label: "AI/ML" },
   { id: "java", label: "Java" },

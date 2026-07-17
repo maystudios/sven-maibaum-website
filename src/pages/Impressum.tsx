@@ -13,9 +13,11 @@ export default function Impressum() {
       <address className="not-italic leading-7">
         <strong>Sven Maibaum</strong>
         <br />
-        Einzelunternehmer, Software-Architekt &amp; Spieleentwickler
+        MAY STUDIOS (Einzelunternehmen)
         <br />
-        [Straße Hausnummer]
+        Software-Architekt &amp; Spieleentwickler
+        <br />
+        Bürgermeister-Schmitd-Str. 72B
         <br />
         51399 Burscheid
         <br />
@@ -27,8 +29,6 @@ export default function Impressum() {
         E-Mail (primär): <a href="mailto:contact@sven-maibaum.com" className="footer-link">contact@sven-maibaum.com</a>
         <br />
         E-Mail (geschäftlich): <a href="mailto:company@maystudios.net" className="footer-link">company@maystudios.net</a>
-        <br />
-        Telefon: [Telefonnummer]
       </p>
       <p>
         Für Rückfragen steht zusätzlich das <a href="/#contact" className="footer-link">Kontaktformular</a> auf dieser
@@ -61,7 +61,7 @@ export default function Impressum() {
       <address className="not-italic leading-7">
         Sven Maibaum
         <br />
-        [Straße Hausnummer]
+        Bürgermeister-Schmitd-Str. 72B
         <br />
         51399 Burscheid
         <br />
@@ -136,7 +136,7 @@ export default function Impressum() {
 
       <h2>12. Stand des Impressums</h2>
       <p>
-        Dieses Impressum entspricht dem Rechtsstand vom <time dateTime="2026-05-08">8. Mai 2026</time>. Bei Änderungen
+        Die Anbieterangaben wurden am <time dateTime="2026-07-17">17. Juli 2026</time> aktualisiert. Bei Änderungen
         gesetzlicher Vorgaben oder der Tätigkeitsangaben wird das Impressum entsprechend aktualisiert. Die jeweils gültige
         Fassung ist auf dieser Seite abrufbar.
       </p>
@@ -146,7 +146,7 @@ export default function Impressum() {
       <p className="text-sm footer-text-muted">
         © 2026 Sven Maibaum. Alle Rechte vorbehalten.
         <br />
-        Zuletzt aktualisiert: <time dateTime="2026-05-08">08.05.2026</time>
+        Zuletzt aktualisiert: <time dateTime="2026-07-17">17.07.2026</time>
       </p>
     </main>
   );

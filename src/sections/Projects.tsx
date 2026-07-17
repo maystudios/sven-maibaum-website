@@ -21,7 +21,7 @@ export default function Projects() {
       <div className="swiss-container">
         <SectionHeading eyebrow="Portfolio" title="Ausgewählte Projekte" className="mb-12" />
 
-        <div className="flex items-center gap-1 mb-12 border-b border-border pb-0 relative">
+        <div className="relative mb-12 flex flex-wrap items-center gap-2 border-b border-border pb-3">
           {projectFilters.map((filter) => {
             const isActive = filter.id === activeFilter;
             return (

@@ -3,6 +3,9 @@ import Layout from "./components/Layout";
 import Home from "./pages/Home";
 import ProjectHeistLine from "./pages/projects/ProjectHeistLine";
 import ProjectMrDork3 from "./pages/projects/ProjectMrDork3";
+import ProjectShapesPuzzleEscape from "./pages/projects/ProjectShapesPuzzleEscape";
+import ProjectTilesLogicPuzzle from "./pages/projects/ProjectTilesLogicPuzzle";
+import ProjectHydroLoop from "./pages/projects/ProjectHydroLoop";
 import ProjectLikeTik from "./pages/projects/ProjectLikeTik";
 import ProjectExambyte from "./pages/projects/ProjectExambyte";
 import ProjectItchio from "./pages/projects/ProjectItchio";
@@ -24,6 +27,9 @@ export default function App() {
           <Route path="/" element={<Home />} />
           <Route path="/projekte/heistline" element={<ProjectHeistLine />} />
           <Route path="/projekte/mr-dork-3" element={<ProjectMrDork3 />} />
+          <Route path="/projekte/shapes-puzzle-escape" element={<ProjectShapesPuzzleEscape />} />
+          <Route path="/projekte/tiles-logic-puzzle" element={<ProjectTilesLogicPuzzle />} />
+          <Route path="/projekte/hydroloop" element={<ProjectHydroLoop />} />
           <Route path="/projekte/liketik" element={<ProjectLikeTik />} />
           <Route path="/projekte/exambyte" element={<ProjectExambyte />} />
           <Route path="/projekte/itchio" element={<ProjectItchio />} />

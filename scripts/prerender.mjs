@@ -46,9 +46,9 @@ const routes = [
   },
   {
     path: '/projekte/app-entwicklung',
-    title: 'App-Entwicklung – kommende Anwendungen | Sven Maibaum',
+    title: 'App-Entwicklung – Wake Up & SplitUp | Sven Maibaum',
     description:
-      'Vorbereiteter Bereich für eigenständige Apps, Store-Releases und kommende Produktprojekte.',
+      'Wake Up und SplitUp: zwei Flutter-Apps für Android und iOS mit dokumentiertem Pre-Release-Status.',
     image: DEFAULT_IMAGE,
   },
   {

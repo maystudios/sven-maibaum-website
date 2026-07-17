@@ -81,17 +81,17 @@ export const projectCards: ProjectCard[] = [
     id: "app-development",
     title: "App-Entwicklung",
     summary:
-      "Vorbereiteter Bereich für eigenständige Anwendungen, Store-Releases und kommende Produktprojekte.",
+      "Zwei Flutter-Apps im Pre-Release: Wake Up für verlässliche Alarme und SplitUp für gemeinsame Ausgaben.",
     tags: [
-      { label: "App-Entwicklung", className: "tech-tag tech-tag-blue" },
-      { label: "In Vorbereitung", className: "tech-tag tech-tag-gray" },
-      { label: "Mobile / Desktop", className: "tech-tag tech-tag-purple" },
+      { label: "Flutter", className: "tech-tag tech-tag-blue" },
+      { label: "Android / iOS", className: "tech-tag tech-tag-purple" },
+      { label: "2 Apps", className: "tech-tag tech-tag-gray" },
     ],
     filters: [],
-    dataTags: ["app-development", "mobile", "desktop", "product-development"],
+    dataTags: ["app-development", "flutter", "android", "ios", "product-development"],
     image: `${import.meta.env.BASE_URL}assets/projects/app-development/preview.svg`,
     route: "/projekte/app-entwicklung",
-    cta: "Bereich ansehen",
+    cta: "Apps ansehen",
     accent: "text-blue-400",
     buttonClass:
       "inline-block bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition duration-300 transform hover:scale-105 text-sm",

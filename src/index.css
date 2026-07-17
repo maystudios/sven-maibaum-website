@@ -523,12 +523,12 @@ header {
   font-weight: 600;
 }
 
-.project-detail-content a:not(.swiss-btn-primary):not(.swiss-btn-secondary):not(.back-to-portfolio) {
+.project-detail-content a:not(.swiss-btn-primary):not(.swiss-btn-secondary):not(.back-to-portfolio):not(.store-badge) {
   color: var(--link-color);
   text-decoration: underline;
   transition: color 0.2s ease;
 }
-.project-detail-content a:not(.swiss-btn-primary):not(.swiss-btn-secondary):not(.back-to-portfolio):hover {
+.project-detail-content a:not(.swiss-btn-primary):not(.swiss-btn-secondary):not(.back-to-portfolio):not(.store-badge):hover {
   color: var(--link-hover-color);
 }
 

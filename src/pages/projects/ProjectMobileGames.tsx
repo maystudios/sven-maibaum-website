@@ -1,3 +1,4 @@
+import GooglePlayBadge from "../../components/GooglePlayBadge";
 import ProjectShell from "../../components/ProjectShell";
 import { mobileGames } from "../../data/mobileGames";
 import type { MobileGame } from "../../data/mobileGames";
@@ -19,7 +20,7 @@ function GameStats({ game }: GameStatsProps) {
         { label: "Studio", value: game.studio },
       ].map((stat) => (
         <div key={stat.label} className="bg-surface p-4">
-          <dt className="text-[11px] uppercase tracking-[0.14em] text-faint">{stat.label}</dt>
+          <dt className="text-[11px] uppercase tracking-[0.14em] text-muted">{stat.label}</dt>
           <dd className="mt-1 font-display text-sm font-semibold text-fg">{stat.value}</dd>
         </div>
       ))}
@@ -53,15 +54,7 @@ function ReleasedGame({ game, index }: ReleasedGameProps) {
 
           <div className="mt-6 flex flex-wrap gap-3">
             {game.storeLinks.map((link) => (
-              <a
-                key={link.href}
-                href={link.href}
-                target="_blank"
-                rel="noreferrer"
-                className="swiss-btn-primary"
-              >
-                {link.label}
-              </a>
+              <GooglePlayBadge key={link.href} href={link.href} productName={game.title} />
             ))}
             <a
               href={game.sourceUrl}
@@ -129,7 +122,7 @@ export default function ProjectMobileGames() {
           { label: "Schwerpunkt", value: "Puzzle Games" },
         ].map((stat) => (
           <div key={stat.label} className="bg-surface p-4">
-            <p className="mb-1 text-xs uppercase tracking-widest text-faint">{stat.label}</p>
+            <p className="mb-1 text-xs uppercase tracking-widest text-muted">{stat.label}</p>
             <p className="font-display text-sm font-semibold text-fg">{stat.value}</p>
           </div>
         ))}
@@ -173,7 +166,7 @@ export default function ProjectMobileGames() {
               { label: "Genre", value: hydroLoop.genre },
             ].map((stat) => (
               <div key={stat.label} className="bg-canvas p-4">
-                <p className="mb-1 text-xs uppercase tracking-widest text-faint">{stat.label}</p>
+                <p className="mb-1 text-xs uppercase tracking-widest text-muted">{stat.label}</p>
                 <p className="m-0 font-display text-sm font-semibold text-fg">{stat.value}</p>
               </div>
             ))}

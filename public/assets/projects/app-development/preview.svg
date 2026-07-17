@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
   <title id="title">App-Entwicklung</title>
-  <desc id="desc">Vorbereiteter Bereich für kommende App-Projekte</desc>
+  <desc id="desc">Wake Up und SplitUp als mobile App-Projekte</desc>
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0" stop-color="#11131a"/>
@@ -24,9 +24,9 @@
     <circle cx="112" cy="48" r="8" fill="#8aa7e8" fill-opacity="0.25" stroke="none"/>
   </g>
   <g font-family="Geist, sans-serif" fill="#f8faff">
-    <text x="200" y="292" font-size="32" font-weight="700" letter-spacing="8" fill="#9db7f0">BEREICH VORBEREITET</text>
+    <text x="200" y="292" font-size="32" font-weight="700" letter-spacing="8" fill="#9db7f0">ZWEI APP-PROJEKTE</text>
     <text x="192" y="425" font-size="100" font-weight="800" letter-spacing="-4">APP-</text>
     <text x="192" y="520" font-size="100" font-weight="800" letter-spacing="-4">ENTWICKLUNG</text>
-    <text x="200" y="620" font-size="28" font-weight="650" letter-spacing="5" fill="#afbad4">00 PROJEKTE · NEUE EINTRÄGE FOLGEN</text>
+    <text x="200" y="620" font-size="24" font-weight="650" letter-spacing="4" fill="#afbad4">02 PROJEKTE · FLUTTER FÜR ANDROID &amp; iOS</text>
   </g>
 </svg>

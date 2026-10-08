@@ -49,6 +49,12 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://www.sven-maibaum.com/links/</loc>
+    <lastmod>2026-10-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://www.sven-maibaum.com/impressum/</loc>
     <lastmod>2026-07-17</lastmod>
     <changefreq>yearly</changefreq>

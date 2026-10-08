@@ -94,6 +94,13 @@ const routes = [
     image: `${BASE_URL}/assets/projects/fab/fab-hero.webp`,
   },
   {
+    path: '/links',
+    title: 'Social Links – TikTok, YouTube & Instagram | Sven Maibaum',
+    description:
+      'Alle Kanäle von Sven Maibaum an einem Ort: TikTok, YouTube und Instagram, dazu der Weg zurück ins Portfolio.',
+    image: DEFAULT_IMAGE,
+  },
+  {
     path: '/impressum',
     title: 'Impressum | Sven Maibaum',
     description: 'Impressum und rechtliche Informationen zum Portfolio von Sven Maibaum.',

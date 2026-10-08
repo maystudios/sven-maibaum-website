@@ -17,11 +17,14 @@ import Datenschutz from "./pages/Datenschutz";
 import AGB from "./pages/AGB";
 import NotFound from "./pages/NotFound";
 import Visitenkarte from "./pages/Visitenkarte";
+import Links from "./pages/Links";
 
 export default function App() {
   return (
     <BrowserRouter basename={import.meta.env.BASE_URL}>
       <Routes>
+        {/* Standalone social link page: no shared header/footer */}
+        <Route path="/links" element={<Links />} />
         <Route element={<Layout />}>
           <Route path="/" element={<Home />} />
           <Route path="/projekte/heistline" element={<ProjectHeistLine />} />

@@ -1,0 +1,466 @@
+/* =========================================================================
+   Social link page (/links)
+   Scoped under .links-page. Reuses the Swiss design tokens from index.css
+   so the page follows the site dark/light themes without own controls.
+   ========================================================================= */
+
+.links-page {
+  --links-tiktok: #25f4ee;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100dvh;
+  overflow-x: hidden;
+  background: var(--sw-bg);
+  color: var(--sw-fg);
+  font-family: Geist, system-ui, sans-serif;
+}
+
+html[data-theme="light"] .links-page {
+  --links-tiktok: #007e82;
+}
+
+/* Hairline brand rule along the very top edge */
+.links-page::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--sw-accent) 35%,
+    var(--sw-accent-light) 50%,
+    var(--sw-accent) 65%,
+    transparent
+  );
+  opacity: 0.55;
+}
+
+/* -- Atmosphere ---------------------------------------------------------- */
+.links-bg {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.links-bg-grid {
+  position: absolute;
+  inset: -1px;
+  background-image:
+    linear-gradient(var(--grid-line-h) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line-v) 1px, transparent 1px);
+  background-size: 72px 72px;
+  -webkit-mask-image: radial-gradient(ellipse 130% 70% at 50% 0%, #000 0%, transparent 72%);
+  mask-image: radial-gradient(ellipse 130% 70% at 50% 0%, #000 0%, transparent 72%);
+}
+
+.links-bg-glow {
+  position: absolute;
+  top: -20rem;
+  left: 50%;
+  width: 44rem;
+  max-width: 170%;
+  height: 34rem;
+  transform: translateX(-50%);
+  background: radial-gradient(circle at 50% 50%, rgba(59, 130, 246, 0.2), transparent 62%);
+}
+
+html[data-theme="light"] .links-bg-glow {
+  background: radial-gradient(circle at 50% 50%, rgba(37, 99, 235, 0.12), transparent 62%);
+}
+
+/* -- Shell --------------------------------------------------------------- */
+.links-main {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 520px;
+  margin: 0 auto;
+  padding: 4rem 1.25rem 3.5rem;
+}
+
+@media (min-width: 768px) {
+  .links-main {
+    padding-top: 5.5rem;
+  }
+}
+
+/* -- Identity ------------------------------------------------------------ */
+.links-identity {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.links-avatar-frame {
+  position: relative;
+  padding: 6px;
+  border: 1px solid var(--sw-border);
+  border-radius: 999px;
+  background: var(--sw-surface);
+}
+
+.links-avatar-frame::after {
+  content: "";
+  position: absolute;
+  inset: -7px;
+  border: 1px solid var(--sw-accent);
+  border-radius: 999px;
+  opacity: 0.22;
+}
+
+.links-avatar {
+  display: block;
+  width: 104px;
+  height: 104px;
+  border-radius: 999px;
+  object-fit: cover;
+  object-position: center top;
+}
+
+.links-name {
+  margin: 1.5rem 0 0;
+  font-size: clamp(1.65rem, 7vw, 2.15rem);
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  line-height: 1.1;
+}
+
+.links-role {
+  margin: 0.5rem 0 0;
+  font-family: "Geist Mono", ui-monospace, monospace;
+  font-size: 0.6875rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--sw-accent);
+}
+
+.links-bio {
+  margin: 1rem 0 0;
+  max-width: 34ch;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: var(--sw-text-muted);
+  text-wrap: pretty;
+}
+
+/* -- Section label ------------------------------------------------------- */
+.links-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  margin: 3rem 0 1rem;
+  font-family: "Geist Mono", ui-monospace, monospace;
+  font-size: 0.625rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--sw-text-muted);
+}
+
+.links-eyebrow::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--sw-border);
+}
+
+/* -- Cards --------------------------------------------------------------- */
+.links-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.links-card {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  min-height: 76px;
+  padding: 0.875rem 1rem;
+  border: 1px solid var(--card-border);
+  border-radius: 2px;
+  background: var(--card-bg);
+  color: inherit;
+  text-decoration: none;
+  transition:
+    border-color 0.22s ease,
+    background-color 0.22s ease,
+    transform 0.22s ease;
+}
+
+/* Accent spine, revealed on interaction */
+.links-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 2px;
+  background: var(--links-accent);
+  opacity: 0;
+  transition: opacity 0.22s ease;
+}
+
+.links-card[href]:hover,
+.links-card[href]:focus-visible {
+  border-color: var(--links-line);
+  background: var(--sw-surface-light);
+  transform: translateY(-2px);
+}
+
+.links-card[href]:hover::before,
+.links-card[href]:focus-visible::before {
+  opacity: 1;
+}
+
+.links-card-icon {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border: 1px solid var(--links-line);
+  border-radius: 2px;
+  background: var(--links-wash);
+  color: var(--links-accent);
+}
+
+.links-card-icon svg {
+  width: 22px;
+  height: 22px;
+}
+
+.links-card-body {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  flex-direction: column;
+  gap: 0.1875rem;
+}
+
+.links-card-name {
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.links-card-handle {
+  font-family: "Geist Mono", ui-monospace, monospace;
+  font-size: 0.75rem;
+  line-height: 1.4;
+  color: var(--sw-text-muted);
+  overflow-wrap: anywhere;
+}
+
+.links-card-arrow {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  color: var(--sw-text-faint);
+  transition:
+    transform 0.22s ease,
+    color 0.22s ease;
+}
+
+.links-card-arrow svg {
+  width: 18px;
+  height: 18px;
+}
+
+.links-card[href]:hover .links-card-arrow,
+.links-card[href]:focus-visible .links-card-arrow {
+  color: var(--links-accent);
+  transform: translate(3px, -3px);
+}
+
+/* Inactive platform: dashed frame, muted icon, status badge instead of arrow */
+.links-card--soon {
+  border-style: dashed;
+  background: transparent;
+}
+
+.links-card--soon .links-card-icon {
+  border-style: dashed;
+  background: transparent;
+  color: var(--sw-text-faint);
+}
+
+.links-card--soon .links-card-name {
+  font-weight: 500;
+  color: var(--sw-text-muted);
+}
+
+.links-badge {
+  flex: none;
+  padding: 0.25rem 0.5rem;
+  border: 1px solid var(--sw-border-light);
+  border-radius: 2px;
+  font-family: "Geist Mono", ui-monospace, monospace;
+  font-size: 0.625rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--sw-text-muted);
+}
+
+/* -- Portfolio strip ----------------------------------------------------- */
+.links-portfolio {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-height: 56px;
+  margin-top: 1.5rem;
+  padding: 0 1rem;
+  border: 1px solid var(--sw-border);
+  border-radius: 2px;
+  color: var(--sw-text-muted);
+  text-decoration: none;
+  transition:
+    border-color 0.22s ease,
+    color 0.22s ease;
+}
+
+.links-portfolio:hover,
+.links-portfolio:focus-visible {
+  border-color: var(--sw-accent);
+  color: var(--sw-fg);
+}
+
+.links-portfolio-label {
+  flex: 1;
+  min-width: 0;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+/* Secondary detail: dropped on the narrowest phones to keep one clean row */
+.links-portfolio-meta {
+  display: none;
+  font-family: "Geist Mono", ui-monospace, monospace;
+  font-size: 0.6875rem;
+  letter-spacing: 0.06em;
+  color: var(--sw-text-muted);
+  white-space: nowrap;
+}
+
+@media (min-width: 380px) {
+  .links-portfolio-meta {
+    display: block;
+  }
+}
+
+.links-portfolio svg {
+  flex: none;
+  width: 16px;
+  height: 16px;
+  transition: transform 0.22s ease;
+}
+
+.links-portfolio:hover svg,
+.links-portfolio:focus-visible svg {
+  transform: translateX(3px);
+}
+
+/* -- Footer -------------------------------------------------------------- */
+.links-footer {
+  position: relative;
+  z-index: 1;
+  margin-top: auto;
+  border-top: 1px solid var(--sw-border);
+}
+
+.links-footer-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  max-width: 520px;
+  margin: 0 auto;
+  padding: 0.75rem 0.75rem 1.25rem;
+}
+
+.links-footer-nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.links-footer-nav a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 0.875rem;
+  font-size: 0.8125rem;
+  color: var(--sw-text-muted);
+  text-decoration: none;
+  transition: color 0.18s ease;
+}
+
+.links-footer-nav a:hover,
+.links-footer-nav a:focus-visible {
+  color: var(--sw-fg);
+}
+
+.links-copy {
+  margin: 0;
+  font-family: "Geist Mono", ui-monospace, monospace;
+  font-size: 0.625rem;
+  letter-spacing: 0.1em;
+  color: var(--sw-text-muted);
+}
+
+/* -- Focus --------------------------------------------------------------- */
+.links-page a:focus-visible {
+  outline: 2px solid var(--sw-accent);
+  outline-offset: 3px;
+}
+
+/* -- Entry motion -------------------------------------------------------- */
+@keyframes links-rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.links-reveal {
+  opacity: 0;
+  animation: links-rise 0.6s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+  animation-delay: var(--links-delay, 0ms);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .links-reveal {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+
+  .links-page *,
+  .links-page *::before,
+  .links-page *::after {
+    transition-duration: 0.01ms !important;
+  }
+
+  .links-card[href]:hover,
+  .links-card[href]:focus-visible,
+  .links-card[href]:hover .links-card-arrow,
+  .links-card[href]:focus-visible .links-card-arrow,
+  .links-portfolio:hover svg,
+  .links-portfolio:focus-visible svg {
+    transform: none;
+  }
+}

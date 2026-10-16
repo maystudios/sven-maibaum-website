@@ -1,120 +1,131 @@
 import { useEffect, useRef, useState } from "react";
-import { useReducedMotion } from "motion/react";
-import SizeDiagram from "./SizeDiagram";
-import type { SizeScene } from "./sizeScene";
+import { useReducedMotionPreference } from "../motionPreference";
+import type { SceneTheme } from "./sceneManifest";
+import type { JourneyPlayer } from "./journeyPlayer";
+import { projectSizeLevels } from "../../data/projectSize";
 
 type SizePanelProps = {
   level: number;
 };
 
-type Mode = "pending" | "webgl" | "fallback";
+const currentTheme = (): SceneTheme =>
+  document.documentElement.getAttribute("data-theme") === "light" ? "light" : "dark";
+
+const MEDIA = "absolute inset-0 w-full h-full object-cover";
 
 /**
- * Live illustration next to the size slider. three.js is imported only when
- * the panel comes near the viewport (separate chunk), renders only while the
- * panel is visible, shows still frames under reduced motion and falls back to
- * the SVG diagram when WebGL is unavailable.
+ * The size scene next to the slider: a camera journey from a script to
+ * connected campuses (see journeyPlayer.ts). The player is a separate chunk
+ * that loads when the contact section is about 800 px away; it plays only
+ * while the panel is visible and follows the site theme live.
  */
 export default function SizePanel({ level }: SizePanelProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const sceneRef = useRef<SizeScene | null>(null);
-  const levelRef = useRef(level);
-  const reduceMotion = useReducedMotion() === true;
-  const reduceRef = useRef(reduceMotion);
-  const [mode, setMode] = useState<Mode>("pending");
+  const stillBackRef = useRef<HTMLImageElement>(null);
+  const stillFrontRef = useRef<HTMLImageElement>(null);
+  const forwardRef = useRef<HTMLVideoElement>(null);
+  const reverseRef = useRef<HTMLVideoElement>(null);
+  const loopRef = useRef<HTMLVideoElement>(null);
+  const playerRef = useRef<JourneyPlayer | null>(null);
+  const reduceMotion = useReducedMotionPreference();
+  const latest = useRef({ level, reduceMotion });
+  const [ready, setReady] = useState(false);
+  const [failed, setFailed] = useState(false);
 
   useEffect(() => {
-    levelRef.current = level;
-    reduceRef.current = reduceMotion;
+    latest.current = { level, reduceMotion };
   }, [level, reduceMotion]);
 
-  // Load three.js once the contact section approaches
   useEffect(() => {
     const container = containerRef.current;
-    if (!container) return;
-    let cancelled = false;
-    const observer = new IntersectionObserver(
+    const elements = {
+      stillBack: stillBackRef.current,
+      stillFront: stillFrontRef.current,
+      forward: forwardRef.current,
+      reverse: reverseRef.current,
+      loop: loopRef.current,
+    };
+    if (!container || Object.values(elements).some((el) => !el)) return;
+    let disposed = false;
+    const cleanups: (() => void)[] = [];
+
+    const approach = new IntersectionObserver(
       (entries) => {
         if (!entries.some((entry) => entry.isIntersecting)) return;
-        observer.disconnect();
-        import("./sizeScene")
-          .then(({ createSizeScene }) => {
-            const canvas = canvasRef.current;
-            if (cancelled || !canvas) return;
-            const scene = createSizeScene(canvas);
-            if (!scene) {
-              console.info("Size panel: WebGL is not available, showing the 2D diagram instead.");
-              setMode("fallback");
-              return;
-            }
-            const rect = canvas.getBoundingClientRect();
-            scene.resize(rect.width, rect.height);
-            scene.setReducedMotion(reduceRef.current);
-            scene.setLevel(levelRef.current, true);
-            sceneRef.current = scene;
-            setMode("webgl");
+        approach.disconnect();
+        import("./journeyPlayer")
+          .then(({ JourneyPlayer }) => {
+            if (disposed) return;
+            const player = new JourneyPlayer({
+              stillBack: elements.stillBack!,
+              stillFront: elements.stillFront!,
+              forward: elements.forward!,
+              reverse: elements.reverse!,
+              loop: elements.loop!,
+              theme: currentTheme(),
+              level: latest.current.level,
+              reduced: latest.current.reduceMotion,
+              onReady: () => setReady(true),
+              onError: (error) => {
+                console.error("Size scene could not be shown.", error);
+                setFailed(true);
+              },
+            });
+            playerRef.current = player;
+            const visibility = new IntersectionObserver((visible) => {
+              player.setPanelVisible(visible.some((entry) => entry.isIntersecting));
+            });
+            visibility.observe(container);
+            const theme = new MutationObserver(() => player.setTheme(currentTheme()));
+            theme.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+            cleanups.push(() => {
+              visibility.disconnect();
+              theme.disconnect();
+            });
+            player.start();
           })
           .catch((error: unknown) => {
-            console.error("Size panel: three.js could not be loaded, showing the 2D diagram.", error);
-            if (!cancelled) setMode("fallback");
+            console.error("Size scene player could not be loaded.", error);
+            if (!disposed) setFailed(true);
           });
       },
       { rootMargin: "800px 0px" }
     );
-    observer.observe(container);
+    approach.observe(container);
+
     return () => {
-      cancelled = true;
-      observer.disconnect();
-      sceneRef.current?.dispose();
-      sceneRef.current = null;
+      disposed = true;
+      approach.disconnect();
+      cleanups.forEach((cleanup) => cleanup());
+      playerRef.current?.dispose();
+      playerRef.current = null;
     };
   }, []);
 
   useEffect(() => {
-    sceneRef.current?.setLevel(level, reduceMotion);
-  }, [level, reduceMotion]);
+    playerRef.current?.setLevel(level);
+  }, [level]);
 
   useEffect(() => {
-    sceneRef.current?.setReducedMotion(reduceMotion);
+    playerRef.current?.setReducedMotion(reduceMotion);
   }, [reduceMotion]);
 
-  // Render only while visible; follow size and theme changes
-  useEffect(() => {
-    const scene = sceneRef.current;
-    const container = containerRef.current;
-    const canvas = canvasRef.current;
-    if (mode !== "webgl" || !scene || !container || !canvas) return;
-    const visibility = new IntersectionObserver((entries) => {
-      scene.setRunning(entries.some((entry) => entry.isIntersecting));
-    });
-    visibility.observe(container);
-    const sizing = new ResizeObserver(() => {
-      const rect = canvas.getBoundingClientRect();
-      scene.resize(rect.width, rect.height);
-    });
-    sizing.observe(canvas);
-    const theme = new MutationObserver(() => scene.refreshTheme());
-    theme.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
-    return () => {
-      visibility.disconnect();
-      sizing.disconnect();
-      theme.disconnect();
-      scene.setRunning(false);
-    };
-  }, [mode]);
+  const current = projectSizeLevels[level - 1];
 
   return (
     <div
       ref={containerRef}
-      className="relative w-full aspect-[4/3] lg:aspect-[16/11] overflow-hidden border border-border bg-canvas"
-      aria-hidden="true"
+      role="img"
+      aria-label={`${current.label}: ${current.example}`}
+      className="relative w-full aspect-[4/3] overflow-hidden border border-border bg-canvas"
     >
-      {mode !== "webgl" ? <SizeDiagram level={level} /> : null}
-      <canvas
-        ref={canvasRef}
-        className={`absolute inset-0 w-full h-full transition-opacity duration-500 ${mode === "webgl" ? "opacity-100" : "opacity-0"}`}
-      />
+      <div className={`absolute inset-0 transition-opacity duration-500 ${ready && !failed ? "opacity-100" : "opacity-0"}`} aria-hidden="true">
+        <img ref={stillBackRef} alt="" className={MEDIA} decoding="async" />
+        <img ref={stillFrontRef} alt="" className={MEDIA} decoding="async" />
+        <video ref={forwardRef} className={MEDIA} muted playsInline preload="none" disablePictureInPicture tabIndex={-1} />
+        <video ref={reverseRef} className={MEDIA} muted playsInline preload="none" disablePictureInPicture tabIndex={-1} />
+        <video ref={loopRef} className={MEDIA} muted playsInline loop preload="none" disablePictureInPicture tabIndex={-1} />
+      </div>
     </div>
   );
 }

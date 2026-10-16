@@ -1,7 +1,15 @@
 import { motion } from 'motion/react';
 import FlipWords from "../components/FlipWords";
-
-const heroTags = ['Unreal Engine', 'Java / Spring Boot', 'React', 'Python / KI', 'Unity'];
+import {
+  heroCtas,
+  heroEyebrow,
+  heroIntro,
+  heroName,
+  heroRolePrefix,
+  heroRoles,
+  heroTags,
+  profileImage,
+} from "../data/hero";
 
 export default function Hero() {
   return (
@@ -64,7 +72,7 @@ export default function Hero() {
             >
               <span className="block w-6 h-px bg-brand" />
               <span className="text-xs font-mono uppercase tracking-widest text-brand">
-                Portfolio
+                {heroEyebrow}
               </span>
             </motion.div>
 
@@ -76,12 +84,12 @@ export default function Hero() {
               transition={{ duration: 0.6, delay: 0.2 }}
             >
               <h1 className="text-5xl sm:text-6xl md:text-7xl font-extrabold font-display text-fg tracking-tight leading-none">
-                Sven Maibaum
+                {heroName}
               </h1>
               <p className="text-xl sm:text-2xl md:text-3xl font-semibold text-muted leading-tight mt-2">
-                Experte für{" "}
+                {heroRolePrefix}{" "}
                 <FlipWords
-                  words={["Software-Architektur", "Spieleentwicklung", "Full-Stack-Dev", "KI & Tooling"]}
+                  words={heroRoles}
                   className="text-brand"
                 />
               </p>
@@ -94,8 +102,7 @@ export default function Hero() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.45 }}
             >
-              Ich baue skalierbare Systeme, immersive Spiele und smarte Tools –
-              vom Backend bis zum Game Engine Plugin.
+              {heroIntro}
             </motion.p>
 
             {/* CTA buttons */}
@@ -109,13 +116,13 @@ export default function Hero() {
                 href="#projects"
                 className="swiss-btn-primary inline-flex items-center justify-center min-h-[44px]"
               >
-                Projekte ansehen
+                {heroCtas.projects}
               </a>
               <a
                 href="#contact"
                 className="swiss-btn-secondary inline-flex items-center gap-2 min-h-[44px]"
               >
-                Kontakt
+                {heroCtas.contact}
                 <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true" className="translate-y-px">
                   <path d="M2 7h10M7 2l5 5-5 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
@@ -136,8 +143,8 @@ export default function Hero() {
               transition={{ duration: 0.2 }}
             >
               <img
-                src={`${import.meta.env.BASE_URL}assets/images/sven_maibaum_profile.webp`}
-                alt="Sven Maibaum - Profilbild"
+                src={profileImage.src}
+                alt={profileImage.alt}
                 className="w-64 h-64 md:w-72 md:h-72 object-cover"
                 loading="eager"
               />

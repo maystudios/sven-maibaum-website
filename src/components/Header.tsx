@@ -1,20 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "motion/react";
+import { getNavLinks, homeSectionIds } from "../data/navigation";
 
 type HeaderProps = {
   isHome: boolean;
 };
-
-const getNavLinks = (isHome: boolean) => [
-  { label: "Home",          href: isHome ? "#home"         : "/#home"         },
-  { label: "Über Mich",     href: isHome ? "#about"        : "/#about"        },
-  { label: "Ansatz",        href: isHome ? "#philosophy"   : "/#philosophy"   },
-  { label: "Projekte",      href: isHome ? "#projects"     : "/#projects"     },
-  { label: "Publikationen", href: isHome ? "#publications" : "/#publications" },
-  { label: "Tech Stack",    href: isHome ? "#skills"       : "/#skills"       },
-  { label: "Kontakt",       href: isHome ? "#contact"      : "/#contact"      },
-];
 
 export default function Header({ isHome }: HeaderProps) {
   const [open, setOpen] = useState(false);
@@ -40,8 +31,7 @@ export default function Header({ isHome }: HeaderProps) {
   // Track active section via IntersectionObserver
   useEffect(() => {
     if (!isHome) return;
-    const ids = ["home", "about", "philosophy", "projects", "publications", "skills", "contact"];
-    const sections = ids.map((id) => document.getElementById(id)).filter(Boolean) as HTMLElement[];
+    const sections = homeSectionIds.map((id) => document.getElementById(id)).filter(Boolean) as HTMLElement[];
     if (sections.length === 0) return;
 
     const observer = new IntersectionObserver(

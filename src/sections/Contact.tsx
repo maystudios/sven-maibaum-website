@@ -1,14 +1,20 @@
 import { useRef, useState } from "react";
-import type { FormEvent } from "react";
+import type { FormEvent, ReactNode } from "react";
 import { motion } from "motion/react";
 import emailjs from "@emailjs/browser";
 import SectionHeading from "../components/SectionHeading";
+import { contactHeading } from "../data/sections";
 
 const SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID as string;
 const TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID as string;
 const PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY as string;
 
-export default function Contact() {
+type ContactProps = {
+  /** Optional extra form field, rendered between e-mail and message (used by the motion variants). */
+  extraField?: ReactNode;
+};
+
+export default function Contact({ extraField }: ContactProps) {
   const formRef = useRef<HTMLFormElement>(null);
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
 
@@ -36,7 +42,7 @@ export default function Contact() {
             viewport={{ once: true, amount: 0.3 }}
             transition={{ duration: 0.5, ease: "easeOut" }}
           >
-            <SectionHeading eyebrow="Kontakt" title="Nehmen Sie Kontakt auf" align="left" className="mb-8" />
+            <SectionHeading eyebrow={contactHeading.eyebrow} title={contactHeading.title} align="left" className="mb-8" />
             <p className="swiss-body mb-10 max-w-md">
               Ich freue mich auf Ihre Anfrage! Nutzen Sie das Formular
               oder kontaktieren Sie mich direkt.
@@ -147,6 +153,7 @@ export default function Contact() {
                     required
                   />
                 </div>
+                {extraField}
                 <div className="flex flex-col gap-2">
                   <label className="text-xs font-medium uppercase tracking-wider text-muted" htmlFor="message">
                     Ihre Nachricht

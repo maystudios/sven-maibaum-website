@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "motion/react";
 import ProjectCard from "../components/ProjectCard";
 import SectionHeading from "../components/SectionHeading";
 import { projectCards, projectFilters } from "../data/projects";
+import { projectsHeading } from "../data/sections";
 
 export default function Projects() {
   const [activeFilter, setActiveFilter] = useState("all");
@@ -19,7 +20,7 @@ export default function Projects() {
   return (
     <section id="projects" className="swiss-section">
       <div className="swiss-container">
-        <SectionHeading eyebrow="Portfolio" title="Ausgewählte Projekte" className="mb-12" />
+        <SectionHeading eyebrow={projectsHeading.eyebrow} title={projectsHeading.title} className="mb-12" />
 
         <div className="relative mb-12 flex flex-wrap items-center gap-2 border-b border-border pb-3">
           {projectFilters.map((filter) => {

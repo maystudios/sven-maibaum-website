@@ -1,32 +1,5 @@
 import { motion } from "motion/react";
-import { Layers, ShieldCheck, Zap, Wrench } from "lucide-react";
-
-const items = [
-  {
-    icon: Layers,
-    title: "Modular & erweiterbar",
-    description:
-      "Systeme sind nie wirklich fertig. Ich designe APIs und Grenzen so, dass sie Erweiterungen aushalten \u2013 ohne Refactor-Lawinen. Hexagonal\u2009/\u2009Ports-&-Adapters, klare Abh\u00e4ngigkeitsrichtung, Events f\u00fcr Entkopplung wo sinnvoll.",
-  },
-  {
-    icon: ShieldCheck,
-    title: "Clean Code & Design",
-    description:
-      "Lesbar, testbar, \u00e4nderbar \u2013 das z\u00e4hlt nachhaltig mehr als clevere Einzeiler. Naming, klare Module, geringe Kopplung, hohe Koh\u00e4sion, sinnvolle Comments & Docs \u2013 \u00fcber den gesamten Lifecycle.",
-  },
-  {
-    icon: Zap,
-    title: "Schnell prototypen & lernen",
-    description:
-      "Ich validiere fr\u00fch: kleine Prototypen geben schnelle Erkenntnisse \u2013 auch wenn wir sie verwerfen. Fail-fast, aber nachhaltig: Erkenntnisse flie\u00dfen kuratiert ins Produkt, kein Wegwerfcode.",
-  },
-  {
-    icon: Wrench,
-    title: "Core-Systeme & Dev-Tools",
-    description:
-      "Ich baue gern Grundlagen, die anderen den Alltag erleichtern: Utility-Libs, Reusable Widgets/Plugins, CI-Snippets. Viele kleine 1\u2009%-Verbesserungen ergeben sp\u00fcrbare Velocity-Gewinne im Team.",
-  },
-];
+import { philosophyHeading, philosophyItems } from "../data/philosophy";
 
 const containerVariants = {
   hidden: {},
@@ -44,13 +17,13 @@ export default function Philosophy() {
       <div className="max-w-6xl mx-auto">
         <div className="mb-16">
           <p className="text-xs uppercase tracking-widest text-muted font-medium mb-4">
-            Arbeitsweise
+            {philosophyHeading.eyebrow}
           </p>
           <h2 className="text-4xl md:text-5xl font-bold text-fg leading-tight">
-            Meine Arbeitsphilosophie
+            {philosophyHeading.title}
           </h2>
           <p className="mt-4 text-muted text-lg max-w-xl">
-            Prinzipien, die ich in jedem Projekt verfolge – unabhängig von Technologie oder Teamgröße.
+            {philosophyHeading.intro}
           </p>
         </div>
 
@@ -61,7 +34,7 @@ export default function Philosophy() {
           whileInView="visible"
           viewport={{ once: true, margin: "-80px" }}
         >
-          {items.map(({ icon: Icon, title, description }) => (
+          {philosophyItems.map(({ icon: Icon, title, description }) => (
             <motion.div
               key={title}
               variants={cardVariants}

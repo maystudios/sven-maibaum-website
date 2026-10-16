@@ -1,6 +1,4 @@
-import { useEffect, useState } from "react";
-
-type Theme = "light" | "dark";
+import { useTheme } from "../lib/useTheme";
 
 type ThemeToggleProps = {
   className?: string;
@@ -10,37 +8,9 @@ type ThemeToggleProps = {
   lightIconId?: string;
 };
 
-const getInitialTheme = (): Theme => {
-  const root = document.documentElement;
-  const attr = root.getAttribute("data-theme") as Theme | null;
-  if (attr === "light" || attr === "dark") {
-    return attr;
-  }
-  const saved = localStorage.getItem("theme") as Theme | null;
-  if (saved === "light" || saved === "dark") {
-    return saved;
-  }
-  return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-};
-
-const applyTheme = (theme: Theme) => {
-  const root = document.documentElement;
-  root.setAttribute("data-theme", theme);
-};
-
 export default function ThemeToggle(props: ThemeToggleProps) {
   const { className, title = "Theme wechseln" } = props;
-  const [theme, setTheme] = useState<Theme>(() => getInitialTheme());
-
-  useEffect(() => {
-    applyTheme(theme);
-  }, [theme]);
-
-  const toggleTheme = () => {
-    const next: Theme = theme === "dark" ? "light" : "dark";
-    setTheme(next);
-    localStorage.setItem("theme", next);
-  };
+  const { theme, toggleTheme } = useTheme();
 
   return (
     <button

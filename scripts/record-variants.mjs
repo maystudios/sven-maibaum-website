@@ -32,6 +32,7 @@ const VARIANTS = {
   1: { slug: "v1-editorial", caption: "V1 Editorial" },
   2: { slug: "v2-tiefe", caption: "V2 Tiefe" },
   3: { slug: "v3-signatur", caption: "V3 Signatur" },
+  4: { slug: "v4", caption: "V4" },
 };
 
 const VIEWPORTS = {
@@ -206,8 +207,87 @@ async function projectsTour(page, variant, mobile) {
   return target;
 }
 
+/**
+ * Variant 4: hero scroll, the self-drawing timeline, the regular project grid
+ * with the morph into a project and back (grid transition both ways), then a
+ * slow sweep of the size slider with the live panel.
+ */
+async function tourCombined(page, mobile) {
+  const vh = mobile ? 844 : 900;
+  await page.goto(`${BASE}/?v=4`, { waitUntil: "networkidle" });
+  await page.waitForSelector("#home");
+  const ready = Date.now();
+  await wait(2000);
+
+  // Into the corridor; the about section slides over the pinned hero
+  await scrollToY(page, vh * 1.3, 3600);
+  await wait(300);
+
+  // The experience line draws itself
+  await scrollToEl(page, "#experience", mobile ? 3200 : 2600, 64);
+  await wait(200);
+  await scrollBy(page, mobile ? vh * 2.2 : vh * 1.1, mobile ? 3800 : 3200);
+  await wait(300);
+
+  // Regular project overview, then forward into a project
+  await scrollToEl(page, "#projects", 1400, 0);
+  await wait(400);
+  const target = projectLink(page);
+  if (mobile) {
+    await scrollBy(page, vh * 1.2, 1600);
+    await wait(300);
+  } else {
+    await scrollBy(page, 330, 700);
+    await wait(200);
+    const cards = page.locator("#projects [data-tags]");
+    await hover(page, cards.nth(0), 1100);
+    await hover(page, cards.nth(1), 1100);
+  }
+  const box = await target.boundingBox();
+  if (box) await scrollBy(page, box.y - vh * 0.6, 1000);
+  await wait(300);
+  await press(page, target, mobile);
+  await page.waitForURL(/\/projekte\//, { timeout: 15000 });
+  await wait(2200);
+  await scrollBy(page, mobile ? 800 : 600, 1300);
+  await wait(500);
+
+  // Back: the grid plays again
+  await page.goBack();
+  await page.waitForURL((url) => url.pathname === "/");
+  await wait(1900);
+
+  // Contact: slider and live panel, one level at a time
+  if (mobile) {
+    await page.locator("#mobile-menu-button").tap();
+    await wait(900);
+    await page.locator("#mobile-menu a", { hasText: "Kontakt" }).tap();
+  } else {
+    await page.locator(".header-desktop a", { hasText: "Kontakt" }).click();
+  }
+  await wait(1600);
+  await scrollToEl(page, "#contact .mv-size", 900, mobile ? 120 : Math.round(vh * 0.36));
+  await wait(600);
+  const track = page.locator("#contact .mv-size");
+  const slider = page.locator('#contact input[type="range"]');
+  const trackBox = await track.boundingBox();
+  const holds = [2000, 2000, 2200, 2800, 3800];
+  for (let step = 0; step < holds.length; step++) {
+    if (mobile && trackBox) {
+      await page.touchscreen.tap(trackBox.x + trackBox.width * (0.1 + step * 0.2), trackBox.y + 20);
+    } else if (step === 0 && trackBox) {
+      await page.mouse.click(trackBox.x + trackBox.width * 0.1, trackBox.y + 20);
+    } else {
+      await slider.press("ArrowRight");
+    }
+    await wait(holds[step]);
+  }
+  return ready;
+}
+
 /** Returns the moment the page was visible, so the video can skip the blank load. */
 async function tour(page, variant, mobile) {
+  if (variant === 4) return tourCombined(page, mobile);
   const vh = mobile ? 844 : 900;
   await page.goto(`${BASE}/?v=${variant}`, { waitUntil: "networkidle" });
   await page.waitForSelector("#home");

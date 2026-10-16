@@ -120,6 +120,7 @@ function IndexRow({ project, active, dimmed, onActivate, startFromPreview }: Ind
           <ClipReveal className="absolute inset-0">
             <ProjectMedia
               src={project.image}
+              videoSrc={project.video}
               alt={project.title}
               active={false}
               onMediaElement={(el) => {
@@ -204,6 +205,7 @@ export default function EditorialProjectIndex() {
                     >
                       <ProjectMedia
                         src={active.image}
+                        videoSrc={active.video}
                         alt={active.title}
                         active={hovering}
                         loading="eager"

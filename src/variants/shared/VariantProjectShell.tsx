@@ -8,7 +8,8 @@ import type { ProjectShellProps } from "../../components/ProjectShell";
 /**
  * Project page shell for the motion variants. The hero image and the title
  * are the landing spots of the shared-element morph; afterwards the hero
- * recedes slightly while scrolling.
+ * recedes slightly while scrolling. The variant header is always shown, so
+ * every page reserves its height (`hasSiteHeader` is not needed here).
  */
 export default function VariantProjectShell({
   title,
@@ -18,7 +19,6 @@ export default function VariantProjectShell({
   children,
   ctaLabel,
   ctaLink,
-  hasSiteHeader = false,
 }: ProjectShellProps) {
   const { pathname } = useLocation();
   // The route this page was mounted for; useLocation already reports the next
@@ -40,10 +40,10 @@ export default function VariantProjectShell({
   const contentDelay = arrivedByMorph ? 0.3 : 0.12;
 
   return (
-    <div className={`bg-canvas min-h-screen ${hasSiteHeader ? "pt-16" : ""}`}>
+    <div className="bg-canvas min-h-screen pt-16">
       <Link
         to="/#projects"
-        className={`back-to-portfolio fixed left-4 z-40 inline-flex items-center gap-2 text-sm min-h-[44px] ${hasSiteHeader ? "top-[72px]" : "top-4"}`}
+        className="back-to-portfolio fixed left-4 top-[72px] z-40 inline-flex items-center gap-2 text-sm min-h-[44px]"
         aria-label="Zurück zur Projektübersicht"
       >
         &larr; Alle Projekte

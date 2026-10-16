@@ -43,6 +43,7 @@ function SpringCard({ project, index }: { project: ProjectCard; index: number })
       <div ref={clipRef} className="relative aspect-[16/10] overflow-hidden border-b border-border">
         <ProjectMedia
           src={project.image}
+          videoSrc={project.video}
           alt={project.title}
           active={active}
           onMediaElement={(el) => {

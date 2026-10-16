@@ -41,10 +41,8 @@ const zoomFrame: Variants = {
 const CURTAIN_COVER = 0.46;
 
 const curtain: Variants = {
-  initial: () => {
-    if (isMorphActive()) return { y: "100%", opacity: 0 };
-    return prefersReducedMotion() ? { y: "0%", opacity: 1 } : { y: "0%", opacity: 1 };
-  },
+  // A new page mounts under a closed curtain (unless a morph carries the transition)
+  initial: () => (isMorphActive() ? { y: "100%", opacity: 0 } : { y: "0%", opacity: 1 }),
   enter: () =>
     prefersReducedMotion()
       ? { opacity: 0, transition: { duration: 0.2 } }
@@ -114,6 +112,13 @@ function GridOverlay() {
   );
 }
 
+// Stable per variant, so re-renders never hand Motion a new variants object
+const FRAME_VARIANTS: Record<MotionVariant, Variants> = {
+  1: overlayFrame(CURTAIN_COVER),
+  2: zoomFrame,
+  3: overlayFrame(GRID_COVER),
+};
+
 type PageFrameProps = {
   variant: MotionVariant;
   children: ReactNode;
@@ -143,7 +148,7 @@ export default function PageFrame({ variant, children, onMounted }: PageFramePro
     if (!isPresent) centerOrigin();
   }, [isPresent]);
 
-  const variants = variant === 2 ? zoomFrame : overlayFrame(variant === 1 ? CURTAIN_COVER : GRID_COVER);
+  const variants = FRAME_VARIANTS[variant];
 
   return (
     <motion.div ref={frameRef} variants={variants} initial="initial" animate="enter" exit="exit">

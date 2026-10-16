@@ -57,6 +57,7 @@ function DepthCard({ project, index, position, isActive, onRefs, onOpen }: Depth
       >
         <ProjectMedia
           src={project.image}
+          videoSrc={project.video}
           alt=""
           active={isActive && hovered}
           loading={index < 3 ? "eager" : "lazy"}

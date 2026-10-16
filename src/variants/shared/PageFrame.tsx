@@ -46,7 +46,7 @@ const curtain: Variants = {
   enter: () =>
     prefersReducedMotion()
       ? { opacity: 0, transition: { duration: 0.2 } }
-      : { y: "-100%", transition: { duration: 0.62, ease: ease.inOut, delay: 0.04 } },
+      : { y: "-100%", transition: { duration: 0.5, ease: ease.inOut, delay: 0.03 } },
   exit: () => {
     if (isMorphActive()) return { opacity: 0, transition: { duration: 0 } };
     if (prefersReducedMotion()) return { opacity: [0, 1], transition: { duration: 0.2 } };
@@ -74,7 +74,7 @@ const cell: Variants = {
   enter: (d: number) =>
     prefersReducedMotion()
       ? { opacity: 0, transition: { duration: 0.2 } }
-      : { opacity: 0, scale: 0.4, transition: { duration: 0.28, delay: 0.04 + d * 0.016, ease: ease.out } },
+      : { opacity: 0, scale: 0.4, transition: { duration: 0.28, delay: 0.03 + d * 0.014, ease: ease.out } },
   exit: (d: number) => {
     if (isMorphActive()) return { opacity: 0, transition: { duration: 0 } };
     if (prefersReducedMotion()) return { opacity: [0, 1], scale: 1, transition: { duration: 0.2 } };

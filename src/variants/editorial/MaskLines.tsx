@@ -18,7 +18,7 @@ type MaskLinesProps = {
  * a rendered line rise together. Line membership is measured after layout and
  * on resize, so it follows the real line breaks at every width.
  */
-export default function MaskLines({ text, className = "", delay = 0, stagger = 0.08, immediate = false }: MaskLinesProps) {
+export default function MaskLines({ text, className = "", delay = 0, stagger = 0.06, immediate = false }: MaskLinesProps) {
   const ref = useRef<HTMLSpanElement>(null);
   const inView = useInView(ref, { once: true, margin: "0px 0px -12% 0px" });
   const [lineOf, setLineOf] = useState<number[]>([]);
@@ -56,7 +56,7 @@ export default function MaskLines({ text, className = "", delay = 0, stagger = 0
               className="inline-block"
               initial={{ y: "112%" }}
               animate={{ y: show ? "0%" : "112%" }}
-              transition={{ duration: 0.5, ease: ease.out, delay: delay + (lineOf[i] ?? 0) * stagger }}
+              transition={{ duration: 0.45, ease: ease.out, delay: delay + (lineOf[i] ?? 0) * stagger }}
             >
               {word}
             </motion.span>

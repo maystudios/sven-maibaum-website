@@ -17,7 +17,7 @@ export default function Impressum() {
         <br />
         Software-Architekt &amp; Spieleentwickler
         <br />
-        Bürgermeister-Schmitd-Str. 72B
+        Bürgermeister-Schmidt-Str. 72B
         <br />
         51399 Burscheid
         <br />
@@ -61,7 +61,7 @@ export default function Impressum() {
       <address className="not-italic leading-7">
         Sven Maibaum
         <br />
-        Bürgermeister-Schmitd-Str. 72B
+        Bürgermeister-Schmidt-Str. 72B
         <br />
         51399 Burscheid
         <br />

@@ -7,7 +7,7 @@
  * WebM captures to H.264 MP4 and joins one captioned comparison video per width.
  *
  * Usage:
- *   node scripts/record-variants.mjs [outputDir] [--skip-build] [--only=1,2] [--widths=1440,390]
+ *   node scripts/record-variants.mjs [outputDir] [--skip-build] [--only=1,2] [--widths=1440,390] [--compare-only]
  *
  * Default outputDir: <repo>/.harness/runs/motion-variants (gitignored run artefacts);
  * pass another folder as the first argument or set RECORD_OUT.
@@ -156,7 +156,8 @@ async function projectsTour(page, variant, mobile) {
       page.evaluate((i) => {
         const section = document.querySelector("#projects");
         const travel = section.offsetHeight - window.innerHeight;
-        return section.offsetTop + travel * (0.05 + (i / 10) * 0.9);
+        const top = section.getBoundingClientRect().top + window.scrollY;
+        return top + travel * (0.05 + (i / 10) * 0.9);
       }, index);
     await scrollToY(page, await stackTarget(2), 2600);
     await wait(300);
@@ -317,8 +318,23 @@ function comparison(files, captions, out, size) {
 
 // ── Main ────────────────────────────────────────────────────────────────────
 
+function buildComparisons() {
+  for (const width of widths) {
+    const files = [1, 2, 3].map((v) => join(outDir, `${VARIANTS[v].slug}-${width}.mp4`)).filter(existsSync);
+    if (files.length < 2) continue;
+    const out = join(outDir, `comparison-${width}.mp4`);
+    const captions = [1, 2, 3].filter((v) => existsSync(join(outDir, `${VARIANTS[v].slug}-${width}.mp4`))).map((v) => VARIANTS[v].caption);
+    comparison(files, captions, out, VIEWPORTS[width].video);
+    console.log(`[comparison-${width}] ${out} ${probeDuration(out).toFixed(1)} s`);
+  }
+}
+
 async function main() {
   mkdirSync(outDir, { recursive: true });
+  if (flag("compare-only")) {
+    buildComparisons();
+    return;
+  }
   const rawDir = join(outDir, "raw");
   mkdirSync(rawDir, { recursive: true });
 
@@ -366,12 +382,6 @@ async function main() {
           results.push({ file: mp4, duration, error: error?.message ?? null });
           console.log(`[${slug}-${width}] ${mp4} ${duration.toFixed(1)} s${error ? " (with error)" : ""}`);
         }
-        const files = only.map((v) => join(outDir, `${VARIANTS[v].slug}-${width}.mp4`)).filter(existsSync);
-        if (files.length > 1) {
-          const out = join(outDir, `comparison-${width}.mp4`);
-          comparison(files, only.map((v) => VARIANTS[v].caption), out, config.video);
-          console.log(`[comparison-${width}] ${out}`);
-        }
       }
     } finally {
       await browser.close();
@@ -383,6 +393,9 @@ async function main() {
   // Raw WebM captures are intermediate files
   for (const name of readdirSync(rawDir)) rmSync(join(rawDir, name), { force: true });
   rmSync(rawDir, { recursive: true, force: true });
+
+  // Comparisons always use all variant videos present in the folder
+  buildComparisons();
 
   console.log("\nVideos:");
   for (const r of results) {

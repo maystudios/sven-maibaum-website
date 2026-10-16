@@ -173,7 +173,9 @@ export default function DepthProjects() {
     if (!section) return;
     const travel = section.offsetHeight - window.innerHeight;
     const progress = RANGE[0] + (index / (count - 1)) * (RANGE[1] - RANGE[0]);
-    glideTo(section.offsetTop + travel * progress, 600);
+    // offsetTop is relative to the positioned wrapper, so measure against the document
+    const sectionTop = section.getBoundingClientRect().top + window.scrollY;
+    glideTo(sectionTop + travel * progress, 600);
   };
 
   if (reduceMotion) return <StaticProjects />;
@@ -220,8 +222,13 @@ export default function DepthProjects() {
             </nav>
           </div>
 
-          <div className="relative lg:col-span-7 lg:row-start-1 min-h-0" style={{ perspective: "1200px", perspectiveOrigin: "50% 20%" }}>
-            <div className="absolute inset-0" style={{ transformStyle: "preserve-3d" }}>
+          {/* The stage itself ignores the pointer: in the 3D context its plane at z = 0
+              would otherwise sit in front of layers that are slightly behind it. */}
+          <div
+            className="relative lg:col-span-7 lg:row-start-1 min-h-0 pointer-events-none"
+            style={{ perspective: "1200px", perspectiveOrigin: "50% 20%" }}
+          >
+            <div className="absolute inset-0 pointer-events-none" style={{ transformStyle: "preserve-3d" }}>
               {projectCards.map((project, i) => (
                 <DepthCard
                   key={project.id}

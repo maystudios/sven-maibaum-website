@@ -1,62 +1,24 @@
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { lazy, Suspense } from "react";
+import { BrowserRouter } from "react-router-dom";
 import Layout from "./components/Layout";
 import Home from "./pages/Home";
-import ProjectHeistLine from "./pages/projects/ProjectHeistLine";
-import ProjectMrDork3 from "./pages/projects/ProjectMrDork3";
-import ProjectMobileGames from "./pages/projects/ProjectMobileGames";
-import ProjectAppDevelopment from "./pages/projects/ProjectAppDevelopment";
-import ProjectLikeTik from "./pages/projects/ProjectLikeTik";
-import ProjectExambyte from "./pages/projects/ProjectExambyte";
-import ProjectItchio from "./pages/projects/ProjectItchio";
-import ProjectMaxsimCli from "./pages/projects/ProjectMaxsimCli";
-import ProjectCcTemplates from "./pages/projects/ProjectCcTemplates";
-import ProjectFabStore from "./pages/projects/ProjectFabStore";
-import ArchitectShowcase from "./pages/ArchitectShowcase";
-import Impressum from "./pages/Impressum";
-import Datenschutz from "./pages/Datenschutz";
-import AGB from "./pages/AGB";
-import NotFound from "./pages/NotFound";
-import Visitenkarte from "./pages/Visitenkarte";
-import Links from "./pages/Links";
+import SiteRoutes from "./SiteRoutes";
+import { activeVariant } from "./variants/variant";
+
+// Motion design variants (?v=1|2|3) load as a separate chunk, so the regular
+// site neither downloads nor runs any of their code.
+const VariantRoot = lazy(() => import("./variants/VariantRoot"));
 
 export default function App() {
   return (
     <BrowserRouter basename={import.meta.env.BASE_URL}>
-      <Routes>
-        {/* Standalone social link page: no shared header/footer */}
-        <Route path="/links" element={<Links />} />
-        <Route element={<Layout />}>
-          <Route path="/" element={<Home />} />
-          <Route path="/projekte/heistline" element={<ProjectHeistLine />} />
-          <Route path="/projekte/mr-dork-3" element={<ProjectMrDork3 />} />
-          <Route path="/projekte/mobile-games" element={<ProjectMobileGames />} />
-          <Route path="/projekte/app-entwicklung" element={<ProjectAppDevelopment />} />
-          <Route
-            path="/projekte/shapes-puzzle-escape"
-            element={<Navigate to="/projekte/mobile-games#shapes" replace />}
-          />
-          <Route
-            path="/projekte/tiles-logic-puzzle"
-            element={<Navigate to="/projekte/mobile-games#tiles" replace />}
-          />
-          <Route
-            path="/projekte/hydroloop"
-            element={<Navigate to="/projekte/mobile-games#hydroloop" replace />}
-          />
-          <Route path="/projekte/liketik" element={<ProjectLikeTik />} />
-          <Route path="/projekte/exambyte" element={<ProjectExambyte />} />
-          <Route path="/projekte/itchio" element={<ProjectItchio />} />
-          <Route path="/projekte/maxsimcli" element={<ProjectMaxsimCli />} />
-          <Route path="/projekte/cc-templates" element={<ProjectCcTemplates />} />
-          <Route path="/projekte/fab-store" element={<ProjectFabStore />} />
-          <Route path="/visitenkarte" element={<Visitenkarte />} />
-          <Route path="/showcase" element={<ArchitectShowcase />} />
-          <Route path="/impressum" element={<Impressum />} />
-          <Route path="/datenschutz" element={<Datenschutz />} />
-          <Route path="/agb" element={<AGB />} />
-          <Route path="*" element={<NotFound />} />
-        </Route>
-      </Routes>
+      {activeVariant ? (
+        <Suspense fallback={<div className="min-h-screen bg-canvas" />}>
+          <VariantRoot variant={activeVariant} />
+        </Suspense>
+      ) : (
+        <SiteRoutes layout={<Layout />} home={<Home />} />
+      )}
     </BrowserRouter>
   );
 }

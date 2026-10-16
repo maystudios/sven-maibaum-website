@@ -123,6 +123,12 @@ Projektverantwortliche:
   Bildern. Generierte Bilder folgen einem durchgehenden Stil.
 - Keine generischen 3D-Blobs, keine Plastik-Illustrationen, keine Stock-Menschen,
   keine Schrift und keine Fantasielogos im Bild, keine gemischten Icon-Familien.
+- Eine eigene, bewegte 3D-Szene mit einer Aufgabe ist erlaubt, etwa die Szene zur
+  Projektgröße im Kontaktformular. Eigen wirkt sie durch präzise und physikalisch
+  stimmige Details, das Blau der Website als einzigen Akzent, keine Menschen und
+  keinen Text im Bild. Vorlagen dienen nur als Stilvorbild. Diese Ausnahme haben die
+  Agenten am 16.10.2026 festgelegt, nachdem der Projektverantwortliche die
+  Entscheidung übertragen hatte: „Entscheide selbst“.
 
 ### Grundlage und Einordnung
 
@@ -364,6 +370,40 @@ Rainbow-Effekt, der von links nach rechts rüberläuft.“
 - Die Stufe hilft bei der Zuordnung zu MAY STUDIOS oder Sentrix Code; entschieden
   wird im Einzelfall, wie im Abschnitt „Ziel“ beschrieben.
 
+Neben dem Regler zeigt eine 3D-Szene, was die gewählte Größe bedeutet. Im Wortlaut
+des Projektverantwortlichen am 16.10.2026: „Und vielleicht rechts oder so daneben
+was, so welche Größe in dem Moment immer bedeutet, wenn man live umswitcht“ und „Dass
+der Slider noch ein bisschen mehr macht und auch direkt zeigt, was man da sich
+darunter vorstellen kann.“ Zum Stil: „So ein wirklich High-Fidelity-Bild, so eine
+hohe Infrastruktur, eine geile 3D-Visualisierung, wirklich so ein bisschen
+Real-Life-mäßig, Datencenter, die sich miteinander verbinden“ und „Das Ganze soll
+quasi so aus dem Boden growen, dann vielleicht aus den anderen Sachen rausgrowen,
+als würde es expandieren und Co., so wirklich Mikro-Animationen, Motion Graphics auf
+höchstem Triple-A-Niveau.“ Und: „Entscheide selbst und bau das Ganze super logisch,
+also keine physikalischen Fehler, Windrad in Strommast oder Straße ohne Kreuzung
+kreuzt sich und so.“
+
+- **Inhalt:** Eine Landschaft aus Rechenzentren wächst Stufe für Stufe, von einem
+  kleinen Gebäude bei Mini bis zu mehreren verbundenen Standorten mit Umspannwerk,
+  Strommasten, Windrädern und blau leuchtenden Datenleitungen bei Maximal *(Vorschlag)*.
+- **Logik:** Die Szene ist aufgebaut wie ein echter Lageplan. Straßen kreuzen sich
+  nur an Kreuzungen, Leitungen verbinden Masten und Umspannwerke, Rotoren haben
+  Abstand zu allem, nichts schwebt oder durchdringt etwas. Was wächst, wächst in
+  sinnvoller Reihenfolge: erst die Straße und der Strom, dann das Gebäude. Ein
+  Prüfskript weist das nach, bevor eine Fassung auf die Website kommt *(Vorschlag)*.
+- **Technik:** Die Szene wird in Blender aus einem Skript erzeugt und vorgerendert;
+  der Regler spult die Bildfolge vor und zurück. Nach Einschätzung der Agenten
+  erreicht Three.js in Echtzeit diese Bildqualität auf Mobilgeräten nicht; ob die
+  vorgerenderte Fassung Qualität und Ladezeit besser erreicht, ist noch ungeprüft und
+  wird mit dem Stiltest vom 16.10.2026 geprüft. Die Bildfolge lädt erst in der Nähe
+  des Kontaktbereichs. Bei reduzierter Bewegung zeigt sie je Stufe ein Standbild
+  *(Vorschlag)*.
+- **Hell und dunkel:** Je eine Fassung für den Dunkel- und den Hellmodus, in Graphit
+  mit leuchtendem Blau und in hellem Ton. Festgelegt von den Agenten nach der
+  Übertragung am 16.10.2026.
+- **Texte:** Je Stufe eine Zeile mit typischen Beispielen, ohne fremde Markennamen
+  und ohne die Behauptung, Sven habe ein solches System gebaut *(Vorschlag)*.
+
 ## Design-System
 
 Im Wortlaut des Projektverantwortlichen am 16.10.2026: „Aufbau bleibt, stark
@@ -447,6 +487,28 @@ Aus dem vorgeschlagenen Menü hat der Projektverantwortliche am 16.10.2026 gewä
 | Video-Vorschau auf Projektkarten | „Videovorschau ist natürlich auch gut. Müssen wir aber halt überlegen, was wir da für ein Video haben.“ |
 | Signatur im Hero aus echter Arbeit | „A können wir auch mit einbauen. Wie gesagt, wir müssen nur halt gucken, was wir in dem Moment haben“ |
 | Effekte, die dem Mauszeiger folgen | ausgeschlossen: „diese Mauseffekte auf jeden Fall nicht, die da folgen.“ |
+
+### Gewählte Richtung
+
+Nach den Varianten V1 bis V3 hat der Projektverantwortliche am 16.10.2026
+ausgewählt. Im Wortlaut: „Die Hero-Sektion bei V2 finde ich zumindest am besten“,
+„was ich ganz cool finde, ist auch bei der V2 in dem Bereich quasi dieser Strich,
+der quasi sich mit aufbaut“, „der alte Aufbau bei der Projektübersicht ist besser
+und einfach übersichtlicher. Deswegen würde ich einfach da den alten Aufbau lassen“,
+„der Wechsel gefällt mir gut zwischen den einzelnen Sachen“ und „mir gefällt bei der
+V3-Version dieses Rückwechseln mit diesem Karomuster und den blauen Elementen am
+besten“.
+
+| Bereich | Richtung |
+| --- | --- |
+| Hero | Korridor aus Rasterrahmen in 3D, durch den man beim Scrollen fliegt (aus V2) |
+| Werdegang | Zeitleiste, die sich beim Scrollen zeichnet und jeden Punkt aufleuchten lässt (aus V2); Deutung des erwähnten Strichs durch die Agenten *(Vorschlag)* |
+| Projektübersicht | bisheriger Aufbau; Bild und Titel fliegen in die Projektseite |
+| Seitenwechsel | Auflösung über Rasterzellen mit blauen Zellen, hin und zurück (aus V3) |
+| Kontaktformular | Regler mit 3D-Szene, siehe „Seitenstruktur“, Abschnitt „Kontaktformular“ |
+
+Die Varianten V1 bis V4 liegen auf dem Branch `explore/motion-variants` und werden
+über `?v=1` bis `?v=4` aufgerufen. V4 führt die gewählte Richtung zusammen.
 
 ### Technik und Vorgehen
 
@@ -1104,8 +1166,12 @@ Projektverantwortlichen fehlt.
 - Sitemap um maxsimcli, cc-templates und fab-store ergänzen; gemeinsames
   Routenverzeichnis prüfen.
 - Testgrundlage einrichten: Vitest, Playwright und ein Testschritt in `deploy.yml`.
-- Bewegungskonzept: Varianten bauen, Auswahl durch den Projektverantwortlichen, dann
-  Tokens und Katalog in den Abschnitt „Bewegung“.
+- Bewegungskonzept: V4 vom Projektverantwortlichen bestätigen lassen, dann Tokens und
+  Katalog in den Abschnitt „Bewegung“.
+- 3D-Szene zur Projektgröße: Stiltest auswerten und dem Projektverantwortlichen
+  zeigen; nach Bestätigung von Technik, Inhalt der Stufen, Beispieltexten und der
+  Position über dem Kontaktformular alle Stufen in beiden Fassungen rendern und
+  einbauen.
 - KI-Look abbauen nach dem Abschnitt „Kein KI-Look“.
 - Bilder optimieren und Routen mit `React.lazy` laden.
 - Englische Fassung: URL-Aufbau bestätigen, Texte übersetzen, Prerender erweitern.

@@ -143,7 +143,8 @@ async function press(page, locator, mobile) {
   else await locator.click();
 }
 
-const projectLink = (page) => page.locator(`#projects a[aria-label="Mehr anzeigen – ${PROJECT}"]`).first();
+// Some layouts render the link twice (wide and narrow); take the one on screen
+const projectLink = (page) => page.locator(`#projects a[aria-label="Mehr anzeigen – ${PROJECT}"]:visible`).first();
 
 async function projectsTour(page, variant, mobile) {
   const vh = mobile ? 844 : 900;

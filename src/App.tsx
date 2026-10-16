@@ -5,7 +5,7 @@ import Home from "./pages/Home";
 import SiteRoutes from "./SiteRoutes";
 import { activeVariant } from "./variants/variant";
 
-// Motion design variants (?v=1|2|3) load as a separate chunk, so the regular
+// Motion design variants (?v=1|2|3|4) load as a separate chunk, so the regular
 // site neither downloads nor runs any of their code.
 const VariantRoot = lazy(() => import("./variants/VariantRoot"));
 

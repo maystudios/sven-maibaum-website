@@ -14,8 +14,10 @@ import type { MotionVariant } from "../variant";
  * and animates it to "enter". Overlays live in a portal so they can cover the
  * fixed header, but they still inherit the frame's variant labels.
  *
- * During a shared-element morph (project card -> project page) all variants
+ * During a shared-element morph (project card -> project page) variants 1-3
  * fall back to a short fade, so the flying image stays the only moving part.
+ * Variant 4 always plays the grid, once per route change in both directions;
+ * the morph clone flies above it (MorphLayer sits over the overlay).
  */
 
 const FADE_OUT = { opacity: 0, transition: { duration: 0.28, ease: "easeIn" } } as const;
@@ -28,6 +30,13 @@ const overlayFrame = (coverSeconds: number): Variants => ({
   enter: { opacity: 1, transition: { duration: 0.3, ease: "easeOut" } },
   exit: () => (isMorphActive() || prefersReducedMotion() ? FADE_OUT : holdFor(coverSeconds)),
 });
+
+// Variant 4: the grid also carries morph navigations
+const gridFrameAlways: Variants = {
+  initial: { opacity: 1 },
+  enter: { opacity: 1, transition: { duration: 0.3, ease: "easeOut" } },
+  exit: () => (prefersReducedMotion() ? FADE_OUT : holdFor(GRID_COVER)),
+};
 
 const zoomFrame: Variants = {
   initial: () => (isMorphActive() ? { opacity: 0 } : { opacity: 0, scale: 0.93 }),
@@ -69,6 +78,22 @@ function CurtainOverlay() {
 
 const GRID_COVER = 0.52;
 
+const cellEnter = (d: number) =>
+  prefersReducedMotion()
+    ? { opacity: 0, transition: { duration: 0.2 } }
+    : { opacity: 0, scale: 0.4, transition: { duration: 0.28, delay: 0.03 + d * 0.014, ease: ease.out } };
+
+const cellCover = (d: number) =>
+  prefersReducedMotion()
+    ? { opacity: [0, 1], scale: 1, transition: { duration: 0.2 } }
+    : { opacity: [0, 1], scale: [0.4, 1], transition: { duration: 0.24, delay: d * 0.014, ease: ease.out } };
+
+const cellAlways: Variants = {
+  initial: { opacity: 1, scale: 1 },
+  enter: cellEnter,
+  exit: cellCover,
+};
+
 const cell: Variants = {
   initial: () => (isMorphActive() ? { opacity: 0, scale: 0.5 } : { opacity: 1, scale: 1 }),
   enter: (d: number) =>
@@ -82,7 +107,7 @@ const cell: Variants = {
   },
 };
 
-function GridOverlay() {
+function GridOverlay({ cellVariants }: { cellVariants: Variants }) {
   const width = window.innerWidth;
   const cols = width >= 1024 ? 12 : width >= 768 ? 8 : 4;
   const size = width / cols;
@@ -103,7 +128,7 @@ function GridOverlay() {
         <motion.div
           key={i}
           custom={d}
-          variants={cell}
+          variants={cellVariants}
           className={accent ? "bg-brand" : "bg-surface"}
           style={{ boxShadow: "inset 0 0 0 0.5px var(--sw-border)" }}
         />
@@ -117,6 +142,7 @@ const FRAME_VARIANTS: Record<MotionVariant, Variants> = {
   1: overlayFrame(CURTAIN_COVER),
   2: zoomFrame,
   3: overlayFrame(GRID_COVER),
+  4: gridFrameAlways,
 };
 
 type PageFrameProps = {
@@ -153,7 +179,8 @@ export default function PageFrame({ variant, children, onMounted }: PageFramePro
   return (
     <motion.div ref={frameRef} variants={variants} initial="initial" animate="enter" exit="exit">
       {variant === 1 ? createPortal(<CurtainOverlay />, document.body) : null}
-      {variant === 3 ? createPortal(<GridOverlay />, document.body) : null}
+      {variant === 3 ? createPortal(<GridOverlay cellVariants={cell} />, document.body) : null}
+      {variant === 4 ? createPortal(<GridOverlay cellVariants={cellAlways} />, document.body) : null}
       {children}
     </motion.div>
   );

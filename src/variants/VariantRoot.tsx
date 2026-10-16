@@ -6,6 +6,7 @@ import VariantProjectShell from "./shared/VariantProjectShell";
 import EditorialHome from "./editorial/EditorialHome";
 import DepthHome from "./depth/DepthHome";
 import SignatureHome from "./signature/SignatureHome";
+import CombinedHome from "./combined/CombinedHome";
 import { ProjectShellOverride } from "./projectShellOverride";
 import type { ProjectShellRenderer } from "./projectShellOverride";
 import type { MotionVariant } from "./variant";
@@ -20,6 +21,7 @@ const homes = {
   1: <EditorialHome />,
   2: <DepthHome />,
   3: <SignatureHome />,
+  4: <CombinedHome />,
 } as const;
 
 /**

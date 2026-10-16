@@ -2,10 +2,11 @@ import { useId, useRef, useState } from "react";
 import type { PointerEvent } from "react";
 import { motion } from "motion/react";
 import { spring } from "./motionTokens";
+import { projectSizeLabel, projectSizeLevels } from "../../data/projectSize";
 
 /** Owner's labels (16.10.2026), from a tiny to a very large project. */
-const STEPS = ["Mini", "Klein", "Mittel", "Groß", "Maximal"] as const;
-const LABEL = "Projektgröße";
+const STEPS = projectSizeLevels.map((level) => level.label);
+const LABEL = projectSizeLabel;
 
 type ProjectSizeSliderProps = {
   defaultValue?: 1 | 2 | 3 | 4 | 5;

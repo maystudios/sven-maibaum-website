@@ -12,9 +12,11 @@ const PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY as string;
 type ContactProps = {
   /** Optional extra form field, rendered between e-mail and message (used by the motion variants). */
   extraField?: ReactNode;
+  /** Optional full-width block at the top of the section (used by motion variant 4). */
+  band?: ReactNode;
 };
 
-export default function Contact({ extraField }: ContactProps) {
+export default function Contact({ extraField, band }: ContactProps) {
   const formRef = useRef<HTMLFormElement>(null);
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
 
@@ -35,6 +37,7 @@ export default function Contact({ extraField }: ContactProps) {
     <section id="contact" className="swiss-section">
       <div className="swiss-container">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-start">
+          {band ? <div className="md:col-span-2 pb-14 border-b border-border">{band}</div> : null}
           {/* Left column – info */}
           <motion.div
             initial={{ opacity: 0, x: -16 }}

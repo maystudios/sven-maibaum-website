@@ -1,15 +1,15 @@
 /**
- * Motion design exploration: selects one of three variants via `?v=1|2|3`.
+ * Motion design exploration: selects a variant via `?v=1|2|3|4`.
  * The choice is kept in sessionStorage so it survives client-side route changes
  * and reloads within the tab. `?v=0` (or any other value) clears it again.
  * Without a selection the regular site renders unchanged.
  */
-export type MotionVariant = 1 | 2 | 3;
+export type MotionVariant = 1 | 2 | 3 | 4;
 
 const STORAGE_KEY = "motion-variant";
 
 function parseVariant(value: string | null): MotionVariant | null {
-  if (value === "1" || value === "2" || value === "3") {
+  if (value === "1" || value === "2" || value === "3" || value === "4") {
     return Number(value) as MotionVariant;
   }
   return null;

@@ -1,0 +1,25 @@
+{
+  "autoContinueAtUsageLimit": true,
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "compact",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo 'CONTEXT WAS COMPACTED. The harness skills are no longer in context. Before doing anything else, re-read in this order: ~/.claude/skills/orchestrator-harness/SKILL.md, references/modes.md, references/usage.md, references/routing.md, references/thinking.md, references/verification.md, then .harness/config.md (the mode), .harness/spec.md (the frozen Goal) and the current RUN-STATUS.md under .harness/runs/. Resume from the recorded state, not from memory of it.'"
+          }
+        ]
+      },
+      {
+        "matcher": "resume",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo 'SESSION RESUMED. Re-read ~/.claude/skills/orchestrator-harness/SKILL.md, .harness/config.md and .harness/spec.md before continuing; check that no host you need is actually exhausted before dispatching (quota never chooses the model); resume from RUN-STATUS.md under .harness/runs/, not from memory.'"
+          }
+        ]
+      }
+    ]
+  }
+}

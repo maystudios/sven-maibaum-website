@@ -1,7 +1,8 @@
 import { useMemo, useRef, useState } from "react";
 import type { MouseEvent, ReactNode } from "react";
 import { Link } from "react-router-dom";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
+import { useReducedMotionPreference } from "../motionPreference";
 import EditorialHeading from "./EditorialHeading";
 import { ClipReveal, Rule } from "./Reveal";
 import ProjectFilterBar from "../shared/ProjectFilterBar";
@@ -67,7 +68,7 @@ function IndexRow({ project, active, dimmed, onActivate, startFromPreview }: Ind
   const titleRef = useRef<HTMLHeadingElement>(null);
   const clipRef = useRef<HTMLDivElement>(null);
   const mediaRef = useRef<MediaElement | null>(null);
-  const reduceMotion = useReducedMotion();
+  const reduceMotion = useReducedMotionPreference();
 
   const handleNavigate = () => {
     if (!project.route) return;

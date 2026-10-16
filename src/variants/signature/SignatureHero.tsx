@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { animate, motion, useMotionValue, useMotionValueEvent, useReducedMotion, useScroll, useTransform } from "motion/react";
+import { animate, motion, useMotionValue, useMotionValueEvent, useScroll, useTransform } from "motion/react";
+import { useReducedMotionPreference } from "../motionPreference";
 import FlipWords from "../../components/FlipWords";
 import NetworkSvg from "../../components/NetworkSvg";
 import { ease } from "../shared/motionTokens";
@@ -23,7 +24,7 @@ type NetworkState = { activations: number[][]; draw: number[] };
  */
 export default function SignatureHero() {
   const sectionRef = useRef<HTMLElement>(null);
-  const reduceMotion = useReducedMotion();
+  const reduceMotion = useReducedMotionPreference();
 
   // Deterministic weights and inputs: the signature looks the same on every visit
   const network = useMemo(() => {

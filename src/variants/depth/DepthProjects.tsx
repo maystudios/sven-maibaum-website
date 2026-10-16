@@ -1,7 +1,8 @@
 import { useRef, useState } from "react";
 import type { RefObject } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { AnimatePresence, motion, useMotionValueEvent, useReducedMotion, useScroll, useTransform } from "motion/react";
+import { AnimatePresence, motion, useMotionValueEvent, useScroll, useTransform } from "motion/react";
+import { useReducedMotionPreference } from "../motionPreference";
 import type { MotionValue } from "motion/react";
 import ProjectMedia from "../shared/ProjectMedia";
 import type { MediaElement } from "../shared/ProjectMedia";
@@ -128,7 +129,7 @@ export default function DepthProjects() {
   const narrowTitleRef = useRef<HTMLHeadingElement>(null);
   const navigate = useNavigate();
   const cardRefs = useRef(new Map<string, CardRefs>());
-  const reduceMotion = useReducedMotion();
+  const reduceMotion = useReducedMotionPreference();
   const count = projectCards.length;
   const [activeIndex, setActiveIndex] = useState(0);
 

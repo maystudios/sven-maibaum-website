@@ -1,8 +1,9 @@
 /** Scroll helpers for the motion variants. They never take over user scrolling. */
 
-export function prefersReducedMotion() {
-  return typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-}
+import { prefersReducedMotion } from "../motionPreference";
+
+// Re-exported so transitions and morphs share the preview override (?motion=full)
+export { prefersReducedMotion };
 
 export function headerOffset() {
   const header = document.querySelector("header") as HTMLElement | null;

@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
-import { motion, useReducedMotion } from "motion/react";
+import { motion } from "motion/react";
+import { useReducedMotionPreference } from "../motionPreference";
 import { spring } from "./motionTokens";
 
 export type MediaElement = HTMLImageElement | HTMLVideoElement;
@@ -33,7 +34,7 @@ export default function ProjectMedia({
   loading = "lazy",
   onMediaElement,
 }: ProjectMediaProps) {
-  const reduceMotion = useReducedMotion();
+  const reduceMotion = useReducedMotionPreference();
   const videoRef = useRef<HTMLVideoElement | null>(null);
 
   useEffect(() => {

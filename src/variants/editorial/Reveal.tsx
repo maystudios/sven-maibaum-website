@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
-import { motion, useReducedMotion } from "motion/react";
+import { motion } from "motion/react";
+import { useReducedMotionPreference } from "../motionPreference";
 import { ease } from "../shared/motionTokens";
 
 type ClipRevealProps = {
@@ -12,7 +13,7 @@ type ClipRevealProps = {
 
 /** Image reveal: a clip-path opens from the bottom while the content settles from a slight zoom. */
 export function ClipReveal({ children, className = "", delay = 0, immediate = false }: ClipRevealProps) {
-  const reduceMotion = useReducedMotion();
+  const reduceMotion = useReducedMotionPreference();
   const hidden = reduceMotion ? { opacity: 0 } : { clipPath: "inset(100% 0% 0% 0%)" };
   const shown = reduceMotion ? { opacity: 1 } : { clipPath: "inset(0% 0% 0% 0%)" };
   const transition = { duration: reduceMotion ? 0.2 : 0.95, ease: ease.inOut, delay };

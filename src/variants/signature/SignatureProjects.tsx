@@ -1,6 +1,7 @@
 import { useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
+import { useReducedMotionPreference } from "../motionPreference";
 import ProjectFilterBar from "../shared/ProjectFilterBar";
 import ProjectMedia from "../shared/ProjectMedia";
 import { startMorph } from "../shared/morph";
@@ -108,7 +109,7 @@ function SpringCard({ project, index }: { project: ProjectCard; index: number })
 /** Project grid with spring micro-interactions; each card opens its page through the shared-element morph. */
 export default function SignatureProjects() {
   const [filter, setFilter] = useState("all");
-  const reduceMotion = useReducedMotion();
+  const reduceMotion = useReducedMotionPreference();
   const projects = useMemo(
     () => (filter === "all" ? projectCards : projectCards.filter((p) => p.filters.includes(filter))),
     [filter]

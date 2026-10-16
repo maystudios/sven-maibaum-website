@@ -8,6 +8,7 @@ import DepthHome from "./depth/DepthHome";
 import SignatureHome from "./signature/SignatureHome";
 import CombinedHome from "./combined/CombinedHome";
 import { ProjectShellOverride } from "./projectShellOverride";
+import { forceFullMotion } from "./motionPreference";
 import type { ProjectShellRenderer } from "./projectShellOverride";
 import type { MotionVariant } from "./variant";
 
@@ -26,7 +27,8 @@ const homes = {
 
 /**
  * Entry of the motion design exploration. `reducedMotion="user"` makes every
- * Motion animation fall back to opacity-only when the visitor asks for less motion.
+ * Motion animation fall back to opacity-only when the visitor asks for less motion;
+ * the preview override `?motion=full` switches that off (see motionPreference.ts).
  */
 export default function VariantRoot({ variant }: VariantRootProps) {
   useEffect(() => {
@@ -39,7 +41,7 @@ export default function VariantRoot({ variant }: VariantRootProps) {
   }, []);
 
   return (
-    <MotionConfig reducedMotion="user">
+    <MotionConfig reducedMotion={forceFullMotion ? "never" : "user"}>
       <ProjectShellOverride.Provider value={renderProjectShell}>
         <SiteRoutes layout={<VariantLayout variant={variant} />} home={homes[variant]} />
       </ProjectShellOverride.Provider>

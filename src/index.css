@@ -805,11 +805,14 @@ header {
   display: none;
 }
 
-/* Reduced motion */
+/* Reduced motion (skipped only under the variant preview override, html[data-motion="full"]) */
 @media (prefers-reduced-motion: reduce) {
-  .media-item, .media-item img.media-thumb,
-  .lightbox__close, .lightbox__nav, .fade-in-up { transition: none; animation: none; }
-  .fade-in-up { opacity: 1; }
+  html:not([data-motion="full"]) .media-item,
+  html:not([data-motion="full"]) .media-item img.media-thumb,
+  html:not([data-motion="full"]) .lightbox__close,
+  html:not([data-motion="full"]) .lightbox__nav,
+  html:not([data-motion="full"]) .fade-in-up { transition: none; animation: none; }
+  html:not([data-motion="full"]) .fade-in-up { opacity: 1; }
 }
 
 /* =========================================
@@ -962,18 +965,19 @@ html:has([data-motion-variant]) body {
   to { transform: translateX(50%); }
 }
 
+/* The preview override ?motion=full sets html[data-motion="full"] and skips these rules */
 @media (prefers-reduced-motion: reduce) {
-  [data-motion-variant] .swiss-btn-primary,
-  [data-motion-variant] .swiss-btn-secondary,
-  [data-motion-variant] .back-to-portfolio,
-  [data-motion-variant] .filter-btn,
-  [data-motion-variant] form button[type="submit"] { transition-duration: 0.01ms; }
-  [data-motion-variant] .swiss-btn-primary:active,
-  [data-motion-variant] .swiss-btn-secondary:active,
-  [data-motion-variant] .back-to-portfolio:active,
-  [data-motion-variant] .filter-btn:active,
-  [data-motion-variant] form button[type="submit"]:active { transform: none; }
-  .mv-link::after { transition: none; }
-  .mv-size-sweep { display: none; }
-  .mv-size-paint[data-step="5"]::before { animation: none; }
+  html:not([data-motion="full"]) [data-motion-variant] .swiss-btn-primary,
+  html:not([data-motion="full"]) [data-motion-variant] .swiss-btn-secondary,
+  html:not([data-motion="full"]) [data-motion-variant] .back-to-portfolio,
+  html:not([data-motion="full"]) [data-motion-variant] .filter-btn,
+  html:not([data-motion="full"]) [data-motion-variant] form button[type="submit"] { transition-duration: 0.01ms; }
+  html:not([data-motion="full"]) [data-motion-variant] .swiss-btn-primary:active,
+  html:not([data-motion="full"]) [data-motion-variant] .swiss-btn-secondary:active,
+  html:not([data-motion="full"]) [data-motion-variant] .back-to-portfolio:active,
+  html:not([data-motion="full"]) [data-motion-variant] .filter-btn:active,
+  html:not([data-motion="full"]) [data-motion-variant] form button[type="submit"]:active { transform: none; }
+  html:not([data-motion="full"]) .mv-link::after { transition: none; }
+  html:not([data-motion="full"]) .mv-size-sweep { display: none; }
+  html:not([data-motion="full"]) .mv-size-paint[data-step="5"]::before { animation: none; }
 }

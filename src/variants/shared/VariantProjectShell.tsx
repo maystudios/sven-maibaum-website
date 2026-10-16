@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
+import { motion, useScroll, useTransform } from "motion/react";
+import { useReducedMotionPreference } from "../motionPreference";
 import { useMorphTarget, useMorphState } from "./morph";
 import { ease } from "./motionTokens";
 import type { ProjectShellProps } from "../../components/ProjectShell";
@@ -27,7 +28,7 @@ export default function VariantProjectShell({
   const clipRef = useRef<HTMLDivElement>(null);
   const imageRef = useRef<HTMLImageElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
-  const reduceMotion = useReducedMotion();
+  const reduceMotion = useReducedMotionPreference();
 
   const morph = useMorphState();
   const [arrivedByMorph] = useState(() => morph !== null && morph.source.route === route);

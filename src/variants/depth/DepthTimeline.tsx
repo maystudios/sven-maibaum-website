@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import { motion, useReducedMotion, useScroll, useSpring, useTransform } from "motion/react";
+import { motion, useScroll, useSpring, useTransform } from "motion/react";
+import { useReducedMotionPreference } from "../motionPreference";
 import type { MotionValue } from "motion/react";
 import { ease } from "../shared/motionTokens";
 import { experienceHeading, experiences } from "../../data/experience";
@@ -54,7 +55,7 @@ function TimelineEntry({ entry, at, progress, still }: EntryProps) {
 /** Experience with a timeline that draws itself in step with the scroll position. */
 export default function DepthTimeline() {
   const listRef = useRef<HTMLOListElement>(null);
-  const reduceMotion = useReducedMotion() === true;
+  const reduceMotion = useReducedMotionPreference();
   const { scrollYProgress } = useScroll({ target: listRef, offset: ["start 75%", "end 55%"] });
   // Light smoothing so the line feels drawn, without lagging behind the page
   const progress = useSpring(scrollYProgress, { stiffness: 260, damping: 40, restDelta: 0.001 });

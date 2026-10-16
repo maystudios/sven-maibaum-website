@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
+import { motion, useScroll, useTransform } from "motion/react";
+import { useReducedMotionPreference } from "../motionPreference";
 import MaskLines from "./MaskLines";
 import { ClipReveal } from "./Reveal";
 import { ease, spring } from "../shared/motionTokens";
@@ -14,7 +15,7 @@ const ROLE_INTERVAL_MS = 2400;
  */
 export default function EditorialHero() {
   const sectionRef = useRef<HTMLElement>(null);
-  const reduceMotion = useReducedMotion();
+  const reduceMotion = useReducedMotionPreference();
   const [activeRole, setActiveRole] = useState(0);
   const [first, ...rest] = heroName.split(" ");
   const last = rest.join(" ");

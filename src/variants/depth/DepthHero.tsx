@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import { animate, motion, useMotionValue, useReducedMotion, useScroll, useTransform } from "motion/react";
+import { animate, motion, useMotionValue, useScroll, useTransform } from "motion/react";
+import { useReducedMotionPreference } from "../motionPreference";
 import type { MotionValue } from "motion/react";
 import FlipWords from "../../components/FlipWords";
 import { ease } from "../shared/motionTokens";
@@ -38,7 +39,7 @@ function CorridorFrame({ index, travel, still }: CorridorFrameProps) {
  */
 export default function DepthHero() {
   const sectionRef = useRef<HTMLElement>(null);
-  const reduceMotion = useReducedMotion();
+  const reduceMotion = useReducedMotionPreference();
   const [stickyTop, setStickyTop] = useState(0);
 
   // Pin the hero only once its bottom is reached, so tall mobile heroes stay readable

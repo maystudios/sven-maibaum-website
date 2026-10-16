@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { motion, AnimatePresence, useReducedMotion } from "motion/react";
+import { motion, AnimatePresence } from "motion/react";
+import { useReducedMotionPreference } from "../motionPreference";
 import ThemeToggleMorph from "./ThemeToggleMorph";
 import { ease, spring } from "./motionTokens";
 import { getNavLinks, homeSectionIds } from "../../data/navigation";
@@ -18,7 +19,7 @@ export default function VariantHeader({ pageKey }: VariantHeaderProps) {
   const [activeSection, setActiveSection] = useState("home");
   const menuRef = useRef<HTMLDivElement | null>(null);
   const triggerRef = useRef<HTMLButtonElement | null>(null);
-  const reduceMotion = useReducedMotion();
+  const reduceMotion = useReducedMotionPreference();
   const menuHidden = reduceMotion ? { opacity: 0 } : { clipPath: "inset(0% 0% 100% 0%)" };
   const menuShown = reduceMotion ? { opacity: 1 } : { clipPath: "inset(0% 0% 0% 0%)" };
 

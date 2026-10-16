@@ -1,8 +1,10 @@
+import { useContext } from "react";
 import type { ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "motion/react";
+import { ProjectShellOverride } from "../variants/projectShellOverride";
 
-type ProjectShellProps = {
+export type ProjectShellProps = {
   title: string;
   subtitle: string;
   heroImage: string;
@@ -13,7 +15,13 @@ type ProjectShellProps = {
   hasSiteHeader?: boolean;
 };
 
-export default function ProjectShell({
+export default function ProjectShell(props: ProjectShellProps) {
+  const renderOverride = useContext(ProjectShellOverride);
+  if (renderOverride) return renderOverride(props);
+  return <DefaultProjectShell {...props} />;
+}
+
+function DefaultProjectShell({
   title,
   subtitle,
   heroImage,

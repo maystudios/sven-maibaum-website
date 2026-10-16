@@ -811,3 +811,169 @@ header {
   .lightbox__close, .lightbox__nav, .fade-in-up { transition: none; animation: none; }
   .fade-in-up { opacity: 1; }
 }
+
+/* =========================================
+   7. MOTION VARIANTS (exploration, ?v=1|2|3)
+   Scoped to [data-motion-variant] or .mv-* classes; the regular site is unaffected.
+   ========================================= */
+:root {
+  /* Spring (stiffness 380, damping 20) sampled every 20 ms over 600 ms */
+  --mv-spring: linear(0, 0.076, 0.242, 0.447, 0.653, 0.834, 0.975, 1.073, 1.129, 1.15, 1.146, 1.124, 1.095, 1.063, 1.034, 1.011, 0.994, 0.983, 0.978, 0.977, 0.98, 0.984, 0.989, 0.993, 0.997, 1, 1.002, 1.003, 1.003, 1.003, 1);
+  --mv-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  /* Project size slider */
+  --mv-size-1: #eab308;
+  --mv-size-2: #22c55e;
+  --mv-size-3a: #22d3ee;
+  --mv-size-3b: #a855f7;
+  --mv-size-4a: #7c3aed;
+  --mv-size-4b: #c084fc;
+}
+
+/* `overflow-x: hidden` on body turns it into a scroll container and breaks
+   position: sticky; `clip` cuts horizontal overflow without that side effect. */
+html:has([data-motion-variant]),
+html:has([data-motion-variant]) body {
+  overflow-x: clip;
+}
+
+/* Buttons spring back after a press */
+[data-motion-variant] .swiss-btn-primary,
+[data-motion-variant] .swiss-btn-secondary,
+[data-motion-variant] .back-to-portfolio,
+[data-motion-variant] .filter-btn,
+[data-motion-variant] form button[type="submit"] {
+  transition: transform 600ms var(--mv-spring), background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, filter 0.2s ease;
+}
+[data-motion-variant] .swiss-btn-primary:active,
+[data-motion-variant] .swiss-btn-secondary:active,
+[data-motion-variant] .back-to-portfolio:active,
+[data-motion-variant] .filter-btn:active,
+[data-motion-variant] form button[type="submit"]:active {
+  transform: scale(0.94);
+  transition: transform 90ms ease-out;
+}
+
+/* Link underline: draws in from the left, leaves to the right */
+.mv-link,
+[data-motion-variant] footer a:not([aria-label]),
+[data-motion-variant] #about a {
+  position: relative;
+  text-decoration: none;
+}
+.mv-link::after,
+[data-motion-variant] footer a:not([aria-label])::after,
+[data-motion-variant] #about a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -2px;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: right center;
+  transition: transform 420ms var(--mv-ease-out);
+}
+.mv-link:hover::after,
+.mv-link:focus-visible::after,
+[data-motion-variant] footer a:not([aria-label]):hover::after,
+[data-motion-variant] footer a:not([aria-label]):focus-visible::after,
+[data-motion-variant] #about a:hover::after,
+[data-motion-variant] #about a:focus-visible::after {
+  transform: scaleX(1);
+  transform-origin: left center;
+}
+[data-motion-variant] .header-desktop .mv-link::after {
+  bottom: 2px;
+}
+
+/* Editorial biography: the first paragraph is the lead */
+.mv-editorial-bio > p:first-child {
+  font-size: clamp(1.35rem, 2.2vw, 1.75rem);
+  line-height: 1.4;
+  color: var(--sw-fg);
+  letter-spacing: -0.01em;
+}
+
+/* --- Project size slider --- */
+.mv-size-base {
+  position: absolute;
+  inset: 0;
+  background: var(--sw-surface-light);
+}
+.mv-size-track {
+  /* five segments with a 4 px gap */
+  -webkit-mask-image: linear-gradient(90deg, #000 0 calc(100% - 4px), transparent calc(100% - 4px));
+  mask-image: linear-gradient(90deg, #000 0 calc(100% - 4px), transparent calc(100% - 4px));
+  -webkit-mask-size: 20% 100%;
+  mask-size: 20% 100%;
+  -webkit-mask-repeat: repeat-x;
+  mask-repeat: repeat-x;
+}
+.mv-size-glow {
+  filter: blur(9px);
+}
+.mv-size-paint {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+.mv-size-paint[data-step="1"] { background: var(--mv-size-1); }
+.mv-size-paint[data-step="2"] { background: var(--mv-size-2); }
+.mv-size-paint[data-step="3"] { background: linear-gradient(90deg, var(--mv-size-3a), var(--mv-size-3b)); }
+.mv-size-paint[data-step="4"] { background: linear-gradient(90deg, var(--mv-size-4a), var(--mv-size-3b) 60%, var(--mv-size-4b)); }
+.mv-size-paint[data-step="5"]::before {
+  /* Two identical rainbow periods; shifting by one period loops seamlessly */
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -100%;
+  width: 200%;
+  background: linear-gradient(90deg,
+    #ef4444 0%, #f97316 7%, #eab308 14%, #22c55e 21%, #22d3ee 28%, #3b82f6 36%, #a855f7 43%, #ef4444 50%,
+    #f97316 57%, #eab308 64%, #22c55e 71%, #22d3ee 78%, #3b82f6 86%, #a855f7 93%, #ef4444 100%);
+  animation: mv-rainbow 2.4s linear infinite;
+}
+.mv-size-sweep {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 35%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.7), transparent);
+  animation: mv-sweep 1.7s cubic-bezier(0.45, 0, 0.25, 1) infinite;
+}
+.mv-size-sweep--glow {
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.9), transparent);
+}
+.mv-size-label.is-active[data-step="1"] { color: var(--mv-size-1); }
+.mv-size-label.is-active[data-step="2"] { color: var(--mv-size-2); }
+.mv-size-label.is-active[data-step="3"] { color: var(--mv-size-3a); }
+.mv-size-label.is-active[data-step="4"] { color: var(--mv-size-4b); }
+.mv-size-label.is-active[data-step="5"] { color: var(--sw-fg); }
+
+@keyframes mv-sweep {
+  from { transform: translateX(-120%); }
+  to { transform: translateX(320%); }
+}
+@keyframes mv-rainbow {
+  from { transform: translateX(0); }
+  to { transform: translateX(50%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-motion-variant] .swiss-btn-primary,
+  [data-motion-variant] .swiss-btn-secondary,
+  [data-motion-variant] .back-to-portfolio,
+  [data-motion-variant] .filter-btn,
+  [data-motion-variant] form button[type="submit"] { transition-duration: 0.01ms; }
+  [data-motion-variant] .swiss-btn-primary:active,
+  [data-motion-variant] .swiss-btn-secondary:active,
+  [data-motion-variant] .back-to-portfolio:active,
+  [data-motion-variant] .filter-btn:active,
+  [data-motion-variant] form button[type="submit"]:active { transform: none; }
+  .mv-link::after { transition: none; }
+  .mv-size-sweep { display: none; }
+  .mv-size-paint[data-step="5"]::before { animation: none; }
+}

@@ -385,7 +385,8 @@
   justify-content: center;
 }
 
-.links-footer-nav a {
+.links-footer-nav a,
+.links-footer-button {
   display: inline-flex;
   align-items: center;
   min-height: 44px;
@@ -396,8 +397,18 @@
   transition: color 0.18s ease;
 }
 
+/* "Cookie-Einstellungen" is a button that looks like its neighbouring links */
+.links-footer-button {
+  border: 0;
+  background: none;
+  font-family: inherit;
+  cursor: pointer;
+}
+
 .links-footer-nav a:hover,
-.links-footer-nav a:focus-visible {
+.links-footer-nav a:focus-visible,
+.links-footer-button:hover,
+.links-footer-button:focus-visible {
   color: var(--sw-fg);
 }
 
@@ -410,7 +421,8 @@
 }
 
 /* -- Focus --------------------------------------------------------------- */
-.links-page a:focus-visible {
+.links-page a:focus-visible,
+.links-footer-button:focus-visible {
   outline: 2px solid var(--sw-accent);
   outline-offset: 3px;
 }

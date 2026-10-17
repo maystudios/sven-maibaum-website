@@ -1,4 +1,5 @@
 import { motion } from "motion/react";
+import ConsentSettingsButton from "../consent/ConsentSettingsButton";
 
 const currentYear = new Date().getFullYear();
 
@@ -63,6 +64,9 @@ export default function Footer() {
               <a className="text-sm text-muted hover:text-fg transition-colors duration-200" href="/datenschutz">
                 Datenschutz
               </a>
+            </li>
+            <li>
+              <ConsentSettingsButton className="mv-link text-left text-sm text-muted hover:text-fg transition-colors duration-200" />
             </li>
           </ul>
         </nav>

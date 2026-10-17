@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import type { CSSProperties, ReactNode } from "react";
+import ConsentSettingsButton from "../consent/ConsentSettingsButton";
 import "./Links.css";
 
 const PAGE_TITLE = "Social Links – TikTok, YouTube & Instagram | Sven Maibaum";
@@ -197,6 +198,7 @@ export default function Links() {
             <a href={import.meta.env.BASE_URL}>Portfolio</a>
             <a href={`${import.meta.env.BASE_URL}impressum/`}>Impressum</a>
             <a href={`${import.meta.env.BASE_URL}datenschutz/`}>Datenschutz</a>
+            <ConsentSettingsButton className="links-footer-button" />
           </nav>
           <p className="links-copy">© {new Date().getFullYear()} Sven Maibaum</p>
         </div>

@@ -181,7 +181,9 @@ export default function Datenschutz() {
         <strong>Anbieter:</strong> Google Ireland Limited, Gordon House, Barrow Street, Dublin 4, Irland. Google
         verarbeitet die Daten als mein Auftragsverarbeiter (Art. 28 DSGVO) nach den Google
         Auftragsdatenverarbeitungsbedingungen für Werbeprodukte, die für Unternehmen im Europäischen Wirtschaftsraum
-        Teil der Nutzungsbedingungen von Google Analytics sind.
+        Teil der Nutzungsbedingungen von Google Analytics sind. Nach den Einstellungen meines Google-Analytics-Kontos
+        darf Google die Daten außerdem zur Verbesserung eigener Produkte und Dienste und für zusammengefasste
+        Vergleichswerte nutzen; dafür ist Google selbst verantwortlich.
       </p>
       <p>
         <strong>Verarbeitete Daten:</strong> Bei jedem Seitenaufruf, auch beim Wechsel zwischen Seiten dieser Website,
@@ -211,13 +213,14 @@ export default function Datenschutz() {
         <strong>Rechtsgrundlage:</strong> Ihre Einwilligung nach Art. 6 Abs. 1 lit. a DSGVO und § 25 Abs. 1 TDDDG.
       </p>
       <p>
-        <strong>Speicherdauer:</strong> Die Cookies gelten wie oben beschrieben. Auf Besucher und einzelne Ereignisse
-        bezogene Daten löscht Google automatisch nach [OFFEN: in Google Analytics eingestellte Aufbewahrungsdauer, 2 oder
-        14 Monate, abzulesen unter Verwaltung &gt; Datenerfassung und -änderung &gt; Datenaufbewahrung]. Zusammengefasste
-        Standardberichte sind von dieser Frist nicht betroffen.
+        <strong>Speicherdauer:</strong> Die Cookies gelten wie oben beschrieben. Daten zu einzelnen Ereignissen löscht
+        Google automatisch nach 2 Monaten. Auf Besucher bezogene Daten löscht Google 14 Monate nach dem letzten Besuch;
+        jeder neue Besuch setzt diese Frist zurück. Zusammengefasste Standardberichte sind von diesen Fristen nicht
+        betroffen.
       </p>
       <p>
-        <strong>Empfänger und Drittlandübermittlung:</strong> Empfänger ist Google als mein Auftragsverarbeiter. Google
+        <strong>Empfänger und Drittlandübermittlung:</strong> Empfänger ist Google, als mein Auftragsverarbeiter und
+        für die oben genannten eigenen Zwecke als eigener Verantwortlicher. Google
         verarbeitet die Daten auch in den USA. Die Google LLC ist nach dem EU-U.S. Data Privacy Framework zertifiziert
         (Angemessenheitsbeschluss der EU-Kommission vom 10.07.2023, Art. 45 DSGVO). Google stützt Übermittlungen für
         seine Werbe- und Analyseprodukte nach eigener Angabe seit dem 01.09.2023 darauf und kann

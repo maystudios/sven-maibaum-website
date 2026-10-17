@@ -5,12 +5,14 @@ Every Blender GPU run goes through here: it takes an exclusive OS lock on render
 
   python scripts/render_shot.py --set phone --shot hold --preset review --out renders/hero/phone.png
   python scripts/render_shot.py --frames 110-116,238,239 --preset draft --out renders/review/f_####.png
+  python scripts/render_shot.py --player --frames 30-450 --preset web --out renders/final/dark/player/f_####.png
   python scripts/render_shot.py --animatic --preset draft --out renders/anim/f_####.png --encode out.mp4
   python scripts/render_shot.py --set phone --shot hold --set-override phone=sets.phone_wip ...
   python scripts/render_shot.py --validate        (exterior validator, also takes the lock)
 
 Options
-  --frames LIST       e.g. "26,48,86-90" (journey frames, 24 fps, 0..395)
+  --frames LIST       e.g. "26,48,86-90" (story frames, 24 fps, 0..395)
+  --player            --frames are player frames (the V4 videos, 30..450; see timeline.py)
   --set S --shot K    hero still: the journey camera at that set's shot (see HERO in journey.py:
                       phone hold|mini|seam, board hold|seam|slot, tunnel hold|mouth|end,
                       hall hold|port|server, ext hold|roof|max)
@@ -85,6 +87,7 @@ def main():
     p.add_argument("--set")
     p.add_argument("--shot", default="hold")
     p.add_argument("--animatic", action="store_true")
+    p.add_argument("--player", action="store_true", help="--frames are player frames (timeline.py)")
     p.add_argument("--loop", type=int, help="idle loop of level 1..5 (camera at the level pose)")
     p.add_argument("--validate", action="store_true")
     p.add_argument("--preset", default="draft")
@@ -104,8 +107,9 @@ def main():
     else:
         if not a.out:
             p.error("--out is required")
-        mode = "hero" if a.set else ("animatic" if a.animatic else ("loop" if a.loop else "frames"))
-        if mode == "frames" and not a.frames:
+        mode = "hero" if a.set else ("animatic" if a.animatic else ("loop" if a.loop else
+                                                                    ("player" if a.player else "frames")))
+        if mode in ("frames", "player") and not a.frames:
             p.error("give --frames, --set/--shot or --animatic")
         cmd = [BLENDER, "-b", "--factory-startup", "-P", os.path.join(HERE, "journey.py"), "--",
                "--theme", a.theme, "--mode", mode, "--preset", a.preset, "--look", a.look,
@@ -114,7 +118,7 @@ def main():
             cmd += ["--res", a.res or "960x720", "--samples", "24"]
         elif a.res:
             cmd += ["--res", a.res]
-        if mode == "frames":
+        if mode in ("frames", "player"):
             cmd += ["--frames", a.frames]
         if mode == "hero":
             cmd += ["--set", a.set, "--shot", a.shot]

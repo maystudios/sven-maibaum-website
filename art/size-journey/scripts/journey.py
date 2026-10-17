@@ -6,6 +6,7 @@ Owned by the lead (camera, seams, timing, integration). Use scripts/render_shot.
       --mode animatic --out renders/anim/f_####.png
   ... --mode frames --frames 26,48,86-90 --res 640x480 --out renders/sb/f_####.png
   ... --mode hero --set phone --shot hold --preset review --out renders/hero/phone.png
+  ... --mode player --frames 30-450 --preset web --out renders/final/dark/player/f_####.png
   options: --preset legacy|draft|review|final   --look legacy|bible
            --set-override phone=sets.phone_wip   (repeatable)
 
@@ -16,6 +17,8 @@ match in shape, colour, direction and speed:
   tunnel 143-160  fibre of light streaks -> bright ferrule bore
   hall  161-238   out of a patch-panel port -> Mittel aisle -> over an open server, rise
   ext   239-395   HA1 roof (== server fan modules) -> Gross campus builds -> Maximal node grid
+These are story frames. `--mode player` renders player frames, the frames of the V4 videos: the
+Mini -> Klein pull-back (story 30-66) is spread over 126 player frames (see timeline.py).
 """
 import math
 import os
@@ -30,6 +33,7 @@ import importlib  # noqa: E402
 
 import build_scene as BS  # noqa: E402
 import sets.common as JC  # noqa: E402
+import timeline as TLN  # noqa: E402
 
 argv = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
 
@@ -402,6 +406,13 @@ def key_camera():
         keys.append((float(f), None))
         if f in SEAMS:
             keys.append((f + 0.5, f))
+    # player frames inside the stretch sit between story frames: key them too, so every player
+    # frame and its (scaled) shutter interval see camera_at() and not a chord between story keys
+    for p in range(TLN.STRETCH_A + 1, TLN.STRETCH_B + TLN.STRETCH):
+        t = TLN.story(p)
+        if t != int(t):
+            keys.append((t, None))
+    keys.sort(key=lambda k: k[0])
     cam.animation_data_clear()
     for (t, cut) in keys:
         shot = None
@@ -453,7 +464,7 @@ def ext_time(t):
 
 
 STRUCT = {"t": None}          # loop mode: structural time frozen at the level frame
-LEVEL_FRAMES = {1: 30, 2: 66, 3: 186, 4: 270, 5: 360}   # V4 player: levels 1..5
+LEVEL_FRAMES = TLN.STORY_LEVELS   # V4 player: levels 1..5 (story frames)
 LOOP_N, LOOP_K = 30, 8        # loop length (multiple of the 15/30-frame micro periods) + pre-roll
 
 
@@ -777,18 +788,25 @@ elif MODE == "loop":
     frames = [TL + j for j in range(-LOOP_K, LOOP_N)]
 else:
     frames = parse_frames(FRAMES)
+# (output frame number, story time, shutter scale); player mode names files by player frame
+if MODE == "player":
+    jobs = [(p, TLN.story(p), TLN.story_rate(p)) for p in frames]
+else:
+    jobs = [(f, f, 1.0) for f in frames]
 times = []
-for f in frames:
-    SC.frame_set(f)
-    state(f)
+for (f, t, k) in jobs:
+    # a story time between frames renders as a subframe (camera keys: key_camera)
+    SC.frame_set(int(math.floor(t)), subframe=t - math.floor(t))
+    state(t)
     if PRESET != "legacy":
-        LB.set_haze(haze_at(f if STRUCT["t"] is None else STRUCT["t"]))
-        lens_fx(f)
+        LB.set_haze(haze_at(t if STRUCT["t"] is None else STRUCT["t"]))
+        lens_fx(t)
+        SC.render.motion_blur_shutter *= k   # half a player frame of motion, like everywhere else
     path_out = OUT.replace("####", "%04d" % f) if "####" in OUT else OUT
     SC.render.filepath = os.path.abspath(path_out)
     t0 = time.time()
     bpy.ops.render.render(write_still=True)
     times.append(time.time() - t0)
-    print("RENDERED %d %.2fs -> %s" % (f, times[-1], path_out), flush=True)
+    print("RENDERED %d (story %.4f) %.2fs -> %s" % (f, t, times[-1], path_out), flush=True)
 print("RENDER_TIMES n=%d avg=%.2fs max=%.2fs total=%.1fs" % (len(times), sum(times) / len(times),
                                                              max(times), sum(times)))

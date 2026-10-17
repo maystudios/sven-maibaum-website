@@ -116,6 +116,11 @@ async function tabTo(page: Page, name: string | RegExp, max = 30) {
   throw new Error(`Tab never reached ${String(name)}`);
 }
 
+// Hits are still logged but never reach Google, so test runs do not count as visits.
+test.beforeEach(async ({ context }) => {
+  await context.route(/google-analytics\.com\/g\/collect/, (route) => route.fulfill({ status: 204 }));
+});
+
 test.describe("before any choice", () => {
   for (const route of ["/", "/projekte/heistline/", "/projekte/mr-dork-3/", "/links/", "/datenschutz/", "/impressum/"]) {
     test(`requests nothing from third parties on ${route}`, async ({ page, context, baseURL }) => {

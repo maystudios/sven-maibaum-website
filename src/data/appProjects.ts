@@ -17,7 +17,7 @@ export type AppProject = {
   platform: string;
   stack: string;
   category: string;
-  theme: "orange" | "blue";
+  accent: "orange" | "blue";
   screenshots: AppProjectScreenshot[];
   features: AppProjectFeature[];
   releaseNote: string;
@@ -37,7 +37,7 @@ export const appProjects: AppProject[] = [
     platform: "Android · iOS",
     stack: "Flutter · Riverpod",
     category: "Alarm & Routinen",
-    theme: "orange",
+    accent: "orange",
     screenshots: [
       {
         src: `${base}assets/projects/app-development/wake-up/welcome.png`,
@@ -79,7 +79,7 @@ export const appProjects: AppProject[] = [
     platform: "Android · iOS",
     stack: "Flutter · Supabase",
     category: "Ausgaben & OCR",
-    theme: "blue",
+    accent: "blue",
     screenshots: [
       {
         src: `${base}assets/projects/app-development/splitup/home.png`,

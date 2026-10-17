@@ -8,8 +8,8 @@ type SizePanelProps = {
   level: number;
 };
 
-const currentTheme = (): SceneTheme =>
-  document.documentElement.getAttribute("data-theme") === "light" ? "light" : "dark";
+/** The site is dark only, so only the dark renders are shipped and requested. */
+const SCENE_THEME: SceneTheme = "dark";
 
 const MEDIA = "absolute inset-0 w-full h-full object-cover";
 
@@ -17,7 +17,7 @@ const MEDIA = "absolute inset-0 w-full h-full object-cover";
  * The size scene next to the slider: a camera journey from a script to
  * connected campuses (see journeyPlayer.ts). The player is a separate chunk
  * that loads when the contact section is about 800 px away; it plays only
- * while the panel is visible and follows the site theme live.
+ * while the panel is visible.
  */
 export default function SizePanel({ level }: SizePanelProps) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -62,7 +62,7 @@ export default function SizePanel({ level }: SizePanelProps) {
               forward: elements.forward!,
               reverse: elements.reverse!,
               loop: elements.loop!,
-              theme: currentTheme(),
+              theme: SCENE_THEME,
               level: latest.current.level,
               reduced: latest.current.reduceMotion,
               onReady: () => setReady(true),
@@ -76,12 +76,7 @@ export default function SizePanel({ level }: SizePanelProps) {
               player.setPanelVisible(visible.some((entry) => entry.isIntersecting));
             });
             visibility.observe(container);
-            const theme = new MutationObserver(() => player.setTheme(currentTheme()));
-            theme.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
-            cleanups.push(() => {
-              visibility.disconnect();
-              theme.disconnect();
-            });
+            cleanups.push(() => visibility.disconnect());
             player.start();
           })
           .catch((error: unknown) => {

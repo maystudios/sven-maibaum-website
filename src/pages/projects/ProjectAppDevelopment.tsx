@@ -4,7 +4,7 @@ import type { AppProject } from "../../data/appProjects";
 
 const base = import.meta.env.BASE_URL;
 
-const themeStyles = {
+const accentStyles = {
   orange: {
     badge: "border-orange-400/40 bg-orange-400/10",
     number: "text-orange-400",
@@ -15,7 +15,7 @@ const themeStyles = {
     number: "text-blue-400",
     note: "border-blue-400/50 bg-blue-400/5",
   },
-} satisfies Record<AppProject["theme"], { badge: string; number: string; note: string }>;
+} satisfies Record<AppProject["accent"], { badge: string; number: string; note: string }>;
 
 type AppEntryProps = {
   project: AppProject;
@@ -23,7 +23,7 @@ type AppEntryProps = {
 };
 
 function AppEntry({ project, index }: AppEntryProps) {
-  const styles = themeStyles[project.theme];
+  const styles = accentStyles[project.accent];
   const galleryClass =
     project.screenshots.length === 2 ? "grid grid-cols-2 gap-3" : "grid grid-cols-2 gap-3 sm:grid-cols-3";
   return (

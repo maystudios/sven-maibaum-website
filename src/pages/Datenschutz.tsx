@@ -195,18 +195,6 @@ export default function Datenschutz() {
         wären nach § 25 Abs. 2 Nr. 2 TDDDG einwilligungsfrei zulässig. Solche Cookies werden derzeit nicht eingesetzt.
       </p>
 
-      <h2>8. Browser-Speicher (localStorage)</h2>
-      <p>
-        Diese Website speichert Ihre Darstellungseinstellung (helles oder dunkles Farbschema) im localStorage Ihres
-        Browsers. Der Eintrag dient ausschließlich dazu, Ihre Einstellung beim nächsten Besuch beizubehalten.
-      </p>
-      <p>
-        <strong>Rechtsgrundlage:</strong> § 25 Abs. 2 Nr. 2 TDDDG. Die Speicherung ist unbedingt erforderlich, um den
-        ausdrücklich gewünschten Dienst (Darstellungseinstellung) bereitzustellen. Es findet kein Tracking und keine
-        Weitergabe an Dritte statt.
-      </p>
-      <p>Sie können diese Daten jederzeit über die Einstellungen Ihres Browsers löschen.</p>
-
       <h2>9. Externe Links</h2>
       <p>
         Diese Website enthält Links zu externen Seiten, etwa GitHub und LinkedIn. Bei einem Klick werden Sie zur Seite
@@ -266,10 +254,6 @@ export default function Datenschutz() {
         <li>
           <strong>Kontaktformular-Daten:</strong> bis zur abschließenden Bearbeitung, auf Anfrage sofortige Löschung,
           soweit keine gesetzliche Aufbewahrungspflicht entgegensteht.
-        </li>
-        <li>
-          <strong>Browser-Speicher (localStorage):</strong> verbleibt lokal in Ihrem Browser, Sie können ihn jederzeit
-          über die Browser-Einstellungen löschen.
         </li>
       </ul>
 

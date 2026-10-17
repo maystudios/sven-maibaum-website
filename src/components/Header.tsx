@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "motion/react";
-import ThemeToggleMorph from "./ThemeToggle";
 import { useReducedMotionPreference } from "../motion/motionPreference";
 import { ease, spring } from "../motion/motionTokens";
 import { getNavLinks, homeSectionIds } from "../data/navigation";
@@ -135,11 +134,9 @@ export default function Header({ pageKey }: HeaderProps) {
               </motion.a>
             );
           })}
-          <ThemeToggleMorph />
         </div>
 
         <div className="header-mobile">
-          <ThemeToggleMorph />
           <motion.button
             id="mobile-menu-button"
             className="min-h-[44px] min-w-[44px] inline-flex items-center justify-center text-muted hover:text-fg transition-colors"

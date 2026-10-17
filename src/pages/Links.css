@@ -1,7 +1,6 @@
 /* =========================================================================
    Social link page (/links)
-   Scoped under .links-page. Reuses the Swiss design tokens from index.css
-   so the page follows the site dark/light themes without own controls.
+   Scoped under .links-page. Reuses the Swiss design tokens from index.css.
    ========================================================================= */
 
 .links-page {
@@ -15,10 +14,6 @@
   background: var(--sw-bg);
   color: var(--sw-fg);
   font-family: Geist, system-ui, sans-serif;
-}
-
-html[data-theme="light"] .links-page {
-  --links-tiktok: #007e82;
 }
 
 /* Hairline brand rule along the very top edge */
@@ -66,10 +61,6 @@ html[data-theme="light"] .links-page {
   height: 34rem;
   transform: translateX(-50%);
   background: radial-gradient(circle at 50% 50%, rgba(59, 130, 246, 0.2), transparent 62%);
-}
-
-html[data-theme="light"] .links-bg-glow {
-  background: radial-gradient(circle at 50% 50%, rgba(37, 99, 235, 0.12), transparent 62%);
 }
 
 /* -- Shell --------------------------------------------------------------- */

@@ -17,7 +17,7 @@ export default {
         muted: 'var(--sw-muted)',
         faint: 'var(--sw-text-faint)',
         surface2: 'var(--sw-surface-light)',
-        // Adaptive tokens (light/dark via CSS variables)
+        // Tokens backed by CSS variables (src/index.css)
         fg: 'var(--sw-fg)',
         canvas: 'var(--sw-bg)',
         surface: 'var(--sw-surface)',

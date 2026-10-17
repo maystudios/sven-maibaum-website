@@ -1,10 +1,10 @@
 import { useReducedMotion } from "motion/react";
 
 /**
- * Preview override for the motion variants: `?motion=full` forces full motion
+ * Preview override for reviewing motion: `?motion=full` forces full motion
  * even when the operating system asks for reduced motion (kept in
- * sessionStorage like `?v`), `?motion=auto` clears it. Without the override the
- * visitor's reduced-motion preference applies unchanged.
+ * sessionStorage for the tab), `?motion=auto` clears it. Without the override
+ * the visitor's reduced-motion preference applies unchanged.
  */
 const STORAGE_KEY = "motion-override";
 

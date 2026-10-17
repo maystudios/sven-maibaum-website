@@ -1,5 +1,6 @@
-import type { ReactElement } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
+import Layout from "./components/Layout";
+import Home from "./pages/Home";
 import ProjectHeistLine from "./pages/projects/ProjectHeistLine";
 import ProjectMrDork3 from "./pages/projects/ProjectMrDork3";
 import ProjectMobileGames from "./pages/projects/ProjectMobileGames";
@@ -18,21 +19,14 @@ import NotFound from "./pages/NotFound";
 import Visitenkarte from "./pages/Visitenkarte";
 import Links from "./pages/Links";
 
-type SiteRoutesProps = {
-  /** Layout route element that renders the shared header, footer and <Outlet />. */
-  layout: ReactElement;
-  /** Element for the home route. */
-  home: ReactElement;
-};
-
-/** Single route table, shared by the regular site and the motion variants. */
-export default function SiteRoutes({ layout, home }: SiteRoutesProps) {
+/** Route table of the site. Every route except /links renders inside the shared layout. */
+export default function SiteRoutes() {
   return (
     <Routes>
       {/* Standalone social link page: no shared header/footer */}
       <Route path="/links" element={<Links />} />
-      <Route element={layout}>
-        <Route path="/" element={home} />
+      <Route element={<Layout />}>
+        <Route path="/" element={<Home />} />
         <Route path="/projekte/heistline" element={<ProjectHeistLine />} />
         <Route path="/projekte/mr-dork-3" element={<ProjectMrDork3 />} />
         <Route path="/projekte/mobile-games" element={<ProjectMobileGames />} />

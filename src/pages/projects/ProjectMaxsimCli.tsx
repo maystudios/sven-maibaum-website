@@ -5,7 +5,6 @@ const base = import.meta.env.BASE_URL;
 export default function ProjectMaxsimCli() {
   return (
     <ProjectShell
-      hasSiteHeader
       title="maxsimcli"
       subtitle="Meta-Prompting und Context Engineering für Claude Code. Strukturierte Prompts, dedizierte Agenten und spec-driven Planning. Jeder Task bekommt einen eigenen Subagenten mit frischem Kontext."
       heroImage={`${base}assets/projects/maxsimcli/banner.svg`}

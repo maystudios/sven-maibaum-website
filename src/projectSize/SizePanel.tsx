@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from "react";
-import { useReducedMotionPreference } from "../motionPreference";
+import { useReducedMotionPreference } from "../motion/motionPreference";
 import type { SceneTheme } from "./sceneManifest";
 import type { JourneyPlayer } from "./journeyPlayer";
-import { projectSizeLevels } from "../../data/projectSize";
+import { projectSizeLevels } from "../data/projectSize";
 
 type SizePanelProps = {
   level: number;

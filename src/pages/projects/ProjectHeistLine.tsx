@@ -107,7 +107,6 @@ export default function ProjectHeistLine() {
   return (
     <>
       <ProjectShell
-        hasSiteHeader
         title="HeistLine"
         subtitle="Vormals The Prisonbreak — Wähle deine Seite: Cop oder Criminal. Entkomme, plane Heists, baue Basen, verdiene Bounties und dominiere mit deinem Team in einem dynamischen Open-World-MMO-Setting."
         heroImage={`${import.meta.env.BASE_URL}assets/projects/heistline/VaultHeist.png`}

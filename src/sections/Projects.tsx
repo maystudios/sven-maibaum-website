@@ -1,9 +1,36 @@
 import { useMemo, useState } from "react";
+import type { MouseEvent } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import ProjectCard from "../components/ProjectCard";
 import SectionHeading from "../components/SectionHeading";
+import { startMorph } from "../motion/morph";
 import { projectCards, projectFilters } from "../data/projects";
 import { projectsHeading } from "../data/sections";
+
+/**
+ * A click on a card's internal link (captured before the router handles it)
+ * hands the card image and title to the shared-element morph, so they fly
+ * into the project page.
+ */
+function startCardMorph(event: MouseEvent<HTMLElement>) {
+  if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+  const link = (event.target as Element).closest<HTMLAnchorElement>("a[href]");
+  if (!link || link.target === "_blank") return;
+  const url = new URL(link.href, window.location.href);
+  if (url.origin !== window.location.origin || !url.pathname.includes("/projekte/")) return;
+  const card = link.closest<HTMLElement>("[data-tags]");
+  const image = card?.querySelector("img") ?? null;
+  const title = card?.querySelector<HTMLElement>("h3") ?? null;
+  const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+  const route = base && url.pathname.startsWith(base) ? url.pathname.slice(base.length) : url.pathname;
+  startMorph({
+    route,
+    title: title?.textContent ?? "",
+    clipEl: image?.parentElement ?? null,
+    imageEl: image,
+    titleEl: title,
+  });
+}
 
 export default function Projects() {
   const [activeFilter, setActiveFilter] = useState("all");
@@ -18,7 +45,7 @@ export default function Projects() {
   }, [activeFilter]);
 
   return (
-    <section id="projects" className="swiss-section">
+    <section id="projects" className="swiss-section" onClickCapture={startCardMorph}>
       <div className="swiss-container">
         <SectionHeading eyebrow={projectsHeading.eyebrow} title={projectsHeading.title} className="mb-12" />
 

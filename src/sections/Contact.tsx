@@ -10,13 +10,11 @@ const TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID as string;
 const PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY as string;
 
 type ContactProps = {
-  /** Optional extra form field, rendered between e-mail and message (used by the motion variants). */
-  extraField?: ReactNode;
-  /** Optional full-width block at the top of the section (used by motion variant 4). */
+  /** Optional full-width block at the top of the section (the project size field on the home page). */
   band?: ReactNode;
 };
 
-export default function Contact({ extraField, band }: ContactProps) {
+export default function Contact({ band }: ContactProps) {
   const formRef = useRef<HTMLFormElement>(null);
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
 
@@ -156,7 +154,6 @@ export default function Contact({ extraField, band }: ContactProps) {
                     required
                   />
                 </div>
-                {extraField}
                 <div className="flex flex-col gap-2">
                   <label className="text-xs font-medium uppercase tracking-wider text-muted" htmlFor="message">
                     Ihre Nachricht

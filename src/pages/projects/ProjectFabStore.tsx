@@ -70,7 +70,6 @@ function ImageCarousel({ images }: { images: CarouselImage[] }) {
 export default function ProjectFabStore() {
   return (
     <ProjectShell
-      hasSiteHeader
       title="Fab Store"
       subtitle="Meine Plugins und Assets für die Unreal Engine, veröffentlicht auf Epics Marketplace Fab.com."
       heroImage={`${base}assets/projects/fab/fab-hero.webp`}

@@ -1,24 +1,29 @@
-import { lazy, Suspense } from "react";
+import { useEffect } from "react";
 import { BrowserRouter } from "react-router-dom";
-import Layout from "./components/Layout";
-import Home from "./pages/Home";
+import { MotionConfig } from "motion/react";
 import SiteRoutes from "./SiteRoutes";
-import { activeVariant } from "./variants/variant";
+import { forceFullMotion } from "./motion/motionPreference";
 
-// Motion design variants (?v=1|2|3|4) load as a separate chunk, so the regular
-// site neither downloads nor runs any of their code.
-const VariantRoot = lazy(() => import("./variants/VariantRoot"));
-
+/**
+ * `reducedMotion="user"` makes every Motion animation fall back to
+ * opacity-only when the visitor asks for less motion; the preview override
+ * `?motion=full` switches that off (see motion/motionPreference.ts).
+ */
 export default function App() {
+  useEffect(() => {
+    // Page frames restore scroll positions themselves after their transition.
+    const previous = window.history.scrollRestoration;
+    window.history.scrollRestoration = "manual";
+    return () => {
+      window.history.scrollRestoration = previous;
+    };
+  }, []);
+
   return (
     <BrowserRouter basename={import.meta.env.BASE_URL}>
-      {activeVariant ? (
-        <Suspense fallback={<div className="min-h-screen bg-canvas" />}>
-          <VariantRoot variant={activeVariant} />
-        </Suspense>
-      ) : (
-        <SiteRoutes layout={<Layout />} home={<Home />} />
-      )}
+      <MotionConfig reducedMotion={forceFullMotion ? "never" : "user"}>
+        <SiteRoutes />
+      </MotionConfig>
     </BrowserRouter>
   );
 }

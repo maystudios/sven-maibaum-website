@@ -1,123 +1,115 @@
-import { useEffect } from "react";
-import { Outlet, useLocation } from "react-router-dom";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useLocation, useNavigate, useNavigationType, useOutlet } from "react-router-dom";
+import { AnimatePresence } from "motion/react";
 import Header from "./Header";
 import Footer from "./Footer";
+import PageFrame from "../motion/PageFrame";
+import MorphLayer from "../motion/MorphLayer";
+import { glideTo, hashTargetTop, jumpTo } from "../motion/scroll";
 
+const FILE_PATH = /\.[a-z0-9]{2,5}$/i;
+
+function stripBase(pathname: string) {
+  const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+  if (base && pathname.startsWith(base)) return pathname.slice(base.length) || "/";
+  return pathname;
+}
+
+/**
+ * Site layout: persistent header, animated page frames, client-side
+ * navigation for plain links (so every route change can animate) and scroll
+ * restoration for back/forward.
+ */
 export default function Layout() {
   const location = useLocation();
-  const path = location.pathname;
-  const isHome = path === "/";
+  const outlet = useOutlet();
+  const navigate = useNavigate();
+  const navigationType = useNavigationType();
+  const [mountedPath, setMountedPath] = useState(location.pathname);
 
-  // Scroll to top on route change (unless navigating to a hash anchor)
+  const locationRef = useRef(location);
+  const navigationTypeRef = useRef(navigationType);
+  const scrollPositions = useRef(new Map<string, number>());
+
   useEffect(() => {
-    if (!location.hash) {
-      window.scrollTo(0, 0);
-    }
-  }, [location.pathname]);
+    locationRef.current = location;
+    navigationTypeRef.current = navigationType;
+  }, [location, navigationType]);
 
-  // IntersectionObserver for .fade-in-up CSS animations (fallback)
+  // Remember the scroll position of every history entry for back/forward
   useEffect(() => {
-    const animated = Array.from(document.querySelectorAll<HTMLElement>(".fade-in-up"));
-    if (animated.length === 0) return;
+    const save = () => scrollPositions.current.set(locationRef.current.key, window.scrollY);
+    window.addEventListener("scroll", save, { passive: true });
+    return () => window.removeEventListener("scroll", save);
+  }, []);
 
-    if (typeof IntersectionObserver === "undefined") {
-      animated.forEach((el) => el.classList.add("visible"));
-      return;
-    }
-
-    const observer = new IntersectionObserver(
-      (entries, observerInstance) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("visible");
-            observerInstance.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.1 }
-    );
-
-    animated.forEach((el) => observer.observe(el));
-    return () => observer.disconnect();
-  }, [location.pathname]);
-
-  // Smooth scroll for nav-link anchors
+  // Plain <a href="/..."> links (header, footer, content) navigate client-side,
+  // so the page transition can play instead of a full reload.
   useEffect(() => {
-    const easeInOutCubic = (t: number) =>
-      t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
-
-    const scrollTo = (target: number, duration = 700) => {
-      const start = window.scrollY;
-      const distance = target - start;
-      if (Math.abs(distance) < 2) return;
-      const startTime = performance.now();
-      const step = (now: number) => {
-        const progress = Math.min((now - startTime) / duration, 1);
-        window.scrollTo(0, start + distance * easeInOutCubic(progress));
-        if (progress < 1) requestAnimationFrame(step);
-      };
-      requestAnimationFrame(step);
-    };
-
-    const getHeaderOffset = () => {
-      const header = document.querySelector("header") as HTMLElement | null;
-      return header ? header.offsetHeight : 64;
-    };
-
     const handleClick = (event: MouseEvent) => {
-      const target = event.target as HTMLElement | null;
-      // Match any internal hash link (nav, hero CTAs, etc.)
-      const anchor = target?.closest('a[href^="#"], a[href^="/#"]') as HTMLAnchorElement | null;
-      if (!anchor || anchor.target === "_blank") return;
-
-      const href = anchor.getAttribute("href") || "";
-      const hash = href.startsWith("#") ? href : "#" + href.split("#")[1];
-      if (!hash || hash.length < 2) return;
-
-      const targetEl = document.querySelector(hash) as HTMLElement | null;
-      if (!targetEl) return;
+      if (event.defaultPrevented || event.button !== 0) return;
+      if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+      const anchor = (event.target as Element | null)?.closest?.("a[href]") as HTMLAnchorElement | null;
+      if (!anchor) return;
+      if ((anchor.target && anchor.target !== "_self") || anchor.hasAttribute("download")) return;
+      const url = new URL(anchor.href, window.location.href);
+      if (url.origin !== window.location.origin) return;
+      const path = stripBase(url.pathname);
+      if (FILE_PATH.test(path)) return;
 
       event.preventDefault();
-      const top = targetEl.getBoundingClientRect().top + window.pageYOffset - getHeaderOffset();
-      scrollTo(top);
-      history.replaceState(null, "", hash);
+      const current = locationRef.current;
+      if (path === current.pathname) {
+        if (url.hash) {
+          const top = hashTargetTop(url.hash);
+          if (top !== null) glideTo(top);
+          navigate({ pathname: path, hash: url.hash }, { replace: true, preventScrollReset: true });
+        } else {
+          glideTo(0);
+        }
+        return;
+      }
+      navigate(path + url.search + url.hash);
     };
-
     document.addEventListener("click", handleClick);
     return () => document.removeEventListener("click", handleClick);
-  }, [location.pathname]);
+  }, [navigate]);
 
-  // Smooth scroll to hash on navigation
-  useEffect(() => {
-    if (!location.hash) return;
-    const targetEl = document.querySelector(location.hash) as HTMLElement | null;
-    if (!targetEl) return;
-    const header = document.querySelector("header") as HTMLElement | null;
-    const headerOffset = header ? header.offsetHeight : 64;
-    const top = targetEl.getBoundingClientRect().top + window.pageYOffset - headerOffset;
-    setTimeout(() => {
-      const start = window.scrollY;
-      const distance = top - start;
-      if (Math.abs(distance) < 2) return;
-      const easeInOutCubic = (t: number) =>
-        t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
-      const startTime = performance.now();
-      const step = (now: number) => {
-        const progress = Math.min((now - startTime) / 700, 1);
-        window.scrollTo(0, start + distance * easeInOutCubic(progress));
-        if (progress < 1) requestAnimationFrame(step);
-      };
-      requestAnimationFrame(step);
-    }, 50);
-  }, [location.hash, location.pathname]);
+  // The old page has left: start the new one at the top (restored or hash
+  // positions are applied once it has mounted).
+  const handleExitComplete = useCallback(() => {
+    jumpTo(0);
+  }, []);
+
+  const handlePageMounted = useCallback(() => {
+    const current = locationRef.current;
+    const saved = scrollPositions.current.get(current.key);
+    if (navigationTypeRef.current === "POP" && saved !== undefined) {
+      jumpTo(saved);
+    } else if (current.hash) {
+      const top = hashTargetTop(current.hash);
+      if (top !== null) jumpTo(top);
+      // Images above the anchor may still change the layout; settle once more.
+      window.setTimeout(() => {
+        const settled = hashTargetTop(current.hash);
+        if (settled !== null && Math.abs(settled - window.scrollY) > 24) glideTo(settled, 400);
+      }, 450);
+    }
+    setMountedPath(current.pathname);
+  }, []);
 
   return (
-    <div className="min-h-screen bg-canvas">
-      <Header isHome={isHome} />
+    <div className="site-layout min-h-screen bg-canvas">
+      <Header pageKey={mountedPath} />
       <main>
-        <Outlet />
+        <AnimatePresence mode="wait" initial={false} onExitComplete={handleExitComplete}>
+          <PageFrame key={location.pathname} onMounted={handlePageMounted}>
+            {outlet}
+            <Footer />
+          </PageFrame>
+        </AnimatePresence>
       </main>
-      <Footer />
+      <MorphLayer />
     </div>
   );
 }

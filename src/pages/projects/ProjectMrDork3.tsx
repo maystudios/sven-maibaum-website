@@ -3,7 +3,6 @@ import ProjectShell from "../../components/ProjectShell";
 export default function ProjectMrDork3() {
   return (
     <ProjectShell
-      hasSiteHeader
       title="Mr. Dork 3"
       subtitle="One Last Doodle — Der liebenswerte Mr. Dork ist zurück! Ein Action-Platformer, der klassische Mechaniken mit modernen Twists, prozeduralen Infinity-Modi und spannenden Multiplayer-Battles vereint."
       heroImage={`${import.meta.env.BASE_URL}assets/projects/mrdork/mrdork3.png`}

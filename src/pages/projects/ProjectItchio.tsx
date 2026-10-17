@@ -3,7 +3,6 @@ import ProjectShell from "../../components/ProjectShell";
 export default function ProjectItchio() {
   return (
     <ProjectShell
-      hasSiteHeader
       title="Game Jams & itch.io"
       subtitle="Experimentelle Projekte, Rapid Prototyping und kreative Challenges."
       heroImage={`${import.meta.env.BASE_URL}assets/projects/itchio/itchio.png`}

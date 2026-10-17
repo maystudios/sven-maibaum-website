@@ -1,6 +1,6 @@
-/** Scroll helpers for the motion variants. They never take over user scrolling. */
+/** Scroll helpers for page transitions and anchor links. They never take over user scrolling. */
 
-import { prefersReducedMotion } from "../motionPreference";
+import { prefersReducedMotion } from "./motionPreference";
 
 // Re-exported so transitions and morphs share the preview override (?motion=full)
 export { prefersReducedMotion };

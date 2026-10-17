@@ -292,20 +292,6 @@ h1, h2, h3 { overflow-wrap: break-word; hyphens: auto; }
    5. HEADER NAV LAYOUT
    ========================================= */
 
-/* Nav inner row: logo left, right group pushed to edge */
-.header-inner {
-  display: flex;
-  align-items: center;
-  max-width: 72rem;      /* max-w-6xl */
-  margin-left: auto;
-  margin-right: auto;
-  padding-left: 1.5rem;
-  padding-right: 1.5rem;
-  height: 4rem;
-  width: 100%;
-  box-sizing: border-box;
-}
-
 /* Desktop nav: hidden by default, shown at ≥768px */
 .header-desktop {
   display: none;
@@ -323,10 +309,6 @@ h1, h2, h3 { overflow-wrap: break-word; hyphens: auto; }
 }
 
 @media (min-width: 768px) {
-  .header-inner {
-    padding-left: 2.5rem;
-    padding-right: 2.5rem;
-  }
   .header-desktop {
     display: flex;
   }
@@ -763,15 +745,6 @@ header {
 /* =========================================
    6. ANIMATIONS
    ========================================= */
-@keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-.fade-in-up { opacity: 0; }
-.fade-in-up.visible {
-  animation: fadeInUp 0.6s ease-out forwards;
-}
-
 /* Marquee animations */
 @keyframes marquee {
   0% { transform: translateX(0%); }
@@ -805,19 +778,18 @@ header {
   display: none;
 }
 
-/* Reduced motion (skipped only under the variant preview override, html[data-motion="full"]) */
+/* Reduced motion (skipped only under the preview override, html[data-motion="full"]) */
 @media (prefers-reduced-motion: reduce) {
   html:not([data-motion="full"]) .media-item,
   html:not([data-motion="full"]) .media-item img.media-thumb,
   html:not([data-motion="full"]) .lightbox__close,
-  html:not([data-motion="full"]) .lightbox__nav,
-  html:not([data-motion="full"]) .fade-in-up { transition: none; animation: none; }
-  html:not([data-motion="full"]) .fade-in-up { opacity: 1; }
+  html:not([data-motion="full"]) .lightbox__nav { transition: none; animation: none; }
 }
 
 /* =========================================
-   7. MOTION VARIANTS (exploration, ?v=1|2|3)
-   Scoped to [data-motion-variant] or .mv-* classes; the regular site is unaffected.
+   7. SITE MOTION
+   Scoped to the shared layout (.site-layout) or .mv-* classes, so the
+   standalone /links page keeps its own styling.
    ========================================= */
 :root {
   /* Spring (stiffness 380, damping 20) sampled every 20 ms over 600 ms */
@@ -834,38 +806,38 @@ header {
 
 /* `overflow-x: hidden` on body turns it into a scroll container and breaks
    position: sticky; `clip` cuts horizontal overflow without that side effect. */
-html:has([data-motion-variant]),
-html:has([data-motion-variant]) body {
+html:has(.site-layout),
+html:has(.site-layout) body {
   overflow-x: clip;
 }
 
 /* Buttons spring back after a press */
-[data-motion-variant] .swiss-btn-primary,
-[data-motion-variant] .swiss-btn-secondary,
-[data-motion-variant] .back-to-portfolio,
-[data-motion-variant] .filter-btn,
-[data-motion-variant] form button[type="submit"] {
+.site-layout .swiss-btn-primary,
+.site-layout .swiss-btn-secondary,
+.site-layout .back-to-portfolio,
+.site-layout .filter-btn,
+.site-layout form button[type="submit"] {
   transition: transform 600ms var(--mv-spring), background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, filter 0.2s ease;
 }
-[data-motion-variant] .swiss-btn-primary:active,
-[data-motion-variant] .swiss-btn-secondary:active,
-[data-motion-variant] .back-to-portfolio:active,
-[data-motion-variant] .filter-btn:active,
-[data-motion-variant] form button[type="submit"]:active {
+.site-layout .swiss-btn-primary:active,
+.site-layout .swiss-btn-secondary:active,
+.site-layout .back-to-portfolio:active,
+.site-layout .filter-btn:active,
+.site-layout form button[type="submit"]:active {
   transform: scale(0.94);
   transition: transform 90ms ease-out;
 }
 
 /* Link underline: draws in from the left, leaves to the right */
 .mv-link,
-[data-motion-variant] footer a:not([aria-label]),
-[data-motion-variant] #about a {
+.site-layout footer a:not([aria-label]),
+.site-layout #about a {
   position: relative;
   text-decoration: none;
 }
 .mv-link::after,
-[data-motion-variant] footer a:not([aria-label])::after,
-[data-motion-variant] #about a::after {
+.site-layout footer a:not([aria-label])::after,
+.site-layout #about a::after {
   content: "";
   position: absolute;
   left: 0;
@@ -879,23 +851,15 @@ html:has([data-motion-variant]) body {
 }
 .mv-link:hover::after,
 .mv-link:focus-visible::after,
-[data-motion-variant] footer a:not([aria-label]):hover::after,
-[data-motion-variant] footer a:not([aria-label]):focus-visible::after,
-[data-motion-variant] #about a:hover::after,
-[data-motion-variant] #about a:focus-visible::after {
+.site-layout footer a:not([aria-label]):hover::after,
+.site-layout footer a:not([aria-label]):focus-visible::after,
+.site-layout #about a:hover::after,
+.site-layout #about a:focus-visible::after {
   transform: scaleX(1);
   transform-origin: left center;
 }
-[data-motion-variant] .header-desktop .mv-link::after {
+.site-layout .header-desktop .mv-link::after {
   bottom: 2px;
-}
-
-/* Editorial biography: the first paragraph is the lead */
-.mv-editorial-bio > p:first-child {
-  font-size: clamp(1.35rem, 2.2vw, 1.75rem);
-  line-height: 1.4;
-  color: var(--sw-fg);
-  letter-spacing: -0.01em;
 }
 
 /* --- Project size slider --- */
@@ -967,16 +931,16 @@ html:has([data-motion-variant]) body {
 
 /* The preview override ?motion=full sets html[data-motion="full"] and skips these rules */
 @media (prefers-reduced-motion: reduce) {
-  html:not([data-motion="full"]) [data-motion-variant] .swiss-btn-primary,
-  html:not([data-motion="full"]) [data-motion-variant] .swiss-btn-secondary,
-  html:not([data-motion="full"]) [data-motion-variant] .back-to-portfolio,
-  html:not([data-motion="full"]) [data-motion-variant] .filter-btn,
-  html:not([data-motion="full"]) [data-motion-variant] form button[type="submit"] { transition-duration: 0.01ms; }
-  html:not([data-motion="full"]) [data-motion-variant] .swiss-btn-primary:active,
-  html:not([data-motion="full"]) [data-motion-variant] .swiss-btn-secondary:active,
-  html:not([data-motion="full"]) [data-motion-variant] .back-to-portfolio:active,
-  html:not([data-motion="full"]) [data-motion-variant] .filter-btn:active,
-  html:not([data-motion="full"]) [data-motion-variant] form button[type="submit"]:active { transform: none; }
+  html:not([data-motion="full"]) .site-layout .swiss-btn-primary,
+  html:not([data-motion="full"]) .site-layout .swiss-btn-secondary,
+  html:not([data-motion="full"]) .site-layout .back-to-portfolio,
+  html:not([data-motion="full"]) .site-layout .filter-btn,
+  html:not([data-motion="full"]) .site-layout form button[type="submit"] { transition-duration: 0.01ms; }
+  html:not([data-motion="full"]) .site-layout .swiss-btn-primary:active,
+  html:not([data-motion="full"]) .site-layout .swiss-btn-secondary:active,
+  html:not([data-motion="full"]) .site-layout .back-to-portfolio:active,
+  html:not([data-motion="full"]) .site-layout .filter-btn:active,
+  html:not([data-motion="full"]) .site-layout form button[type="submit"]:active { transform: none; }
   html:not([data-motion="full"]) .mv-link::after { transition: none; }
   html:not([data-motion="full"]) .mv-size-sweep { display: none; }
   html:not([data-motion="full"]) .mv-size-paint[data-step="5"]::before { animation: none; }

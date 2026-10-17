@@ -2,7 +2,7 @@ type AboutBioProps = {
   className?: string;
 };
 
-/** Biography paragraphs of the about section, shared by the regular site and the motion variants. */
+/** Biography paragraphs of the about section. */
 export default function AboutBio({ className = "space-y-5 text-muted text-lg leading-relaxed" }: AboutBioProps) {
   return (
     <div className={className}>

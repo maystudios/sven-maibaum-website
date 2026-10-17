@@ -1,8 +1,8 @@
 import { useId, useRef } from "react";
 import type { PointerEvent } from "react";
 import { motion } from "motion/react";
-import { spring } from "../shared/motionTokens";
-import { projectSizeLabel, projectSizeLevels } from "../../data/projectSize";
+import { spring } from "../motion/motionTokens";
+import { projectSizeLabel, projectSizeLevels } from "../data/projectSize";
 
 type SizeSliderProps = {
   value: number;

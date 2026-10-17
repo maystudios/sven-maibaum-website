@@ -1,8 +1,8 @@
 import type { Transition } from "motion/react";
 
 /**
- * Motion tokens of the exploration branch. If a variant is chosen, these move
- * into the "Bewegung" section of WEBSITE.md and into tailwind/index.css tokens.
+ * Motion tokens of the site. They are to be recorded in the "Bewegung" section
+ * of WEBSITE.md (open point there) and mirrored in index.css where CSS needs them.
  */
 export const ease = {
   /** Fast start, long settle: entrances and reveals. */

@@ -105,7 +105,6 @@ function AppEntry({ project, index }: AppEntryProps) {
 export default function ProjectAppDevelopment() {
   return (
     <ProjectShell
-      hasSiteHeader
       title="App-Entwicklung"
       subtitle="Mobile Produktentwicklung mit Flutter, nativen Plattformfunktionen und klaren Release-Prozessen."
       heroImage={base + "assets/projects/app-development/preview.svg"}

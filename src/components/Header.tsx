@@ -1,55 +1,56 @@
 import { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "motion/react";
+import ThemeToggleMorph from "./ThemeToggle";
+import { useReducedMotionPreference } from "../motion/motionPreference";
+import { ease, spring } from "../motion/motionTokens";
 import { getNavLinks, homeSectionIds } from "../data/navigation";
 
 type HeaderProps = {
-  isHome: boolean;
+  /** Pathname of the page that is currently mounted (lags behind the URL during a transition). */
+  pageKey: string;
 };
 
-export default function Header({ isHome }: HeaderProps) {
+export default function Header({ pageKey }: HeaderProps) {
+  const location = useLocation();
+  const isHome = location.pathname === "/";
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [isMobile, setIsMobile] = useState(() => window.innerWidth < 768);
   const [activeSection, setActiveSection] = useState("home");
-  const location = useLocation();
   const menuRef = useRef<HTMLDivElement | null>(null);
   const triggerRef = useRef<HTMLButtonElement | null>(null);
+  const reduceMotion = useReducedMotionPreference();
+  const menuHidden = reduceMotion ? { opacity: 0 } : { clipPath: "inset(0% 0% 100% 0%)" };
+  const menuShown = reduceMotion ? { opacity: 1 } : { clipPath: "inset(0% 0% 0% 0%)" };
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
+    handleScroll();
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // Track the active home section once the page behind the transition has mounted
   useEffect(() => {
-    const handler = () => setIsMobile(window.innerWidth < 768);
-    window.addEventListener("resize", handler, { passive: true });
-    return () => window.removeEventListener("resize", handler);
-  }, []);
-
-  // Track active section via IntersectionObserver
-  useEffect(() => {
-    if (!isHome) return;
-    const sections = homeSectionIds.map((id) => document.getElementById(id)).filter(Boolean) as HTMLElement[];
+    if (pageKey !== "/") return;
+    const sections = homeSectionIds
+      .map((id) => document.getElementById(id))
+      .filter(Boolean) as HTMLElement[];
     if (sections.length === 0) return;
-
+    // The section that crosses a thin band at 40 % of the viewport is active;
+    // this also works for sections far taller than the screen (pinned projects).
     const observer = new IntersectionObserver(
       (entries) => {
-        const visible = entries.filter((e) => e.isIntersecting);
-        if (visible.length === 0) return;
-        // Pick section with largest intersection ratio
-        const top = visible.reduce((a, b) => (a.intersectionRatio > b.intersectionRatio ? a : b));
-        setActiveSection(top.target.id);
+        const hit = entries.find((e) => e.isIntersecting);
+        if (hit) setActiveSection(hit.target.id);
       },
-      { threshold: [0.2, 0.5], rootMargin: "-64px 0px -30% 0px" }
+      { threshold: 0, rootMargin: "-40% 0px -59% 0px" }
     );
-
     sections.forEach((s) => observer.observe(s));
     return () => observer.disconnect();
-  }, [isHome, location.pathname]);
+  }, [pageKey]);
 
-  // Close mobile menu on route change
+  // Close the mobile menu on route change
   // eslint-disable-next-line react-hooks/set-state-in-effect -- sync with router navigation
   useEffect(() => { setOpen(false); }, [location.pathname]);
 
@@ -58,14 +59,12 @@ export default function Header({ isHome }: HeaderProps) {
     return () => { document.body.style.overflow = ""; };
   }, [open]);
 
-  // Keyboard trap for mobile menu
+  // Keyboard trap for the mobile menu
   useEffect(() => {
     if (!open) return;
     const menu = menuRef.current;
     if (!menu) return;
-    const focusable = menu.querySelectorAll<HTMLElement>(
-      'a[href], button, textarea, input, select, details,[tabindex]:not([tabindex="-1"])'
-    );
+    const focusable = menu.querySelectorAll<HTMLElement>('a[href], button, [tabindex]:not([tabindex="-1"])');
     const first = focusable[0];
     const last = focusable[focusable.length - 1];
     if (first) first.focus();
@@ -81,47 +80,37 @@ export default function Header({ isHome }: HeaderProps) {
 
   const navLinks = getNavLinks(isHome);
   const isActiveLink = (href: string, label: string) => {
-    if (href === "/showcase") return location.pathname === "/showcase";
     if (label === "Projekte" && location.pathname.startsWith("/projekte")) return true;
     if (!isHome) return false;
     const hash = href.startsWith("#") ? href.slice(1) : href.includes("#") ? href.split("#")[1] : "";
     return hash === activeSection;
   };
 
-  // On mobile the header is always opaque so it's always visible as a pinned nav bar.
-  // On desktop it starts transparent and becomes opaque once the user scrolls.
-  const showBg = scrolled || isMobile;
-
   return (
     <motion.header
-      initial={{ y: -100 }}
-      animate={{ y: 0 }}
-      transition={{ duration: 0.5, ease: "easeOut" }}
-      className="fixed top-0 left-0 right-0 z-50 border-b transition-all duration-300"
-      style={{
-        borderColor: showBg ? "rgba(39,39,42,0.8)" : "transparent",
-      }}
+      initial={{ y: -80, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.5, ease: ease.out }}
+      className="fixed top-0 left-0 right-0 z-50 border-b transition-colors duration-300"
+      style={{ borderColor: scrolled ? "var(--sw-border)" : "transparent" }}
     >
-      {/* Background layer isolated from interactive children to fix iOS Safari backdrop-filter hit-test bug */}
       <div
-        className="absolute inset-0 pointer-events-none transition-all duration-300"
+        className="absolute inset-0 pointer-events-none transition-opacity duration-300 max-md:!opacity-100"
         style={{
-          background: showBg ? "rgba(9,9,11,0.92)" : "transparent",
-          backdropFilter: showBg ? "blur(12px)" : "none",
-          WebkitBackdropFilter: showBg ? "blur(12px)" : "none",
+          opacity: scrolled ? 1 : 0,
+          background: "var(--sw-header-scrolled-bg)",
+          backdropFilter: "blur(12px)",
+          WebkitBackdropFilter: "blur(12px)",
         }}
       />
-      <nav className="header-inner relative" aria-label="Hauptnavigation">
-        {/* Logo – hard left */}
+      <nav className="relative flex items-center w-full max-w-7xl mx-auto h-16 px-6 sm:px-10 lg:px-16" aria-label="Hauptnavigation">
         <a
-          href="/#home"
-          className="text-lg font-bold tracking-tight text-fg hover:text-fg/80 transition-colors"
-          style={{ flexShrink: 0 }}
+          href={isHome ? "#home" : "/#home"}
+          className="mv-link text-lg font-bold tracking-tight text-fg shrink-0"
         >
           Sven Maibaum
         </a>
 
-        {/* Desktop: links */}
         <div className="header-desktop">
           {navLinks.map((link, i) => {
             const active = isActiveLink(link.href, link.label);
@@ -131,29 +120,27 @@ export default function Header({ isHome }: HeaderProps) {
                 href={link.href}
                 initial={{ opacity: 0, y: -8 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, delay: 0.1 + i * 0.05, ease: "easeOut" }}
-                className="text-sm transition-colors relative pb-1"
-                style={{ color: active ? "#ffffff" : undefined }}
+                transition={{ duration: 0.4, delay: 0.1 + i * 0.04, ease: ease.out }}
+                className={`mv-link relative text-sm py-2 transition-colors ${active ? "text-fg" : "text-muted hover:text-fg"}`}
                 aria-current={active ? "page" : undefined}
               >
-                <span className={active ? "text-white" : "text-muted hover:text-fg transition-colors"}>
-                  {link.label}
-                </span>
+                {link.label}
                 {active && (
                   <motion.span
-                    layoutId="nav-active-dot"
-                    className="absolute -bottom-0.5 left-1/2 -translate-x-1/2 block w-1 h-1 rounded-full bg-brand"
-                    transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                    layoutId="mv-nav-active"
+                    className="absolute -bottom-1 left-1/2 -ml-0.5 block w-1 h-1 rounded-full bg-brand"
+                    transition={spring.snappy}
                   />
                 )}
               </motion.a>
             );
           })}
+          <ThemeToggleMorph />
         </div>
 
-        {/* Mobile: Burger */}
         <div className="header-mobile">
-          <button
+          <ThemeToggleMorph />
+          <motion.button
             id="mobile-menu-button"
             className="min-h-[44px] min-w-[44px] inline-flex items-center justify-center text-muted hover:text-fg transition-colors"
             aria-label="Menü öffnen"
@@ -161,66 +148,60 @@ export default function Header({ isHome }: HeaderProps) {
             aria-controls="mobile-menu"
             onClick={() => setOpen(true)}
             ref={triggerRef}
+            whileTap={{ scale: 0.88 }}
+            transition={spring.press}
           >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16m-7 6h7" />
             </svg>
-          </button>
+          </motion.button>
         </div>
       </nav>
 
-      {/* Mobile Menu */}
       <AnimatePresence>
         {open && (
           <motion.div
             id="mobile-menu"
             ref={menuRef}
-            initial={{ opacity: 0, y: -8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
-            transition={{ duration: 0.2 }}
-            className="md:hidden fixed inset-0 z-[60] bg-canvas border-b border-border flex flex-col"
+            initial={menuHidden}
+            animate={menuShown}
+            exit={menuHidden}
+            transition={{ duration: reduceMotion ? 0.15 : 0.45, ease: ease.inOut }}
+            className="md:hidden fixed inset-0 z-[60] bg-canvas flex flex-col"
             role="dialog"
             aria-modal="true"
             aria-label="Hauptmenü"
-            onClick={(event) => {
-              if (event.target === event.currentTarget) setOpen(false);
-            }}
           >
-            {/* Close button */}
             <div className="flex justify-end px-6 py-4">
-              <button
-                className="min-h-[44px] min-w-[44px] inline-flex items-center justify-center border border-border hover:border-muted rounded-sm text-muted hover:text-fg transition-colors"
+              <motion.button
+                className="min-h-[44px] min-w-[44px] inline-flex items-center justify-center border border-border rounded-sm text-muted hover:text-fg transition-colors"
                 aria-label="Menü schließen"
                 onClick={() => setOpen(false)}
+                whileTap={{ scale: 0.88 }}
+                transition={spring.press}
               >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M6 18L18 6M6 6l12 12"
-                  />
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
                 </svg>
-              </button>
+              </motion.button>
             </div>
-
-            {/* Nav links */}
-            <nav className="flex flex-col items-center justify-center flex-1 gap-2">
-              {navLinks.map((link) => (
-                <a
-                  key={link.label}
-                  href={link.href}
-                  className={`block w-full text-center py-4 text-lg font-display tracking-wide min-h-[44px] transition-colors ${
-                    isActiveLink(link.href, link.label)
-                      ? "text-fg"
-                      : "text-muted hover:text-fg"
-                  }`}
-                  aria-current={isActiveLink(link.href, link.label) ? "page" : undefined}
-                  onClick={() => setOpen(false)}
-                >
-                  {link.label}
-                </a>
+            <nav className="flex flex-col justify-center flex-1 px-8 gap-1" aria-label="Mobile Navigation">
+              {navLinks.map((link, i) => (
+                <div key={link.label} className="overflow-hidden">
+                  <motion.a
+                    href={link.href}
+                    initial={{ y: "110%" }}
+                    animate={{ y: "0%" }}
+                    transition={{ ...spring.soft, delay: 0.12 + i * 0.04 }}
+                    className={`block py-2 text-4xl font-bold tracking-tight min-h-[44px] ${
+                      isActiveLink(link.href, link.label) ? "text-fg" : "text-muted"
+                    }`}
+                    aria-current={isActiveLink(link.href, link.label) ? "page" : undefined}
+                    onClick={() => setOpen(false)}
+                  >
+                    {link.label}
+                  </motion.a>
+                </div>
               ))}
             </nav>
           </motion.div>

@@ -3,8 +3,7 @@ import type { RefObject } from "react";
 import { prefersReducedMotion } from "./scroll";
 
 /**
- * Shared-element transition from a project preview (card, index row, depth
- * layer) into the project page. A fixed overlay clone of the image and the
+ * Shared-element transition from a project card into the project page. A fixed overlay clone of the image and the
  * title flies from the source rectangles to the hero image and the page title.
  *
  * Flow: startMorph (click) -> page exit fades -> project page registers its
@@ -77,11 +76,6 @@ const getSnapshot = () => state;
 
 export function useMorphState() {
   return useSyncExternalStore(subscribe, getSnapshot, getSnapshot);
-}
-
-/** True while a shared-element transition replaces the regular page transition. */
-export function isMorphActive() {
-  return state !== null;
 }
 
 function toRect(r: DOMRect): Rect {

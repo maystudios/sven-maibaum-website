@@ -1,45 +1,76 @@
+import { useId } from "react";
+import { motion } from "motion/react";
 import { useTheme } from "../lib/useTheme";
+import { spring } from "../motion/motionTokens";
 
-type ThemeToggleProps = {
-  className?: string;
-  title?: string;
-  iconSizeClass?: string;
-  darkIconId?: string;
-  lightIconId?: string;
-};
+const RAYS = Array.from({ length: 8 }, (_, i) => (i * Math.PI) / 4);
+const TITLE = "Theme wechseln";
 
-export default function ThemeToggle(props: ThemeToggleProps) {
-  const { className, title = "Theme wechseln" } = props;
+/** Sun and moon are one shape: a mask circle slides in to cut the crescent, rays retract. */
+export default function ThemeToggleMorph() {
   const { theme, toggleTheme } = useTheme();
+  const maskId = useId();
+  const isDark = theme === "dark";
 
   return (
-    <button
+    <motion.button
       type="button"
-      className={`inline-flex items-center justify-center min-h-[44px] min-w-[44px] border border-border hover:border-muted p-1.5 rounded-sm text-muted hover:text-fg transition-colors${className ? ` ${className}` : ""}`}
-      title={title}
       onClick={toggleTheme}
-      aria-label={title}
+      aria-label={TITLE}
+      title={TITLE}
+      aria-pressed={isDark}
+      whileTap={{ scale: 0.86 }}
+      transition={spring.press}
+      className="inline-flex items-center justify-center min-h-[44px] min-w-[44px] rounded-sm text-muted hover:text-fg transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand"
     >
-      {/* Moon icon (shown in dark mode) */}
-      <svg
-        className={`w-5 h-5${theme === "dark" ? "" : " hidden"}`}
-        fill="currentColor"
-        viewBox="0 0 20 20"
+      <motion.svg
+        width="20"
+        height="20"
+        viewBox="0 0 24 24"
+        aria-hidden="true"
+        initial={false}
+        animate={{ rotate: isDark ? 30 : 90 }}
+        transition={spring.soft}
       >
-        <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
-      </svg>
-      {/* Sun icon (shown in light mode) */}
-      <svg
-        className={`w-5 h-5${theme === "light" ? "" : " hidden"}`}
-        fill="currentColor"
-        viewBox="0 0 20 20"
-      >
-        <path
-          d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"
-          fillRule="evenodd"
-          clipRule="evenodd"
+        <mask id={maskId}>
+          <rect x="0" y="0" width="24" height="24" fill="white" />
+          <motion.circle
+            r="8"
+            fill="black"
+            initial={false}
+            animate={isDark ? { cx: 17, cy: 6 } : { cx: 30, cy: -4 }}
+            transition={spring.soft}
+          />
+        </mask>
+        <motion.circle
+          cx="12"
+          cy="12"
+          fill="currentColor"
+          mask={`url(#${maskId})`}
+          initial={false}
+          animate={{ r: isDark ? 9 : 5 }}
+          transition={spring.soft}
         />
-      </svg>
-    </button>
+        <motion.g
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          initial={false}
+          animate={{ opacity: isDark ? 0 : 1, scale: isDark ? 0.3 : 1 }}
+          transition={spring.soft}
+          style={{ originX: "12px", originY: "12px" }}
+        >
+          {RAYS.map((angle) => (
+            <line
+              key={angle}
+              x1={12 + Math.cos(angle) * 8}
+              y1={12 + Math.sin(angle) * 8}
+              x2={12 + Math.cos(angle) * 10.5}
+              y2={12 + Math.sin(angle) * 10.5}
+            />
+          ))}
+        </motion.g>
+      </motion.svg>
+    </motion.button>
   );
 }

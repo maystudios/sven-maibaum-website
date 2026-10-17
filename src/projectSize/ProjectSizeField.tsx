@@ -2,13 +2,13 @@ import { useEffect, useId, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import SizeSlider from "./SizeSlider";
 import SizePanel from "./SizePanel";
-import { ease } from "../shared/motionTokens";
-import { projectSizeLevels } from "../../data/projectSize";
+import { ease } from "../motion/motionTokens";
+import { projectSizeLevels } from "../data/projectSize";
 
 const ANNOUNCE_DELAY_MS = 450;
 
 /**
- * Project size field of variant 4: the slider with a readout on the left, the
+ * Project size field: the slider with a readout on the left, the
  * live illustration on the right (below on narrow screens). The panel shows
  * scope only; it is no reference to built systems.
  */

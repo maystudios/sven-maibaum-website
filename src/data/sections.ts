@@ -1,4 +1,4 @@
-/** Section headings that both the regular sections and the motion variants render. */
+/** Section headings of the home page. */
 export const aboutHeading = { eyebrow: "Über Mich", title: "Über Mich", cta: "Kontakt aufnehmen" };
 
 export const projectsHeading = { eyebrow: "Portfolio", title: "Ausgewählte Projekte" };

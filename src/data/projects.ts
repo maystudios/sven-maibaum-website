@@ -11,8 +11,6 @@ export type ProjectCard = {
   filters: string[];
   dataTags: string[];
   image: string;
-  /** Optional short preview clip (muted loop) shown on hover in the motion variants. */
-  video?: string;
   link?: string;
   route?: string;
   cta: string;

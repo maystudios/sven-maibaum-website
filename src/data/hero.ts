@@ -1,4 +1,4 @@
-/** Hero content, shared by the regular hero and the motion variants. */
+/** Hero content of the home page. */
 export const heroEyebrow = "Portfolio";
 
 export const heroName = "Sven Maibaum";

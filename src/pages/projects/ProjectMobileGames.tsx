@@ -106,7 +106,6 @@ export default function ProjectMobileGames() {
 
   return (
     <ProjectShell
-      hasSiteHeader
       title="Mobile Games"
       subtitle="Veröffentlichte Mobile-Puzzles und laufende Spieleprojekte von MAY STUDIOS und Partnerstudios."
       heroImage={`${base}assets/projects/mobile-games/card.svg`}

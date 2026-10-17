@@ -64,7 +64,8 @@ export default function Datenschutz() {
         Ergänzend setzt GitHub EU-Standardvertragsklauseln (SCCs) nach Art. 46 Abs. 2 lit. c DSGVO ein.
       </p>
       <p>
-        <strong>Speicherdauer:</strong> Die Logdaten werden nach spätestens sieben Tagen gelöscht.
+        <strong>Speicherdauer:</strong> GitHub nennt keine feste Frist. Nach eigenen Angaben richtet sich die
+        Speicherdauer nach dem Zweck der Erhebung und nach gesetzlichen Pflichten.
       </p>
       <p>
         Datenschutzerklärung von GitHub:{" "}
@@ -248,7 +249,8 @@ export default function Datenschutz() {
       </p>
       <ul>
         <li>
-          <strong>Server-Logfiles (GitHub Pages):</strong> automatische Löschung nach spätestens sieben Tagen.
+          <strong>Server-Logfiles (GitHub Pages):</strong> je nach Zweck der Erhebung und gesetzlichen Pflichten;
+          eine feste Frist nennt GitHub nicht.
         </li>
         <li>
           <strong>Cloudflare-Logdaten:</strong> automatische Löschung nach maximal 24 Stunden (Standardnutzung).

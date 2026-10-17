@@ -1,30 +1,16 @@
 import { useReducedMotion } from "motion/react";
 
 /**
- * Preview override for reviewing motion: `?motion=full` forces full motion
- * even when the operating system asks for reduced motion (kept in
- * sessionStorage for the tab), `?motion=auto` clears it. Without the override
- * the visitor's reduced-motion preference applies unchanged.
+ * Preview override for reviewing motion: `?motion=full` in the address forces
+ * full motion even when the operating system asks for reduced motion. It is
+ * read once per page load and stays in effect for client-side navigation; it
+ * is not stored on the device, so a visitor never gets storage they did not
+ * consent to. Without the override the visitor's reduced-motion preference
+ * applies unchanged.
  */
-const STORAGE_KEY = "motion-override";
-
 function readOverride(): boolean {
   if (typeof window === "undefined") return false;
-  const param = new URLSearchParams(window.location.search).get("motion");
-  try {
-    if (param === "full") {
-      window.sessionStorage.setItem(STORAGE_KEY, "full");
-      return true;
-    }
-    if (param === "auto") {
-      window.sessionStorage.removeItem(STORAGE_KEY);
-      return false;
-    }
-    return window.sessionStorage.getItem(STORAGE_KEY) === "full";
-  } catch {
-    // sessionStorage can be unavailable; fall back to the URL only
-    return param === "full";
-  }
+  return new URLSearchParams(window.location.search).get("motion") === "full";
 }
 
 /** Resolved once per page load. */

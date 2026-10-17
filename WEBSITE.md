@@ -272,7 +272,7 @@ Ausweichlösung, die ihren Zweck aushebelt.
   CSS-Variablen (`--sw-*`) in `src/index.css`.
 - **Nur dunkel:** Die Website hat keinen Hellmodus und keinen Umschalter. Im
   Wortlaut des Projektverantwortlichen am 17.10.2026: „Der White Mode sollte auf
-  jeden Fall raus entfernt werden.“
+  jeden Fall raus entfernt werden“.
 - **Bewegung:** Motion (`motion`, Import aus `"motion/react"`).
 - **Hosting:** GitHub Pages, gebaut und veröffentlicht über GitHub Actions
   (`.github/workflows/deploy.yml`) bei jedem Push auf `main`. Domain

@@ -265,8 +265,10 @@ export default function Datenschutz() {
         <strong>Rechtsgrundlage:</strong> Ihre Einwilligung nach Art. 6 Abs. 1 lit. a DSGVO und § 25 Abs. 1 TDDDG.
       </p>
       <p>
-        <strong>Speicherdauer:</strong> Wie lange Valve die Daten speichert, bestimmt Valve; für die weitere Verarbeitung
-        ist Valve selbst verantwortlich. Einzelheiten nennt die Datenschutzerklärung von Valve.
+        <strong>Speicherdauer:</strong> Das Cookie sessionid löscht Ihr Browser am Ende der Sitzung. Andere Daten
+        speichert Valve nach eigener Angabe nur so lange, wie es für die Zwecke ihrer Erhebung nötig ist, oder so
+        lange, wie ein Gesetz es verlangt; danach werden sie gelöscht, gesperrt oder anonymisiert (Datenschutzerklärung
+        von Valve, Abschnitt „How Long We Store Data“). Für diese weitere Verarbeitung ist Valve selbst verantwortlich.
       </p>
       <p>
         <strong>Drittlandübermittlung:</strong> Valve ist nach dem EU-U.S. Data Privacy Framework zertifiziert (Art. 45

@@ -265,14 +265,6 @@ export default function ProjectHeistLine() {
               >
                 Auf Steam wünschen
               </a>
-              <a
-                href="https://discord.gg/"
-                target="_blank"
-                rel="noopener"
-                className="swiss-btn-secondary inline-flex items-center px-6 py-3 text-sm min-h-[44px]"
-              >
-                Discord beitreten
-              </a>
             </div>
           </div>
         </div>
@@ -338,10 +330,6 @@ export default function ProjectHeistLine() {
                 </a>
               </li>
             </ul>
-            <p className="text-xs text-faint mt-4">
-              Bildrechte: Bitte nur freigegebene/selbst erstellte Assets nutzen. Die hier verlinkten
-              Steam-Thumbnails sind Platzhalter zum Testen.
-            </p>
           </div>
         </div>
       </ProjectShell>

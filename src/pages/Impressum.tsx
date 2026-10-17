@@ -1,6 +1,6 @@
 export default function Impressum() {
   return (
-    <main className="container mx-auto px-6 section-padding project-detail-container project-detail-content">
+    <article className="container mx-auto px-6 section-padding project-detail-container project-detail-content">
       <h1 className="text-3xl md:text-4xl font-bold mb-6">
         <span className="gradient-text">Impressum</span>
       </h1>
@@ -105,9 +105,10 @@ export default function Impressum() {
       <h2>8. Bildnachweise</h2>
       <p>
         Sofern nicht anders gekennzeichnet, stammen alle auf dieser Website verwendeten Bilder, Grafiken, Screenshots und
-        visuellen Elemente vom Betreiber selbst oder wurden im Rahmen der jeweiligen Projektarbeit erstellt. Verwendete
-        Schriftarten (Geist, Geist Mono) werden über Google Fonts ausgeliefert. Verwendete Icon-Sets (Font Awesome) werden
-        über das Cloudflare-CDN ausgeliefert. Details siehe <a href="/datenschutz" className="footer-link">Datenschutzerklärung</a>.
+        visuellen Elemente vom Betreiber selbst oder wurden im Rahmen der jeweiligen Projektarbeit erstellt. Die
+        Schriftarten Geist und Geist Mono (© The Geist Project Authors, SIL Open Font License 1.1) liefert diese Website
+        selbst aus; die Symbole sind Teil des Website-Codes. Details siehe{" "}
+        <a href="/datenschutz" className="footer-link">Datenschutzerklärung</a>.
       </p>
 
       <h2>9. Markenrechtlicher Hinweis</h2>
@@ -146,8 +147,8 @@ export default function Impressum() {
       <p className="text-sm footer-text-muted">
         © 2026 Sven Maibaum. Alle Rechte vorbehalten.
         <br />
-        Zuletzt aktualisiert: <time dateTime="2026-07-17">17.07.2026</time>
+        Zuletzt aktualisiert: <time dateTime="2026-10-17">17.10.2026</time>
       </p>
-    </main>
+    </article>
   );
 }

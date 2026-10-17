@@ -1,26 +1,44 @@
+import ConsentSettingsButton from "../consent/ConsentSettingsButton";
+import { MEASUREMENT_ID } from "../consent/googleAnalytics";
+
+/**
+ * Privacy policy. Every vendor fact has a source with its reading date in
+ * docs/research/2026-10-16-legal.md and docs/research/2026-10-17-google-analytics-consent.md;
+ * the behaviour described in sections 5 to 7 is checked by tests/e2e/consent.spec.ts.
+ */
+
+const gaSessionCookie = `_ga_${MEASUREMENT_ID.slice(2)}`;
+
+function ExternalLink({ href, children }: { href: string; children: string }) {
+  return (
+    <a href={href} target="_blank" rel="noopener noreferrer" className="footer-link">
+      {children}
+    </a>
+  );
+}
+
 export default function Datenschutz() {
   return (
-    <main className="container mx-auto px-6 section-padding project-detail-container project-detail-content">
+    <article className="container mx-auto px-6 section-padding project-detail-container project-detail-content">
       <h1 className="text-3xl md:text-4xl font-bold mb-6">
         <span className="gradient-text">Datenschutzerklärung</span>
       </h1>
 
-      <h2>1. Einleitung</h2>
+      <h2>1. Überblick</h2>
       <p>
         Diese Seite informiert Sie darüber, welche personenbezogenen Daten beim Besuch dieser Website verarbeitet werden,
-        auf welcher Rechtsgrundlage das geschieht und welche Rechte Ihnen zustehen.
-      </p>
-      <p>
-        Verarbeitung erfolgt nach Datenschutz-Grundverordnung (DSGVO), Bundesdatenschutzgesetz (BDSG) und
+        zu welchem Zweck, auf welcher Rechtsgrundlage und welche Rechte Sie haben. Maßgeblich sind die
+        Datenschutz-Grundverordnung (DSGVO), das Bundesdatenschutzgesetz (BDSG) und das
         Telekommunikation-Digitale-Dienste-Datenschutz-Gesetz (TDDDG).
       </p>
       <p>
-        Diese Website nutzt keine Tracking-Cookies, kein Google Analytics und keine Werbenetzwerke. Ein Cookie-Banner ist
-        deshalb nicht erforderlich.
+        Ohne Ihre Einwilligung lädt diese Website nur Dateien von ihrem eigenen Server und setzt keine Cookies. Google
+        Analytics (Abschnitt 6) und das Steam-Widget (Abschnitt 7) laden erst, wenn Sie in den Cookie-Einstellungen
+        eingewilligt haben (Abschnitt 5).
       </p>
 
       <h2>2. Verantwortlicher</h2>
-      <p>Verantwortlich nach Art. 13 Abs. 1 lit. a DSGVO:</p>
+      <p>Verantwortlich nach Art. 4 Nr. 7 DSGVO:</p>
       <address className="not-italic leading-7">
         <strong>Sven Maibaum</strong>
         <br />
@@ -39,51 +57,50 @@ export default function Datenschutz() {
         Ein Datenschutzbeauftragter ist nicht bestellt. Die Voraussetzungen nach Art. 37 DSGVO liegen nicht vor.
       </p>
 
-      <h2>3. Hosting (GitHub Pages)</h2>
+      <h2>3. Hosting und Server-Logs (GitHub Pages)</h2>
       <p>
-        Diese Website wird auf Servern von GitHub Inc., 88 Colin P Kelly Jr St, San Francisco, CA 94107, USA gehostet
-        (GitHub Pages).
-      </p>
-      <p>Beim Aufruf erhebt GitHub automatisch folgende Daten in Server-Logfiles:</p>
-      <ul>
-        <li>IP-Adresse des anfragenden Geräts</li>
-        <li>Datum und Uhrzeit des Zugriffs</li>
-        <li>Name und URL der abgerufenen Seite</li>
-        <li>HTTP-Statuscode und übertragene Datenmenge</li>
-        <li>Referrer-URL (zuvor besuchte Seite)</li>
-        <li>Informationen zu Browser und Betriebssystem</li>
-      </ul>
-      <p>
-        <strong>Rechtsgrundlage:</strong> Art. 6 Abs. 1 lit. f DSGVO. Berechtigtes Interesse ist die stabile und sichere
-        Bereitstellung der Website sowie der Schutz vor Angriffen. Ich habe keinen direkten Zugriff auf diese Logdaten,
-        es findet kein eigenes Tracking statt.
+        Diese Website wird über GitHub Pages bereitgestellt, einen Dienst der GitHub, Inc., 88 Colin P. Kelly Jr. St.,
+        San Francisco, CA 94107, USA. GitHub liefert alle Dateien der Website aus, auch die Schriftarten Geist und Geist
+        Mono, die Bilder und die Skripte. Schriften und Symbole werden nicht von anderen Anbietern nachgeladen.
       </p>
       <p>
-        <strong>Drittlandübermittlung:</strong> GitHub Inc. ist als Tochter von Microsoft unter dem EU-U.S. Data Privacy
-        Framework (DPF) zertifiziert (Angemessenheitsbeschluss der EU-Kommission vom 10.07.2023, C(2023) 4745).
-        Ergänzend setzt GitHub EU-Standardvertragsklauseln (SCCs) nach Art. 46 Abs. 2 lit. c DSGVO ein.
+        Wenn Sie die Website aufrufen, protokolliert GitHub nach eigener Angabe Ihre IP-Adresse zu Sicherheitszwecken.
+        Solche Protokolle umfassen laut der Datenschutzerklärung von GitHub die IP-Adresse, Angaben zum Gerät, Angaben
+        zur Sitzung sowie Datum und Uhrzeit der Anfrage.
       </p>
       <p>
-        <strong>Speicherdauer:</strong> Die Logdaten werden nach spätestens sieben Tagen gelöscht.
+        <strong>Rechtsgrundlage:</strong> Art. 6 Abs. 1 lit. f DSGVO. Mein berechtigtes Interesse ist eine sichere und
+        stabile Bereitstellung der Website.
+      </p>
+      <p>
+        <strong>Speicherdauer:</strong> GitHub nennt keine feste Frist. Nach Angabe von GitHub richtet sich die Dauer
+        nach dem Zweck der Erhebung, hier der Sicherheit, und nach gesetzlichen Pflichten.
+      </p>
+      <p>
+        <strong>Drittlandübermittlung:</strong> GitHub ist nach dem EU-U.S. Data Privacy Framework zertifiziert
+        (Angemessenheitsbeschluss der EU-Kommission vom 10.07.2023, Art. 45 DSGVO) und stützt Übermittlungen zusätzlich
+        auf die Standardvertragsklauseln der EU-Kommission (Art. 46 Abs. 2 lit. c DSGVO).
       </p>
       <p>
         Datenschutzerklärung von GitHub:{" "}
-        <a
-          href="https://docs.github.com/site-policy/privacy-policies/github-general-privacy-statement"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="footer-link"
-        >
+        <ExternalLink href="https://docs.github.com/site-policy/privacy-policies/github-general-privacy-statement">
           docs.github.com/site-policy/privacy-policies/github-general-privacy-statement
-        </a>
+        </ExternalLink>
       </p>
 
-      <h2>4. Kontaktformular (EmailJS)</h2>
+      <h2>4. Kontakt per E-Mail und Kontaktformular</h2>
+      <h3>E-Mail</h3>
+      <p>
+        Wenn Sie mir eine E-Mail schreiben, verarbeite ich Ihre E-Mail-Adresse, Ihren Namen, soweit Sie ihn angeben, und
+        den Inhalt Ihrer Nachricht, um Ihre Anfrage zu beantworten. Das Postfach contact@sven-maibaum.com liegt bei
+        Google Workspace.
+      </p>
+      <h3>Kontaktformular (EmailJS)</h3>
       <p>
         Wenn Sie das Kontaktformular nutzen, werden Ihre Eingaben (Name, E-Mail-Adresse, Nachricht) sowie technische
         Daten (IP-Adresse, Zeitstempel) an den Dienst EmailJS übertragen. EmailJS stellt die Nachricht über mein
         E-Mail-Postfach bei Google Workspace an mich zu und schickt Ihnen eine automatische Eingangsbestätigung an die
-        angegebene E-Mail-Adresse.
+        angegebene E-Mail-Adresse. Das Formular sendet erst, wenn Sie auf „Nachricht senden“ klicken.
       </p>
       <p>
         <strong>Dienstleister:</strong> EmailJS Pte. Ltd., Singapur. Die Server von EmailJS stehen in den USA und
@@ -91,12 +108,12 @@ export default function Datenschutz() {
       </p>
       <p>
         <strong>Rechtsgrundlage:</strong> Art. 6 Abs. 1 lit. b DSGVO. Die Verarbeitung ist zur Beantwortung Ihrer
-        Anfrage und damit zur Aufnahme einer vorvertraglichen Kommunikation erforderlich.
+        Anfrage und damit zur Aufnahme einer vorvertraglichen Kommunikation erforderlich. Das gilt für E-Mails ebenso.
       </p>
       <p>
         <strong>Drittlandübermittlung:</strong> EmailJS verarbeitet Daten auf Servern in den USA. Für EmailJS gilt
         weder ein Angemessenheitsbeschluss noch das EU-U.S. Data Privacy Framework. Die Datenübermittlung erfolgt
-        deshalb auf Grundlage der EU-Standardvertragsklauseln (SCCs) nach Art. 46 Abs. 2 lit. c DSGVO, die Teil der
+        deshalb auf Grundlage der EU-Standardvertragsklauseln (Art. 46 Abs. 2 lit. c DSGVO), die Teil der
         Datenverarbeitungsvereinbarung von EmailJS sind (emailjs.com/legal/data-protection-agreement/).
       </p>
       <p>
@@ -105,161 +122,196 @@ export default function Datenschutz() {
         gelöscht, soweit keine gesetzliche Aufbewahrungspflicht entgegensteht.
       </p>
       <p>
-        <strong>Hinweis:</strong> Das Kontaktformular setzt selbst keine Cookies und nutzt keinen localStorage.
+        <strong>Hinweis:</strong> Das Kontaktformular setzt selbst keine Cookies und nutzt keinen lokalen Speicher. Ihre
+        Eingaben im Formular gehen nie an Google Analytics (siehe Abschnitt 6).
       </p>
       <p>
         Datenschutzerklärung von EmailJS:{" "}
-        <a
-          href="https://www.emailjs.com/legal/privacy-policy/"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="footer-link"
-        >
-          emailjs.com/legal/privacy-policy/
-        </a>
+        <ExternalLink href="https://www.emailjs.com/legal/privacy-policy/">emailjs.com/legal/privacy-policy/</ExternalLink>
       </p>
 
-      <h2>5. Schriftarten (Google Fonts)</h2>
+      <h2>5. Einwilligung und gespeicherte Auswahl</h2>
       <p>
-        Diese Website verwendet die Schriftarten Geist und Geist Mono des Dienstes Google Fonts. Anbieter ist Google
-        LLC, 1600 Amphitheatre Parkway, Mountain View, CA 94043, USA. EU-Niederlassung: Google Ireland Limited, Gordon
-        House, Barrow Street, Dublin 4, Irland.
+        Beim ersten Besuch fragt ein Hinweis nach Ihrer Einwilligung in zwei Kategorien: „Statistik“ (Google Analytics,
+        Abschnitt 6) und „Externe Medien“ (Steam-Widget, Abschnitt 7). Nichts ist vorausgewählt, und „Ablehnen“ ist so
+        einfach wie „Alle akzeptieren“. Der Hinweis ist ein eigener Bestandteil dieser Website; kein fremder Dienst ist
+        daran beteiligt.
       </p>
       <p>
-        Beim Aufruf einer Seite baut Ihr Browser eine direkte Verbindung zu den Servern von Google
-        (fonts.googleapis.com / fonts.gstatic.com) auf. Dabei wird Ihre IP-Adresse an Google übertragen.
+        Ihre Auswahl speichert die Website im lokalen Speicher (localStorage) Ihres Browsers unter dem Schlüssel
+        „consent“: je Kategorie Ihre Entscheidung, die Version des Hinweises und den Zeitpunkt der letzten Änderung. Der
+        Eintrag enthält keine Kennung, bleibt auf Ihrem Gerät und wird weder an mich noch an Dritte übertragen.
       </p>
       <p>
-        <strong>Rechtsgrundlage:</strong> Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an einer einheitlichen
-        Darstellung) in Verbindung mit Art. 45 DSGVO.
+        <strong>Rechtsgrundlage:</strong> § 25 Abs. 2 Nr. 2 TDDDG. Die Speicherung ist unbedingt erforderlich, damit die
+        Website die Wahl beachten kann, die Sie ausdrücklich getroffen haben.
       </p>
       <p>
-        <strong>Drittlandübermittlung:</strong> Google LLC ist unter dem EU-U.S. Data Privacy Framework (DPF)
-        zertifiziert (Angemessenheitsbeschluss der EU-Kommission vom 10.07.2023, C(2023) 4745). Die Datenübermittlung in
-        die USA stützt sich auf Art. 45 DSGVO.
+        <strong>Speicherdauer:</strong> Die Auswahl gilt zwölf Monate. Danach, oder wenn sich die Kategorien oder
+        Anbieter ändern, fragt die Website erneut. Sie können den Eintrag jederzeit selbst löschen, indem Sie die
+        Websitedaten in Ihrem Browser löschen.
+      </p>
+      <p>
+        <strong>Widerruf:</strong> Eine Einwilligung können Sie jederzeit mit Wirkung für die Zukunft widerrufen, über
+        „Cookie-Einstellungen“ im Fuß jeder Seite oder hier. Der Widerruf wirkt sofort, ohne dass die Seite neu geladen
+        wird. Die Rechtmäßigkeit der Verarbeitung bis zum Widerruf bleibt davon unberührt (Art. 7 Abs. 3 DSGVO).
+      </p>
+      <p>
+        <ConsentSettingsButton className="swiss-btn-secondary" />
+      </p>
+
+      <h2>6. Statistik mit Google Analytics</h2>
+      <p>
+        Wenn Sie in „Statistik“ einwilligen, nutzt diese Website Google Analytics 4. Damit sehe ich, wie viele Menschen
+        die Website besuchen, welche Seiten sie aufrufen und über welche Seiten sie kommen, und kann die Website danach
+        verbessern. Ohne Ihre Einwilligung lädt die Website kein Skript von Google und sendet keine Daten an Google.
+      </p>
+      <p>
+        <strong>Anbieter:</strong> Google Ireland Limited, Gordon House, Barrow Street, Dublin 4, Irland. Google
+        verarbeitet die Daten als mein Auftragsverarbeiter (Art. 28 DSGVO) nach den Google
+        Auftragsdatenverarbeitungsbedingungen für Werbeprodukte, die für Unternehmen im Europäischen Wirtschaftsraum
+        Teil der Nutzungsbedingungen von Google Analytics sind.
+      </p>
+      <p>
+        <strong>Verarbeitete Daten:</strong> Bei jedem Seitenaufruf, auch beim Wechsel zwischen Seiten dieser Website,
+        sendet Ihr Browser an Google: die Adresse und den Titel der Seite, die zuvor besuchte Seite, die Spracheinstellung,
+        die Bildschirmauflösung, Angaben zu Browser, Betriebssystem und Gerät sowie eine zufällige Kennung aus dem Cookie
+        _ga. Zusätzlich erfasst Google Analytics, wenn Sie eine Seite zu 90 % durchscrollen, einen Link zu einer anderen
+        Website anklicken, eine Datei herunterladen oder beginnen, das Kontaktformular auszufüllen, oder es absenden.
+        Beim Kontaktformular übermittelt Google Analytics nur Merkmale des Formulars wie die Zieladresse, die Zahl der
+        Felder und den Namen des ersten Feldes, nie Ihre Eingaben.
+      </p>
+      <p>
+        Ihre IP-Adresse erreicht Google technisch bedingt. Bei Zugriffen aus der EU verwendet Google sie nach eigener
+        Angabe nur, um daraus den ungefähren Standort (Land, Region, Stadt) abzuleiten, und verwirft sie danach sofort;
+        Google Analytics protokolliert und speichert keine IP-Adressen.
+      </p>
+      <p>
+        <strong>Cookies:</strong> _ga dient zur Unterscheidung von Besuchern, {gaSessionCookie} speichert den Status der
+        Sitzung. Google Analytics setzt beide als Cookies dieser Website. Sie gelten zwei Jahre ab Ihrem letzten Besuch,
+        sofern Ihr Browser die Laufzeit nicht verkürzt.
+      </p>
+      <p>
+        <strong>Einstellungen:</strong> Die Website schaltet Google-Signale ab und untersagt Google, die Daten für
+        personalisierte Werbung zu nutzen. Im Einwilligungsmodus von Google bleiben die Kategorien für Werbung (ad_storage,
+        ad_user_data, ad_personalization) verweigert; erteilt wird nur analytics_storage. Eine Nutzer-ID wird nicht
+        verwendet.
+      </p>
+      <p>
+        <strong>Rechtsgrundlage:</strong> Ihre Einwilligung nach Art. 6 Abs. 1 lit. a DSGVO und § 25 Abs. 1 TDDDG.
+      </p>
+      <p>
+        <strong>Speicherdauer:</strong> Die Cookies gelten wie oben beschrieben. Auf Besucher und einzelne Ereignisse
+        bezogene Daten löscht Google automatisch nach [OFFEN: in Google Analytics eingestellte Aufbewahrungsdauer, 2 oder
+        14 Monate, abzulesen unter Verwaltung &gt; Datenerfassung und -änderung &gt; Datenaufbewahrung]. Zusammengefasste
+        Standardberichte sind von dieser Frist nicht betroffen.
+      </p>
+      <p>
+        <strong>Empfänger und Drittlandübermittlung:</strong> Empfänger ist Google als mein Auftragsverarbeiter. Google
+        verarbeitet die Daten auch in den USA. Die Google LLC ist nach dem EU-U.S. Data Privacy Framework zertifiziert
+        (Angemessenheitsbeschluss der EU-Kommission vom 10.07.2023, Art. 45 DSGVO). Google stützt Übermittlungen für
+        seine Werbe- und Analyseprodukte nach eigener Angabe seit dem 01.09.2023 darauf und kann
+        Standardvertragsklauseln nutzen, wo dieser Rahmen nicht greift.
+      </p>
+      <p>
+        <strong>Widerruf:</strong> Über „Cookie-Einstellungen“ (Abschnitt 5). Ab dann erfasst Google Analytics auf dieser
+        Website nichts mehr, und die Website löscht die Cookies _ga und {gaSessionCookie}. Ein Ereignis, das unmittelbar
+        vor dem Widerruf erfasst wurde, kann Google Analytics noch übertragen. Zusätzlich bietet Google ein Browser-Add-on
+        zur Deaktivierung von Google Analytics an:{" "}
+        <ExternalLink href="https://tools.google.com/dlpage/gaoptout">tools.google.com/dlpage/gaoptout</ExternalLink>
       </p>
       <p>
         Datenschutzerklärung von Google:{" "}
-        <a
-          href="https://policies.google.com/privacy"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="footer-link"
-        >
-          policies.google.com/privacy
-        </a>
+        <ExternalLink href="https://policies.google.com/privacy">policies.google.com/privacy</ExternalLink>. Wie Google
+        Daten von Websites verwendet, die Google-Dienste nutzen:{" "}
+        <ExternalLink href="https://policies.google.com/technologies/partner-sites">
+          policies.google.com/technologies/partner-sites
+        </ExternalLink>
       </p>
 
-      <h2>6. Cloudflare CDN</h2>
+      <h2>7. Steam-Widget (Valve)</h2>
       <p>
-        Icon-Ressourcen (Font Awesome) werden über das Content Delivery Network cdnjs.cloudflare.com geladen. Anbieter
-        ist Cloudflare, Inc., 101 Townsend St., San Francisco, CA 94107, USA. EU-Niederlassung: Cloudflare Germany
-        GmbH, Rosental 7, c/o Mindspace, 80331 München.
+        Auf den Projektseiten zu HeistLine und Mr. Dork 3 kann ein Widget aus dem Steam-Store eingebunden werden.
+        Anbieter ist die Valve Corporation, P.O. Box 1688, Bellevue, WA 98009, USA. Ihr Vertreter in der EU ist die
+        RIVACY GmbH, Mexikoring 33, 22297 Hamburg.
       </p>
       <p>
-        Beim Laden dieser Ressourcen wird Ihre IP-Adresse zusammen mit technischen Informationen (Browser-Typ,
-        Betriebssystem, Referrer-URL) an Cloudflare-Server übertragen und protokolliert.
+        Ohne Ihre Einwilligung zeigt die Seite stattdessen ein eigenes Bild und einen Link zum Steam-Store; dabei geht
+        keine Anfrage an Valve. Erst wenn Sie in „Externe Medien“ einwilligen, auch über die Schaltfläche
+        „Steam-Widget laden“, lädt Ihr Browser das Widget von Servern von Valve (store.steampowered.com und
+        steamstatic.com). Dabei erhält Valve Ihre IP-Adresse, Angaben zu Ihrem Browser und die Adresse dieser Website.
+        Valve protokolliert nach eigener Angabe die IP-Adresse.
       </p>
       <p>
-        <strong>Rechtsgrundlage:</strong> Art. 6 Abs. 1 lit. f DSGVO. Berechtigtes Interesse ist die schnelle und
-        zuverlässige Auslieferung der Website-Inhalte.
+        Valve setzt dabei Cookies auf seiner eigenen Domain. Bei einer Prüfung am 17.10.2026 war das das Cookie
+        „sessionid“ von store.steampowered.com, das bis zum Ende der Browsersitzung gilt und nach Angabe von Valve dem
+        Schutz vor Angriffen (Cross-Site-Request-Forgery) dient.
       </p>
       <p>
-        <strong>Drittlandübermittlung:</strong> Cloudflare, Inc. ist seit August 2024 unter dem EU-U.S. Data Privacy
-        Framework (DPF) zertifiziert. Die Datenübermittlung in die USA stützt sich auf Art. 45 DSGVO. Ergänzend setzt
-        Cloudflare EU-Standardvertragsklauseln (SCCs) ein.
+        <strong>Rechtsgrundlage:</strong> Ihre Einwilligung nach Art. 6 Abs. 1 lit. a DSGVO und § 25 Abs. 1 TDDDG.
       </p>
       <p>
-        <strong>Speicherdauer:</strong> Cloudflare-Logdaten werden bei Standardnutzung nach maximal 24 Stunden gelöscht.
+        <strong>Speicherdauer:</strong> Wie lange Valve die Daten speichert, bestimmt Valve; für die weitere Verarbeitung
+        ist Valve selbst verantwortlich. Einzelheiten nennt die Datenschutzerklärung von Valve.
       </p>
       <p>
-        Datenschutzerklärung von Cloudflare:{" "}
-        <a
-          href="https://www.cloudflare.com/de-de/privacypolicy/"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="footer-link"
-        >
-          cloudflare.com/de-de/privacypolicy/
-        </a>
-      </p>
-
-      <h2>7. Cookies</h2>
-      <p>
-        Diese Website setzt keine eigenen Cookies und keine Tracking-Cookies. Es werden weder Analyse- noch
-        Werbe-Cookies, weder Re-Targeting- noch Profilbildungs-Cookies eingesetzt. Eine Einwilligung über ein
-        Cookie-Banner ist daher nach § 25 TDDDG nicht erforderlich.
+        <strong>Drittlandübermittlung:</strong> Valve ist nach dem EU-U.S. Data Privacy Framework zertifiziert (Art. 45
+        DSGVO) und nennt zusätzlich Standardvertragsklauseln.
       </p>
       <p>
-        Cookies, die ausschließlich der Übertragung einer Nachricht über ein öffentliches Telekommunikationsnetz
-        dienen oder unbedingt erforderlich sind, um einen vom Nutzer ausdrücklich gewünschten Dienst bereitzustellen,
-        wären nach § 25 Abs. 2 Nr. 2 TDDDG einwilligungsfrei zulässig. Solche Cookies werden derzeit nicht eingesetzt.
+        <strong>Widerruf:</strong> Über „Cookie-Einstellungen“ (Abschnitt 5); das Widget verschwindet sofort. Cookies,
+        die Valve bereits gesetzt hat, gehören zur Domain von Valve, und diese Website kann sie nicht löschen. Sie können
+        sie in Ihrem Browser löschen.
+      </p>
+      <p>
+        Datenschutzerklärung von Valve:{" "}
+        <ExternalLink href="https://store.steampowered.com/privacy_agreement/">
+          store.steampowered.com/privacy_agreement/
+        </ExternalLink>
       </p>
 
-      <h2>9. Externe Links</h2>
+      <h2>8. Externe Links</h2>
       <p>
-        Diese Website enthält Links zu externen Seiten, etwa GitHub und LinkedIn. Bei einem Klick werden Sie zur Seite
-        des jeweiligen Betreibers weitergeleitet. Für den Datenschutz auf diesen Seiten ist ausschließlich der jeweilige
-        Betreiber verantwortlich.
-      </p>
-      <p>
-        Vor dem Klick werden keine Daten an die verlinkten Betreiber übertragen. Es handelt sich um einfache Hyperlinks
-        ohne Social-Plugins oder Tracking-Integrationen.
+        Diese Website enthält Links zu anderen Websites, etwa GitHub, LinkedIn, TikTok, YouTube oder dem Steam-Store.
+        Erst wenn Sie einen Link anklicken, ruft Ihr Browser die Seite des jeweiligen Betreibers auf; für den Datenschutz
+        dort ist ausschließlich dieser Betreiber verantwortlich. Vor dem Klick werden keine Daten an die verlinkten
+        Betreiber übertragen. Es handelt sich um einfache Links ohne Social-Plugins.
       </p>
 
-      <h2>10. Datenübermittlung in Drittländer</h2>
-      <p>
-        Einige der eingesetzten Dienste übermitteln personenbezogene Daten in die USA. Die folgende Übersicht zeigt
-        Anbieter und Übertragungsgrundlage:
-      </p>
+      <h2>9. Übermittlung in Drittländer</h2>
+      <p>Folgende Dienste übermitteln personenbezogene Daten in die USA:</p>
       <ul>
         <li>
-          <strong>GitHub Pages</strong> (Hosting), GitHub Inc. / Microsoft, USA: Art. 45 DSGVO (DPF) und SCCs
-          (Art. 46 Abs. 2 lit. c).
+          <strong>GitHub Pages</strong> (Hosting), GitHub, Inc.: Data Privacy Framework (Art. 45 DSGVO) und
+          Standardvertragsklauseln (Art. 46 Abs. 2 lit. c DSGVO).
         </li>
         <li>
-          <strong>EmailJS</strong> (Kontaktformular), EmailJS Pte. Ltd., Singapur, Server in den USA: SCCs
-          (Art. 46 Abs. 2 lit. c DSGVO).
+          <strong>EmailJS</strong> (Kontaktformular), EmailJS Pte. Ltd., Singapur, Server in den USA:
+          Standardvertragsklauseln (Art. 46 Abs. 2 lit. c DSGVO).
         </li>
         <li>
-          <strong>Google Fonts</strong> (Schriftarten), Google LLC, USA: Art. 45 DSGVO (DPF).
+          <strong>Google</strong> (E-Mail-Postfach bei Google Workspace; Google Analytics nur mit Ihrer Einwilligung):
+          Die Google LLC ist nach dem Data Privacy Framework zertifiziert (Art. 45 DSGVO).
         </li>
         <li>
-          <strong>Cloudflare cdnjs</strong> (Icons), Cloudflare Inc., USA: Art. 45 DSGVO (DPF) und SCCs
-          (Art. 46 Abs. 2 lit. c).
+          <strong>Valve</strong> (Steam-Widget, nur mit Ihrer Einwilligung), Valve Corporation: Data Privacy Framework
+          (Art. 45 DSGVO) und Standardvertragsklauseln.
         </li>
       </ul>
       <p>
-        Das EU-U.S. Data Privacy Framework (Angemessenheitsbeschluss C(2023) 4745 vom 10.07.2023) ist derzeit gültig,
-        aber politisch anfechtbar. Wo zusätzlich SCCs eingesetzt werden, besteht ein doppeltes Schutzfundament.
+        Der Angemessenheitsbeschluss zum EU-U.S. Data Privacy Framework ist der Durchführungsbeschluss (EU) 2023/1795
+        der EU-Kommission vom 10.07.2023. Die Standardvertragsklauseln der EU-Kommission sind im Durchführungsbeschluss
+        (EU) 2021/914 veröffentlicht; eine Kopie erhalten Sie auch auf Anfrage bei mir.
       </p>
 
-      <h2>11. SSL/TLS-Verschlüsselung</h2>
+      <h2>10. Verschlüsselung</h2>
       <p>
-        Diese Website wird vollständig über HTTPS ausgeliefert und nutzt eine SSL- bzw. TLS-Verschlüsselung nach Art. 32
-        Abs. 1 lit. a DSGVO. Die verschlüsselte Verbindung erkennen Sie am Schloss-Symbol und am Präfix „https://“ in
-        der Adresszeile. Übermittelte Daten können von Dritten nicht mitgelesen werden.
+        Diese Website wird nur über HTTPS ausgeliefert; Aufrufe über HTTP werden auf HTTPS umgeleitet. Die Verbindung
+        zwischen Ihrem Browser und dem Server ist damit verschlüsselt (Art. 32 Abs. 1 lit. a DSGVO), und Dritte können
+        übertragene Daten nicht mitlesen.
       </p>
 
-      <h2>12. Speicherdauer und Löschung</h2>
-      <p>
-        Personenbezogene Daten werden nur so lange verarbeitet, wie es für den jeweiligen Zweck erforderlich ist oder
-        gesetzliche Aufbewahrungspflichten bestehen.
-      </p>
-      <ul>
-        <li>
-          <strong>Server-Logfiles (GitHub Pages):</strong> automatische Löschung nach spätestens sieben Tagen.
-        </li>
-        <li>
-          <strong>Cloudflare-Logdaten:</strong> automatische Löschung nach maximal 24 Stunden (Standardnutzung).
-        </li>
-        <li>
-          <strong>Kontaktformular-Daten:</strong> bis zur abschließenden Bearbeitung, auf Anfrage sofortige Löschung,
-          soweit keine gesetzliche Aufbewahrungspflicht entgegensteht.
-        </li>
-      </ul>
-
-      <h2>13. Ihre Rechte als betroffene Person</h2>
+      <h2>11. Ihre Rechte</h2>
       <p>Sie haben gegenüber mir als Verantwortlichem folgende Rechte:</p>
 
       <h3>Auskunftsrecht (Art. 15 DSGVO)</h3>
@@ -294,10 +346,11 @@ export default function Datenschutz() {
         schutzwürdige Gründe nachweisen, die Ihre Interessen überwiegen.
       </p>
 
-      <h3>Widerrufsrecht bei Einwilligung (Art. 7 Abs. 3 DSGVO)</h3>
+      <h3>Widerruf einer Einwilligung (Art. 7 Abs. 3 DSGVO)</h3>
       <p>
         Beruht eine Verarbeitung auf einer Einwilligung, können Sie diese jederzeit mit Wirkung für die Zukunft
-        widerrufen. Die Rechtmäßigkeit der bis zum Widerruf erfolgten Verarbeitung bleibt davon unberührt.
+        widerrufen, für Google Analytics und das Steam-Widget über „Cookie-Einstellungen“ (Abschnitt 5). Die
+        Rechtmäßigkeit der bis zum Widerruf erfolgten Verarbeitung bleibt davon unberührt.
       </p>
 
       <p>
@@ -305,33 +358,31 @@ export default function Datenschutz() {
         <a href="mailto:contact@sven-maibaum.com" className="footer-link">contact@sven-maibaum.com</a>
       </p>
 
-      <h2>14. Beschwerderecht bei der Aufsichtsbehörde</h2>
+      <h2>12. Beschwerderecht bei der Aufsichtsbehörde</h2>
       <p>
         Wenn Sie der Ansicht sind, dass die Verarbeitung Ihrer personenbezogenen Daten gegen die DSGVO verstößt, können
-        Sie sich bei einer Datenschutz-Aufsichtsbehörde beschweren (Art. 77 DSGVO).
+        Sie sich bei einer Datenschutz-Aufsichtsbehörde beschweren (Art. 77 DSGVO), insbesondere in dem Mitgliedstaat
+        Ihres Aufenthaltsorts, Ihres Arbeitsplatzes oder des Orts des mutmaßlichen Verstoßes.
       </p>
-      <p>Die zuständige Aufsichtsbehörde für den Verantwortlichen (Wohnort in NRW) ist:</p>
+      <p>Für den Verantwortlichen (Sitz in Nordrhein-Westfalen) ist zuständig:</p>
       <address className="not-italic leading-7">
         <strong>Landesbeauftragte für Datenschutz und Informationsfreiheit Nordrhein-Westfalen (LDI NRW)</strong>
         <br />
         Postfach 20 04 44
         <br />
         40102 Düsseldorf
+        <br />
+        Besucheranschrift: Kavalleriestr. 2-4, 40213 Düsseldorf
       </address>
       <p>
-        Telefon: +49 (0)211 38424 - 0
-        <br />
-        Telefax: +49 (0)211 38424 - 999
+        Telefon: +49 211 38424-0
         <br />
         E-Mail: <a href="mailto:poststelle@ldi.nrw.de" className="footer-link">poststelle@ldi.nrw.de</a>
         <br />
-        Website:{" "}
-        <a href="https://www.ldi.nrw.de" target="_blank" rel="noopener noreferrer" className="footer-link">
-          ldi.nrw.de
-        </a>
+        Website: <ExternalLink href="https://www.ldi.nrw.de">ldi.nrw.de</ExternalLink>
       </p>
 
-      <h2>14. Hinweis zur unverlangten Zusendung von Werbung</h2>
+      <h2>13. Widerspruch gegen Werbe-E-Mails</h2>
       <p>
         Der Nutzung der in dieser Datenschutzerklärung und im Impressum veröffentlichten Kontaktdaten zur Übersendung
         nicht ausdrücklich angeforderter Werbung und Informationsmaterialien wird widersprochen. Der Betreiber behält
@@ -339,12 +390,11 @@ export default function Datenschutz() {
         vor.
       </p>
 
-      <h2>15. Aktualität dieser Datenschutzerklärung</h2>
+      <h2>14. Stand dieser Datenschutzerklärung</h2>
       <p>
-        Diese Datenschutzerklärung hat den Stand vom <time dateTime="2026-05-08">8. Mai 2026</time>. Bei einer
-        Weiterentwicklung dieser Website oder bei Änderungen der gesetzlichen oder behördlichen Vorgaben kann eine
-        Anpassung dieser Datenschutzerklärung notwendig werden. Die jeweils aktuelle Version ist auf dieser Seite
-        abrufbar.
+        Diese Datenschutzerklärung hat den Stand vom <time dateTime="2026-10-17">17. Oktober 2026</time>. Ändert sich die
+        Website oder ändern sich gesetzliche oder behördliche Vorgaben, wird sie angepasst. Die jeweils aktuelle Fassung
+        ist auf dieser Seite abrufbar.
       </p>
 
       <hr className="my-8 border-border" />
@@ -352,8 +402,8 @@ export default function Datenschutz() {
       <p className="text-sm footer-text-muted">
         © 2026 Sven Maibaum. Alle Rechte vorbehalten.
         <br />
-        Zuletzt aktualisiert: <time dateTime="2026-05-08">08.05.2026</time>
+        Zuletzt aktualisiert: <time dateTime="2026-10-17">17.10.2026</time>
       </p>
-    </main>
+    </article>
   );
 }

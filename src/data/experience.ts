@@ -1,6 +1,8 @@
 export type ExperienceEntry = {
   period: string;
   company: string;
+  /** Optional website of the company, linked from its name. */
+  companyUrl?: string;
   title: string;
   detail: string;
   tags: string[];
@@ -14,10 +16,11 @@ export const experienceHeading = {
 export const experiences: ExperienceEntry[] = [
   {
     period: "2026 – Heute",
-    company: "Sentrix Code",
+    company: "Sentrix Code GmbH",
+    companyUrl: "https://sentrixcode.com",
     title: "Chief Technology Officer (CTO)",
     detail:
-      "Technische Leitung meines eigenen Unternehmens: Architektur, Technik und Entwicklung.",
+      "Software und Spiele entwickeln, auf den Markt bringen und die Dienstleistungen drumherum liefern. Als CTO verantworte ich Architektur, Technik und Entwicklung.",
     tags: ["Technische Leitung", "Architektur"],
   },
   {

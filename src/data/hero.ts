@@ -1,5 +1,5 @@
 /** Hero content of the home page. */
-export const heroEyebrow = "Portfolio";
+export const heroEyebrow = "CTO bei Sentrix Code GmbH";
 
 export const heroName = "Sven Maibaum";
 

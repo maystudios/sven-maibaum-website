@@ -21,7 +21,7 @@ export default function Footer() {
             Sven Maibaum<span className="text-brand ml-0.5">.</span>
           </h2>
           <p className="mt-3 text-sm text-muted leading-relaxed">
-            CTO bei Sentrix Code, Software-Architekt &amp; Spieleentwickler.
+            CTO bei Sentrix Code GmbH, Software-Architekt &amp; Spieleentwickler.
           </p>
         </section>
 

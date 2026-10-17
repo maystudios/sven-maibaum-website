@@ -35,7 +35,20 @@ function TimelineEntry({ entry, at, progress, still }: EntryProps) {
       />
       <div className="text-sm">
         <p className="font-mono text-xs text-faint mb-1">{entry.period}</p>
-        <p className="font-medium text-muted">{entry.company}</p>
+        <p className="font-medium text-muted">
+          {entry.companyUrl ? (
+            <a
+              href={entry.companyUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-brandLight hover:text-brand transition-colors duration-200"
+            >
+              {entry.company}
+            </a>
+          ) : (
+            entry.company
+          )}
+        </p>
       </div>
       <div>
         <h3 className="font-display font-bold text-fg text-xl mb-2 tracking-tight">{entry.title}</h3>

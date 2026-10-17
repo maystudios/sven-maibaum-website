@@ -24,8 +24,18 @@ export default function AboutBio({ className = "space-y-5 text-muted text-lg lea
       </p>
 
       <p>
-        Seit 2026 bin ich <strong className="text-fg">CTO bei Sentrix Code</strong>,
-        meinem eigenen Unternehmen. Dort verantworte ich Architektur und Technik.
+        Seit 2026 bin ich <strong className="text-fg">CTO</strong> der{' '}
+        <a
+          href="https://sentrixcode.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-brandLight hover:text-brand transition-colors duration-200 font-semibold"
+        >
+          Sentrix Code GmbH
+        </a>
+        , meines eigenen Unternehmens. Sentrix Code entwickelt Software und Spiele, bringt sie
+        auf den Markt und liefert die Dienstleistungen, die dazugehören. Ich verantworte dort
+        Architektur, Technik und Entwicklung.
       </p>
 
       <p>

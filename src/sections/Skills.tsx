@@ -45,7 +45,7 @@ function Webentwicklung() {
       <div>
         <DocHeading>Frontend & Backend</DocHeading>
         <DocText>
-          Über 8 Jahre Full-Stack-Erfahrung — von interaktiven React-SPAs bis zu verteilten
+          Über 10 Jahre Programmiererfahrung — von interaktiven React-SPAs bis zu verteilten
           Microservice-Architekturen mit Java Spring Boot. Ich decke den gesamten Stack ab,
           von der UI bis zur Datenbankschicht.
         </DocText>
@@ -170,10 +170,10 @@ function Spieleentwicklung() {
 // ─── Tab 3: Software Engineering ─────────────────────────────────────────────
 
 const langs = [
-  { name: "Java",       cat: "Backend / Enterprise",   level: "Expert",         years: "> 8 Jahre" },
+  { name: "Java",       cat: "Backend / Enterprise",   level: "Expert",         years: "> 10 Jahre" },
   { name: "TypeScript", cat: "Frontend / Backend",      level: "Expert",         years: "> 4 Jahre" },
   { name: "Python",     cat: "Scripting / KI / Data",  level: "Fortgeschritten",years: "> 5 Jahre" },
-  { name: "C++",        cat: "Systems / Game Dev",      level: "Fortgeschritten",years: "> 4 Jahre" },
+  { name: "C++",        cat: "Systems / Game Dev",      level: "Fortgeschritten",years: "> 8 Jahre" },
   { name: "C#",         cat: "Unity / .NET",            level: "Fortgeschritten",years: "> 3 Jahre" },
   { name: "C",          cat: "Systems / Embedded",      level: "Grundlagen",     years: "> 2 Jahre" },
 ];

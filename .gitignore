@@ -27,6 +27,3 @@ dist-ssr
 
 # Workflow Harness: run artefacts stay local (public repo)
 /.harness/runs/
-
-# V4 size scene media: local placeholders until the final renders are approved
-/public/assets/size-scene/

@@ -5,10 +5,13 @@ import type { SceneManifest, SceneTheme } from "./sceneManifest";
  * Plays the size scene: one camera journey across scales.
  *
  * Moving up plays the forward video from the current position to the target
- * level time, moving down plays the reverse video (reverse time = duration -
- * forward time). Jumps over several levels raise the playback rate (at most
- * 2x) so a move stays under about 2.5 s; changing direction mid-move maps the
- * position onto the other video. On arrival the level's idle loop cross-fades
+ * level time, moving down plays the reverse video. The reverse video holds the
+ * forward frames backwards, so a forward time t sits at
+ * (duration - 1/fps) - t in it (duration = container length, the last frame
+ * starts one frame earlier). Jumps over several levels raise the playback rate
+ * (at most 3x, owner decision 2026-10-17: seamless travel before speed);
+ * changing direction mid-move maps the position onto the other video. On
+ * arrival the level's idle loop cross-fades
  * in. Stills paint first and are all that shows under reduced motion or when
  * the videos fail. Loops pause while the panel or the tab is hidden.
  *
@@ -17,8 +20,10 @@ import type { SceneManifest, SceneTheme } from "./sceneManifest";
  */
 
 const FADE_MS = 280;
-const MAX_RATE = 2;
+const MAX_RATE = 3;
 const MAX_MOVE_SECONDS = 2.5;
+/** Seeks land a quarter frame into the target frame, never on its boundary. */
+const SEEK_INSIDE_FRAME = 0.25;
 
 export type JourneyElements = {
   stillBack: HTMLImageElement;
@@ -214,11 +219,28 @@ export class JourneyPlayer {
     return dir > 0 ? this.el.forward : this.el.reverse;
   }
 
+  /** Start time of the last frame; the reverse video mirrors around it. */
+  private lastFrameTime() {
+    const { journey, fps } = this.manifest!;
+    return journey.duration - 1 / fps;
+  }
+
+  /** Time in the given video for a forward position (and back: the mapping is its own inverse). */
+  private videoTime(dir: 1 | -1, forwardTime: number) {
+    return dir > 0 ? forwardTime : this.lastFrameTime() - forwardTime;
+  }
+
+  /** Seek target inside the frame that starts at `time`, clamped to the video. */
+  private frameSeekTime(time: number) {
+    const frame = 1 / this.manifest!.fps;
+    return Math.min(Math.max(0, time) + SEEK_INSIDE_FRAME * frame, this.lastFrameTime() + SEEK_INSIDE_FRAME * frame);
+  }
+
   /** Position on the forward timeline, wherever the picture currently comes from. */
   private currentPosition() {
     if (this.move?.running) {
       const video = this.video(this.move.dir);
-      return this.move.dir > 0 ? video.currentTime : this.manifest!.journey.duration - video.currentTime;
+      return this.videoTime(this.move.dir, video.currentTime);
     }
     return this.pos;
   }
@@ -314,7 +336,7 @@ export class JourneyPlayer {
         if (this.disposed || sourceToken !== this.sourceToken) return;
         this.videosReady = true;
         // Park the forward video on the current level, so the first move starts from there
-        forward.currentTime = this.pos;
+        forward.currentTime = this.frameSeekTime(this.pos);
       });
     }
     this.prepareLoop(this.level);
@@ -353,13 +375,12 @@ export class JourneyPlayer {
   private async startMove(dir: 1 | -1, from: number, target: number, level: number, rate: number) {
     this.cancelMove();
     const token = this.token;
-    const duration = this.manifest!.journey.duration;
     const video = this.video(dir);
     const other = this.video(dir > 0 ? -1 : 1);
     const move: Move = { dir, target, level, running: false };
     this.move = move;
     this.pos = from;
-    await this.seekTo(video, dir > 0 ? from : duration - from);
+    await this.seekTo(video, this.frameSeekTime(this.videoTime(dir, from)));
     if (token !== this.token || this.disposed) return;
     // The journey frame now matches what is on screen: show it, then let the loop go
     setOpacity(video, 1, false);
@@ -395,13 +416,13 @@ export class JourneyPlayer {
       const move = this.move;
       if (!move || token !== this.token || this.disposed) return;
       const video = this.video(move.dir);
-      const duration = this.manifest!.journey.duration;
-      const position = move.dir > 0 ? video.currentTime : duration - video.currentTime;
+      const position = this.videoTime(move.dir, video.currentTime);
       this.pos = position;
       const frame = 1 / this.manifest!.fps;
       if ((move.target - position) * move.dir <= frame * video.playbackRate * 0.75 || video.ended) {
         video.pause();
-        video.currentTime = move.dir > 0 ? move.target : duration - move.target;
+        // Land exactly on the level frame; the loop and the still start from it
+        video.currentTime = this.frameSeekTime(this.videoTime(move.dir, move.target));
         this.pos = move.target;
         this.move = null;
         this.arrive(move.level);

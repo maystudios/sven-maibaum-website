@@ -1,4 +1,5 @@
 import ProjectShell from "../../components/ProjectShell";
+import SteamWidget from "../../components/SteamWidget";
 
 export default function ProjectMrDork3() {
   return (
@@ -46,12 +47,12 @@ export default function ProjectMrDork3() {
             </li>
           </ul>
         </div>
-        <div className="border border-border overflow-hidden flex items-center justify-center bg-surface">
-          <iframe
-            src="https://store.steampowered.com/widget/3274870/"
-            title="Mr. Dork 3 Steam Widget"
-            className="w-full max-w-[646px] h-[190px]"
-          ></iframe>
+        <div className="flex items-center justify-center">
+          <SteamWidget
+            appId={3274870}
+            title="Mr. Dork 3"
+            image={`${import.meta.env.BASE_URL}assets/projects/mrdork/mrdork3.png`}
+          />
         </div>
       </div>
 

@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import ProjectShell from "../../components/ProjectShell";
+import SteamWidget from "../../components/SteamWidget";
 
 const galleryBase = `${import.meta.env.BASE_URL}assets/projects/heistline/gallery/`;
 const galleryImages = [
@@ -279,12 +280,11 @@ export default function ProjectHeistLine() {
         {/* Steam Widget */}
         <h2>Steam</h2>
         <p className="text-faint mb-4">Direkt aus dem Steam-Store eingebettet.</p>
-        <iframe
-          src="https://store.steampowered.com/widget/3613860/"
-          title="HeistLine Steam Widget"
-          className="w-full max-w-[646px] border border-border"
-          style={{ height: "190px" }}
-        ></iframe>
+        <SteamWidget
+          appId={3613860}
+          title="HeistLine"
+          image={`${import.meta.env.BASE_URL}assets/projects/heistline/VaultHeist.png`}
+        />
 
         {/* FAQ & Press */}
         <div className="grid md:grid-cols-2 gap-8">

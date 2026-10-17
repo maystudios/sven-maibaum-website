@@ -5,8 +5,8 @@ export default function ProjectExambyte() {
     <ProjectShell
       title="Exambyte"
       subtitle="Web-basiertes Testsystem als Alternative zu ILIAS für Programmierlabore."
-      heroImage="https://placehold.co/900x500/e5a935/1a202c?text=Exambyte+Dashboard+Mockup"
-      heroAlt="Exambyte - Dashboard Mockup des web-basierten Testsystems"
+      heroImage={`${import.meta.env.BASE_URL}assets/projects/exambyte/cover.svg`}
+      heroAlt="Exambyte, abstrakte Titelgrafik (noch kein Screenshot)"
     >
       <div className="grid grid-cols-2 md:grid-cols-4 gap-px bg-surface2 mb-8">
         {[

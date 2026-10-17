@@ -225,7 +225,7 @@ export const projectCards: ProjectCard[] = [
     ],
     filters: ["java"],
     dataTags: ["java", "spring-boot", "postgresql", "github-oauth"],
-    image: "https://placehold.co/600x400/e5a935/1a202c?text=Exambyte+Testsystem",
+    image: `${import.meta.env.BASE_URL}assets/projects/exambyte/cover.svg`,
     route: "/projekte/exambyte",
     cta: "Mehr anzeigen",
     accent: "text-yellow-400",

@@ -32,9 +32,10 @@ export default {
         },
       },
       fontFamily: {
-        display: ["Geist", "system-ui", "sans-serif"],
-        body: ["Geist", "system-ui", "sans-serif"],
-        mono: ["Geist Mono", "ui-monospace", "monospace"],
+        // Self-hosted from @fontsource-variable (src/main.tsx), no request to Google
+        display: ["Geist Variable", "system-ui", "sans-serif"],
+        body: ["Geist Variable", "system-ui", "sans-serif"],
+        mono: ["Geist Mono Variable", "ui-monospace", "monospace"],
       },
       boxShadow: {
         accent: "0 0 0 1px #3b82f6",

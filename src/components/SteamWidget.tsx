@@ -29,7 +29,7 @@ export default function SteamWidget({ appId, title, image, className = "" }: Ste
         <p className="font-display text-sm font-semibold text-fg">{title} auf Steam</p>
         <p className="text-xs leading-relaxed text-muted">{steamPlaceholderCopy.notice}</p>
         <div className="flex flex-wrap gap-2">
-          <button type="button" className="swiss-btn-primary min-h-[44px] px-4 py-2 text-sm" onClick={grantExternalMedia}>
+          <button type="button" className="swiss-btn-secondary min-h-[44px] px-4 py-2 text-sm" onClick={grantExternalMedia}>
             {steamPlaceholderCopy.load}
           </button>
           <a

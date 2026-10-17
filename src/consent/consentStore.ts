@@ -108,11 +108,14 @@ export function openConsentSettings(opener: HTMLElement | null) {
   emit();
 }
 
+/** Closes the banner; returns whether focus went back to the element that reopened it. */
 export function closeConsentSettings() {
   const { opener } = settings;
   settings = { ...settings, open: false, opener: null };
   emit();
-  if (opener?.isConnected) opener.focus();
+  if (!opener?.isConnected) return false;
+  opener.focus();
+  return true;
 }
 
 export function useConsent() {

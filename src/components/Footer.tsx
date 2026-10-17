@@ -66,7 +66,11 @@ export default function Footer() {
               </a>
             </li>
             <li>
-              <ConsentSettingsButton className="mv-link text-left text-sm text-muted hover:text-fg transition-colors duration-200" />
+              {/* py-3 gives a 44 px target; -my-3 keeps the list rhythm of the links above */}
+              <ConsentSettingsButton
+                className="-my-3 py-3 text-left text-sm text-muted hover:text-fg transition-colors duration-200"
+                labelClassName="mv-link"
+              />
             </li>
           </ul>
         </nav>

@@ -279,7 +279,7 @@ export default function ProjectHeistLine() {
 
         {/* Steam Widget */}
         <h2>Steam</h2>
-        <p className="text-faint mb-4">Direkt aus dem Steam-Store eingebettet.</p>
+        <p className="text-faint mb-4">Mit Ihrer Einwilligung direkt aus dem Steam-Store eingebettet.</p>
         <SteamWidget
           appId={3613860}
           title="HeistLine"

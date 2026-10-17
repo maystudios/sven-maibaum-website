@@ -121,6 +121,11 @@ test.describe("before any choice", () => {
     test(`requests nothing from third parties on ${route}`, async ({ page, context, baseURL }) => {
       const log = recordRequests(context);
       await page.goto(route, { waitUntil: "load" });
+      // The page really rendered: the banner asks, and game pages show the Steam placeholder.
+      await expect(banner(page)).toBeVisible();
+      if (route.includes("heistline") || route.includes("mr-dork")) {
+        await expect(page.locator('[data-consent-placeholder="steam"]')).toBeVisible();
+      }
       await scrollThrough(page);
       await page.waitForLoadState("networkidle");
       const foreign = thirdParty(log, baseURL);
@@ -192,6 +197,9 @@ test.describe("banner", () => {
     const dialog = banner(page);
     await expect(dialog).toBeVisible();
     await expect.poll(() => focusIsInBanner(page)).toBe(true);
+    // Escape cannot dismiss the banner before a choice exists.
+    await page.keyboard.press("Escape");
+    await expect(dialog).toBeVisible();
 
     await tabTo(page, "Einstellungen");
     await page.keyboard.press("Enter");
@@ -203,6 +211,25 @@ test.describe("banner", () => {
 
     await expect(dialog).toBeHidden();
     expect(await storedChoice(page)).toMatchObject({ version: 1, statistics: true, externalMedia: false });
+    // Focus goes to the page content, not to <body>.
+    expect(await page.evaluate(() => document.activeElement?.tagName)).toBe("MAIN");
+  });
+
+  test("asks again when the stored choice is outdated, expired or unreadable", async ({ page }) => {
+    const yearAgo = new Date(Date.now() - 366 * 86_400_000).toISOString();
+    const records = [
+      JSON.stringify({ version: 0, updatedAt: new Date().toISOString(), statistics: true, externalMedia: true }),
+      JSON.stringify({ version: 1, updatedAt: yearAgo, statistics: true, externalMedia: true }),
+      "{not json",
+    ];
+    for (const record of records) {
+      await page.goto("/impressum/");
+      await page.evaluate(([key, value]) => window.localStorage.setItem(key, value), [CONSENT_KEY, record]);
+      await page.reload();
+      await expect(banner(page)).toBeVisible();
+      await banner(page).getByRole("button", { name: "Einstellungen", exact: true }).click();
+      await expect(switchFor(banner(page), "Statistik")).toHaveAttribute("aria-checked", "false");
+    }
   });
 
   test("rejecting stores the choice, loads nothing from Google, and the footer reopens the banner", async ({ page, context, baseURL }) => {
@@ -324,6 +351,11 @@ test.describe("statistics", () => {
     // Absence of a duplicate can only be shown by waiting past GA's batching window.
     await page.waitForTimeout(6000);
     expect(pageViews(log)).toEqual(["/", "/impressum", "/datenschutz"]);
+    // Consent Mode: ads storage denied, analytics granted (gcs=G101); no ad personalisation (npa=1).
+    for (const event of gaEvents(log)) {
+      expect(event.params.gcs).toBe("G101");
+      expect(event.params.npa).toBe("1");
+    }
     const hosts = [...new Set(log.filter(isGoogle).map((entry) => entry.host))].sort();
     saveEvidence("network-after-accept.json", {
       googleHosts: hosts,
@@ -345,7 +377,9 @@ test.describe("statistics", () => {
     await page.locator("#email").fill(values.email);
     await page.locator("#message").fill(values.message);
     await page.getByRole("button", { name: "Nachricht senden" }).click();
-    // Form events are batched; wait for GA to flush before checking what it sent.
+    // GA saw the form (otherwise the check below would pass vacuously) ...
+    await expect.poll(() => gaEvents(log).some((event) => event.name === "form_start"), { timeout: 20_000 }).toBe(true);
+    // ... and form events are batched; wait for GA to flush before checking what it sent.
     await page.waitForTimeout(8000);
 
     const sent = log.filter(isGoogle).map((entry) => {
@@ -406,6 +440,52 @@ test.describe("statistics", () => {
     expect(eventsAfterWithdrawal).toEqual([]);
     expect(cookiesAfterNavigation).toEqual([]);
     expect(afterReload).toEqual([]);
+  });
+
+  test("consent given again in the same page resumes GA from the next route change", async ({ page, context }) => {
+    const log = recordRequests(context);
+    await page.goto("/");
+    const dialog = banner(page);
+    await dialog.getByRole("button", { name: "Alle akzeptieren", exact: true }).click();
+    await expect.poll(() => pageViews(log), { timeout: 20_000 }).toEqual(["/"]);
+
+    const settingsButton = page.getByRole("button", { name: "Cookie-Einstellungen" });
+    await settingsButton.dispatchEvent("click");
+    await switchFor(dialog, "Statistik").click();
+    await dialog.getByRole("button", { name: "Auswahl speichern" }).click();
+    await expect.poll(() => gaCookieNames(context)).toEqual([]);
+
+    await settingsButton.dispatchEvent("click");
+    await switchFor(dialog, "Statistik").click();
+    await dialog.getByRole("button", { name: "Auswahl speichern" }).click();
+    await page.locator("footer").getByRole("link", { name: "Impressum", exact: true }).click();
+    await expect(page).toHaveURL(/\/impressum$/);
+    await expect.poll(() => pageViews(log), { timeout: 20_000 }).toEqual(["/", "/impressum"]);
+    await expect.poll(() => gaCookieNames(context)).toEqual(["_ga", `_ga_${MEASUREMENT_ID.slice(2)}`]);
+  });
+
+  test("withdrawal also deletes GA cookies set on the parent domain", async ({ page, context, baseURL }) => {
+    // Serve the build under a production-like host name, so GA sets its cookies on the parent domain.
+    const host = "http://www.sven-maibaum.test";
+    await context.route(`${host}/**`, async (route) => {
+      const url = new URL(route.request().url());
+      const response = await route.fetch({ url: `${baseURL}${url.pathname}${url.search}` });
+      await route.fulfill({ response });
+    });
+    await page.goto(`${host}/`);
+    const dialog = banner(page);
+    await dialog.getByRole("button", { name: "Alle akzeptieren", exact: true }).click();
+    await expect.poll(() => gaCookieNames(context), { timeout: 20_000 }).toEqual(["_ga", `_ga_${MEASUREMENT_ID.slice(2)}`]);
+    const before = (await context.cookies())
+      .filter((cookie) => GA_COOKIE.test(cookie.name))
+      .map(({ name, domain }) => ({ name, domain }));
+
+    await page.getByRole("button", { name: "Cookie-Einstellungen" }).dispatchEvent("click");
+    await switchFor(dialog, "Statistik").click();
+    await dialog.getByRole("button", { name: "Auswahl speichern" }).click();
+    await expect.poll(() => gaCookieNames(context)).toEqual([]);
+    saveEvidence("cookies-parent-domain.json", { before, after: await gaCookieNames(context) });
+    expect(before.every((cookie) => cookie.domain === ".sven-maibaum.test")).toBe(true);
   });
 });
 

@@ -1,10 +1,11 @@
 import type { ConsentCategory } from "../consent/consentStore";
+import { GA_SESSION_COOKIE } from "../consent/googleAnalytics";
 
 /** Copy of the consent banner and the consent-gated embeds. Facts: Datenschutz.tsx, sections 5 to 7. */
 export const consentCopy = {
   title: "Cookie-Einstellungen",
   intro:
-    "Mit Ihrer Einwilligung zähle ich mit Google Analytics Besuche und Seitenaufrufe. Auf den Seiten zu HeistLine und Mr. Dork 3 kann zusätzlich ein Steam-Widget von Valve laden. Ohne Ihre Einwilligung lädt beides nicht. Ihre Wahl können Sie jederzeit über „Cookie-Einstellungen“ im Seitenfuß ändern.",
+    "Mit Ihrer Einwilligung nutze ich Google Analytics, um zu sehen, wie viele Menschen diese Website besuchen, welche Seiten sie aufrufen und wie sie sie nutzen. Auf den Seiten zu HeistLine und Mr. Dork 3 kann zusätzlich ein Steam-Widget von Valve laden. Ohne Ihre Einwilligung lädt beides nicht. Ihre Wahl können Sie jederzeit über „Cookie-Einstellungen“ im Seitenfuß ändern.",
   policyLead: "Mehr dazu in der",
   policyLink: "Datenschutzerklärung",
   acceptAll: "Alle akzeptieren",
@@ -22,8 +23,7 @@ export const consentCategories: { id: ConsentCategory; label: string; descriptio
   {
     id: "statistics",
     label: "Statistik",
-    description:
-      "Google Analytics zählt Besuche und Seitenaufrufe. Dafür setzt Google die Cookies _ga und _ga_TSBZ01TVDR, die bis zu zwei Jahre gültig sind. Anbieter ist Google Ireland Limited; Daten können an Google LLC in den USA gehen.",
+    description: `Google Analytics erfasst aufgerufene Seiten, Scrolltiefe, Klicks auf Links zu anderen Websites, Downloads sowie Beginn und Absenden des Kontaktformulars (nie Ihre Eingaben), dazu Gerät, Browser und ungefähren Standort. Dafür setzt Google die Cookies _ga und ${GA_SESSION_COOKIE}, die bis zu zwei Jahre gültig sind. Anbieter ist Google Ireland Limited; Daten können an Google LLC in den USA gehen.`,
   },
   {
     id: "externalMedia",

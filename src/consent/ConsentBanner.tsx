@@ -61,7 +61,8 @@ function ConsentDialog({ consent, startExpanded }: ConsentDialogProps) {
 
   const decide = (next: ConsentDecisions) => {
     saveConsent(next);
-    closeConsentSettings();
+    // The banner took focus when it opened by itself; hand it to the page, not to <body>.
+    if (!closeConsentSettings()) focusPageContent();
   };
 
   const handleKeyDown = (event: KeyboardEvent) => {
@@ -136,7 +137,7 @@ function ConsentDialog({ consent, startExpanded }: ConsentDialogProps) {
               <div>
                 <p className="flex min-h-[44px] items-center justify-between gap-4 text-sm font-semibold text-fg">
                   {consentCopy.necessaryLabel}
-                  <span className="text-xs font-normal text-faint">{consentCopy.necessaryState}</span>
+                  <span className="text-xs font-normal text-muted">{consentCopy.necessaryState}</span>
                 </p>
                 <p className="mt-1 text-sm leading-relaxed text-muted">{consentCopy.necessaryDescription}</p>
               </div>
@@ -151,6 +152,13 @@ function ConsentDialog({ consent, startExpanded }: ConsentDialogProps) {
       </section>
     </>
   );
+}
+
+function focusPageContent() {
+  const main = document.querySelector<HTMLElement>("main");
+  if (!main) return;
+  if (!main.hasAttribute("tabindex")) main.setAttribute("tabindex", "-1");
+  main.focus({ preventScroll: true });
 }
 
 type CategorySwitchProps = {

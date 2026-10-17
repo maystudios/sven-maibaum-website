@@ -141,6 +141,8 @@ body {
 }
 
 img, svg, video { max-width: 100%; height: auto; }
+/* Focus target after a consent choice (ConsentBanner); the region itself needs no ring */
+main[tabindex="-1"]:focus { outline: none; }
 iframe { max-width: 100%; }
 h1, h2, h3 { overflow-wrap: break-word; hyphens: auto; }
 

@@ -14,6 +14,8 @@
  * Sources: docs/research/2026-10-17-google-analytics-consent.md
  */
 export const MEASUREMENT_ID = "G-TSBZ01TVDR";
+/** Session cookie GA4 sets next to _ga: "_ga_" plus the ID without "G-". */
+export const GA_SESSION_COOKIE = `_ga_${MEASUREMENT_ID.slice(2)}`;
 const DISABLE_FLAG = `ga-disable-${MEASUREMENT_ID}`;
 const GA_COOKIE = /^_ga($|_)/;
 
@@ -39,6 +41,8 @@ function setDisabled(disabled: boolean) {
 export function enableAnalytics() {
   setDisabled(false);
   if (loaded) {
+    // Consent given again in the same page view: measurement resumes with the
+    // next route change; the current page already counted before the withdrawal.
     gtag("consent", "update", { analytics_storage: "granted" });
     return;
   }

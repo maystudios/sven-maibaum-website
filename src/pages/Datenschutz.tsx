@@ -1,5 +1,5 @@
 import ConsentSettingsButton from "../consent/ConsentSettingsButton";
-import { MEASUREMENT_ID } from "../consent/googleAnalytics";
+import { GA_SESSION_COOKIE } from "../consent/googleAnalytics";
 
 /**
  * Privacy policy. Every vendor fact has a source with its reading date in
@@ -7,7 +7,6 @@ import { MEASUREMENT_ID } from "../consent/googleAnalytics";
  * the behaviour described in sections 5 to 7 is checked by tests/e2e/consent.spec.ts.
  */
 
-const gaSessionCookie = `_ga_${MEASUREMENT_ID.slice(2)}`;
 
 function ExternalLink({ href, children }: { href: string; children: string }) {
   return (
@@ -35,6 +34,13 @@ export default function Datenschutz() {
         Ohne Ihre Einwilligung lädt diese Website nur Dateien von ihrem eigenen Server und setzt keine Cookies. Google
         Analytics (Abschnitt 6) und das Steam-Widget (Abschnitt 7) laden erst, wenn Sie in den Cookie-Einstellungen
         eingewilligt haben (Abschnitt 5).
+      </p>
+      <p>
+        Sie sind weder gesetzlich noch vertraglich verpflichtet, Daten bereitzustellen. Ohne die Verbindungsdaten aus
+        Abschnitt 3 kann die Website nicht angezeigt werden, und ohne Kontaktdaten kann ich Ihre Anfrage nicht
+        beantworten. Einwilligungen sind freiwillig; ohne sie funktioniert die Website vollständig, nur das Steam-Widget
+        erscheint dann als Bild mit Link. Eine automatisierte Entscheidungsfindung einschließlich Profiling nach Art. 22
+        DSGVO findet nicht statt.
       </p>
 
       <h2>2. Verantwortlicher</h2>
@@ -77,9 +83,9 @@ export default function Datenschutz() {
         nach dem Zweck der Erhebung, hier der Sicherheit, und nach gesetzlichen Pflichten.
       </p>
       <p>
-        <strong>Drittlandübermittlung:</strong> GitHub ist nach dem EU-U.S. Data Privacy Framework zertifiziert
-        (Angemessenheitsbeschluss der EU-Kommission vom 10.07.2023, Art. 45 DSGVO) und stützt Übermittlungen zusätzlich
-        auf die Standardvertragsklauseln der EU-Kommission (Art. 46 Abs. 2 lit. c DSGVO).
+        <strong>Drittlandübermittlung:</strong> GitHub stützt Übermittlungen nach eigener Angabe in der Regel auf die
+        Standardvertragsklauseln der EU-Kommission (Art. 46 Abs. 2 lit. c DSGVO) und ist zusätzlich nach dem EU-U.S. Data
+        Privacy Framework zertifiziert (Angemessenheitsbeschluss der EU-Kommission vom 10.07.2023, Art. 45 DSGVO).
       </p>
       <p>
         Datenschutzerklärung von GitHub:{" "}
@@ -93,7 +99,10 @@ export default function Datenschutz() {
       <p>
         Wenn Sie mir eine E-Mail schreiben, verarbeite ich Ihre E-Mail-Adresse, Ihren Namen, soweit Sie ihn angeben, und
         den Inhalt Ihrer Nachricht, um Ihre Anfrage zu beantworten. Das Postfach contact@sven-maibaum.com liegt bei
-        Google Workspace.
+        Google Workspace. Google verarbeitet die E-Mails dort als mein Auftragsverarbeiter nach dem
+        Datenverarbeitungszusatz von Google Cloud. Danach können die Daten in jedem Land verarbeitet werden, in dem
+        Google oder seine Unterauftragsverarbeiter Einrichtungen unterhalten; Übermittlungen in Drittländer stützt Google
+        auf einen anerkannten Übermittlungsmechanismus oder auf die Standardvertragsklauseln.
       </p>
       <h3>Kontaktformular (EmailJS)</h3>
       <p>
@@ -119,7 +128,9 @@ export default function Datenschutz() {
       <p>
         <strong>Speicherdauer:</strong> Die übermittelten Daten verbleiben, bis die Anfrage abschließend bearbeitet ist
         (in der Regel innerhalb von drei Monaten nach der letzten Antwort). Auf Anfrage werden Ihre Daten unverzüglich
-        gelöscht, soweit keine gesetzliche Aufbewahrungspflicht entgegensteht.
+        gelöscht, soweit keine gesetzliche Aufbewahrungspflicht entgegensteht. Bei EmailJS bleiben die Daten nach Angabe
+        des Anbieters 30 Tage gespeichert; IP-Protokolle kann EmailJS vorübergehend zur Abwehr von Missbrauch und Betrug
+        aufbewahren.
       </p>
       <p>
         <strong>Hinweis:</strong> Das Kontaktformular setzt selbst keine Cookies und nutzt keinen lokalen Speicher. Ihre
@@ -175,8 +186,7 @@ export default function Datenschutz() {
       <p>
         <strong>Verarbeitete Daten:</strong> Bei jedem Seitenaufruf, auch beim Wechsel zwischen Seiten dieser Website,
         sendet Ihr Browser an Google: die Adresse und den Titel der Seite, die zuvor besuchte Seite, die Spracheinstellung,
-        die Bildschirmauflösung, Angaben zu Browser, Betriebssystem und Gerät sowie eine zufällige Kennung aus dem Cookie
-        _ga. Zusätzlich erfasst Google Analytics, wenn Sie eine Seite zu 90 % durchscrollen, einen Link zu einer anderen
+        die Bildschirmauflösung, Angaben zu Browser, Betriebssystem und Gerät sowie die Kennung aus dem Cookie _ga. Zusätzlich erfasst Google Analytics, wenn Sie eine Seite zu 90 % durchscrollen, einen Link zu einer anderen
         Website anklicken, eine Datei herunterladen oder beginnen, das Kontaktformular auszufüllen, oder es absenden.
         Beim Kontaktformular übermittelt Google Analytics nur Merkmale des Formulars wie die Zieladresse, die Zahl der
         Felder und den Namen des ersten Feldes, nie Ihre Eingaben.
@@ -187,7 +197,7 @@ export default function Datenschutz() {
         Google Analytics protokolliert und speichert keine IP-Adressen.
       </p>
       <p>
-        <strong>Cookies:</strong> _ga dient zur Unterscheidung von Besuchern, {gaSessionCookie} speichert den Status der
+        <strong>Cookies:</strong> _ga dient zur Unterscheidung von Besuchern, {GA_SESSION_COOKIE} speichert den Status der
         Sitzung. Google Analytics setzt beide als Cookies dieser Website. Sie gelten zwei Jahre ab Ihrem letzten Besuch,
         sofern Ihr Browser die Laufzeit nicht verkürzt.
       </p>
@@ -215,7 +225,7 @@ export default function Datenschutz() {
       </p>
       <p>
         <strong>Widerruf:</strong> Über „Cookie-Einstellungen“ (Abschnitt 5). Ab dann erfasst Google Analytics auf dieser
-        Website nichts mehr, und die Website löscht die Cookies _ga und {gaSessionCookie}. Ein Ereignis, das unmittelbar
+        Website nichts mehr, und die Website löscht die Cookies _ga und {GA_SESSION_COOKIE}. Ein Ereignis, das unmittelbar
         vor dem Widerruf erfasst wurde, kann Google Analytics noch übertragen. Zusätzlich bietet Google ein Browser-Add-on
         zur Deaktivierung von Google Analytics an:{" "}
         <ExternalLink href="https://tools.google.com/dlpage/gaoptout">tools.google.com/dlpage/gaoptout</ExternalLink>
@@ -232,14 +242,15 @@ export default function Datenschutz() {
       <h2>7. Steam-Widget (Valve)</h2>
       <p>
         Auf den Projektseiten zu HeistLine und Mr. Dork 3 kann ein Widget aus dem Steam-Store eingebunden werden.
-        Anbieter ist die Valve Corporation, P.O. Box 1688, Bellevue, WA 98009, USA. Ihr Vertreter in der EU ist die
-        RIVACY GmbH, Mexikoring 33, 22297 Hamburg.
+        Anbieter ist die Valve Corporation, P.O. Box 1688, Bellevue, WA 98009, USA. Vertreter von Valve in der EU ist
+        die RIVACY GmbH, Mexikoring 33, 22297 Hamburg.
       </p>
       <p>
         Ohne Ihre Einwilligung zeigt die Seite stattdessen ein eigenes Bild und einen Link zum Steam-Store; dabei geht
         keine Anfrage an Valve. Erst wenn Sie in „Externe Medien“ einwilligen, auch über die Schaltfläche
-        „Steam-Widget laden“, lädt Ihr Browser das Widget von Servern von Valve (store.steampowered.com und
-        steamstatic.com). Dabei erhält Valve Ihre IP-Adresse, Angaben zu Ihrem Browser und die Adresse dieser Website.
+        „Steam-Widget laden“, lädt Ihr Browser das Widget von store.steampowered.com und Bilder und Skripte dazu von
+        Servern unter steamstatic.com. Dabei erhält Valve Ihre IP-Adresse, Angaben zu Ihrem Browser und die Adresse
+        dieser Website.
         Valve protokolliert nach eigener Angabe die IP-Adresse.
       </p>
       <p>
@@ -279,22 +290,26 @@ export default function Datenschutz() {
       </p>
 
       <h2>9. Übermittlung in Drittländer</h2>
-      <p>Folgende Dienste übermitteln personenbezogene Daten in die USA:</p>
+      <p>Folgende Dienste übermitteln personenbezogene Daten in Länder außerhalb der EU:</p>
       <ul>
         <li>
-          <strong>GitHub Pages</strong> (Hosting), GitHub, Inc.: Data Privacy Framework (Art. 45 DSGVO) und
-          Standardvertragsklauseln (Art. 46 Abs. 2 lit. c DSGVO).
+          <strong>GitHub Pages</strong> (Hosting), GitHub, Inc., USA: Standardvertragsklauseln (Art. 46 Abs. 2 lit. c
+          DSGVO) und Data Privacy Framework (Art. 45 DSGVO).
         </li>
         <li>
-          <strong>EmailJS</strong> (Kontaktformular), EmailJS Pte. Ltd., Singapur, Server in den USA:
-          Standardvertragsklauseln (Art. 46 Abs. 2 lit. c DSGVO).
+          <strong>EmailJS</strong> (Kontaktformular), EmailJS Pte. Ltd., Singapur (kein Angemessenheitsbeschluss), Server
+          in den USA: Standardvertragsklauseln (Art. 46 Abs. 2 lit. c DSGVO).
         </li>
         <li>
-          <strong>Google</strong> (E-Mail-Postfach bei Google Workspace; Google Analytics nur mit Ihrer Einwilligung):
-          Die Google LLC ist nach dem Data Privacy Framework zertifiziert (Art. 45 DSGVO).
+          <strong>Google Workspace</strong> (E-Mail-Postfach): anerkannter Übermittlungsmechanismus oder
+          Standardvertragsklauseln nach dem Datenverarbeitungszusatz von Google Cloud (Abschnitt 4).
         </li>
         <li>
-          <strong>Valve</strong> (Steam-Widget, nur mit Ihrer Einwilligung), Valve Corporation: Data Privacy Framework
+          <strong>Google Analytics</strong> (nur mit Ihrer Einwilligung), Google LLC, USA: Data Privacy Framework (Art. 45
+          DSGVO), Standardvertragsklauseln, wo dieser Rahmen nicht greift.
+        </li>
+        <li>
+          <strong>Valve</strong> (Steam-Widget, nur mit Ihrer Einwilligung), Valve Corporation, USA: Data Privacy Framework
           (Art. 45 DSGVO) und Standardvertragsklauseln.
         </li>
       </ul>
@@ -308,7 +323,7 @@ export default function Datenschutz() {
       <p>
         Diese Website wird nur über HTTPS ausgeliefert; Aufrufe über HTTP werden auf HTTPS umgeleitet. Die Verbindung
         zwischen Ihrem Browser und dem Server ist damit verschlüsselt (Art. 32 Abs. 1 lit. a DSGVO), und Dritte können
-        übertragene Daten nicht mitlesen.
+        übertragene Daten nicht ohne Weiteres mitlesen.
       </p>
 
       <h2>11. Ihre Rechte</h2>

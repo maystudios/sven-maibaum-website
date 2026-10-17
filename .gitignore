@@ -25,5 +25,11 @@ dist-ssr
 *.sln
 *.sw?
 
+# Python bytecode
+__pycache__/
+
 # Workflow Harness: run artefacts stay local (public repo)
 /.harness/runs/
+
+# Agent worktrees (Claude Code)
+/.claude/worktrees/

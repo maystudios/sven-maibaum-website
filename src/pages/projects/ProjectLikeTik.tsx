@@ -27,8 +27,8 @@ export default function ProjectLikeTik() {
       <h2>Projektübersicht</h2>
       <p>
         <strong>LikeTik</strong> ist eine revolutionäre Plattform, die Social Commerce automatisiert. Als
-        <strong> Leitender Software-Architekt</strong> bei Axinity verantworte ich die technische Konzeption und
-        Umsetzung dieses komplexen Ökosystems. Die App verbindet Content Creator direkt mit Brands und übernimmt die
+        <strong> Lead Softwarearchitekt &amp; Software Developer</strong> bei Axinity habe ich von März 2025 bis
+        April 2026 die technische Konzeption und Umsetzung dieses komplexen Ökosystems verantwortet. Die App verbindet Content Creator direkt mit Brands und übernimmt die
         komplette Logistikkette – von der KI-basierten Produktauswahl bis zum Versand.
       </p>
       <p>

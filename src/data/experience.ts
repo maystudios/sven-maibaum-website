@@ -13,35 +13,43 @@ export const experienceHeading = {
 
 export const experiences: ExperienceEntry[] = [
   {
-    period: "März 2025 – Heute",
-    company: "LikeTik by Axinity (Teilzeit)",
-    title: "Leitender Software-Architekt",
+    period: "2026 – Heute",
+    company: "Sentrix Code",
+    title: "Chief Technology Officer (CTO)",
     detail:
-      "Verantwortlich für Software-Projektleitung und die Konzeption sowie Implementierung skalierbarer Web-Architekturen in innovativen Software-Engineering Projekten.",
-    tags: ["Architektur", "Web", "Projektleitung"],
-  },
-  {
-    period: "Okt. 2024 – Heute",
-    company: "Emotions Gaming (Teilzeit)",
-    title: "Leitender Spieleentwickler",
-    detail:
-      'Führende Rolle in der Entwicklung kreativer und technisch anspruchsvoller Spiele, u.a. für das Open-World-Multiplayer-Projekt "The Prisonbreak". Einsatz von Perforce und Unreal Engine.',
-    tags: ["Unreal Engine", "Perforce", "Multiplayer"],
+      "Technische Leitung meines eigenen Unternehmens: Architektur, Technik und Entwicklung.",
+    tags: ["Technische Leitung", "Architektur"],
   },
   {
     period: "Juni 2023 – Heute",
-    company: "MayStudios (Freiberuflich)",
-    title: "Unternehmensinhaber & Entwickler",
+    company: "MayStudios (Selbstständig)",
+    title: "CEO",
     detail:
-      "Data Scientist & Full-Stack Developer mit über 6 Jahren Erfahrung. Spezialisiert auf Backend-Systeme mit Spring Boot/Framework und datengetriebene Lösungen.",
-    tags: ["Spring Boot", "Full-Stack", "Data Science"],
+      "Eigenes Technologieunternehmen für Aufträge in Softwareentwicklung, Softwarearchitektur, Produktmanagement, technischer Leitung und Spieleentwicklung. Daneben entwickle ich eigene Produkte. Programmiert habe ich zuerst mit elf Jahren, heute sind es über zehn Jahre Erfahrung.",
+    tags: ["Softwarearchitektur", "Spieleentwicklung", "Eigene Produkte"],
+  },
+  {
+    period: "März 2025 – Apr. 2026",
+    company: "LikeTik by Axinity (Teilzeit)",
+    title: "Lead Softwarearchitekt & Software Developer",
+    detail:
+      "Architektur, technische Ausrichtung und Umsetzung einer Social-Commerce-App, von den Produktanforderungen bis zur skalierbaren Software.",
+    tags: ["Architektur", "Web", "Projektleitung"],
+  },
+  {
+    period: "Okt. 2024 – März 2026",
+    company: "Emotions Gaming (Vollzeit, remote)",
+    title: "Leitender Spieleentwickler",
+    detail:
+      'Lead Game Developer von HeistLine, früher unter dem Arbeitstitel "The Prison Break": Gameplay-Systeme, Spielablauf und Multiplayer-Netzwerk in Unreal Engine mit C++ und Blueprints, dazu Werkzeuge für das Team und die technische Planung.',
+    tags: ["Unreal Engine", "C++", "Multiplayer"],
   },
   {
     period: "März 2024 – Juli 2024",
     company: "Phantomedia (Vollzeit)",
     title: "Spieleentwickler",
     detail:
-      "Mitwirkung an der Entwicklung von Spielen unter Verwendung von Perforce und Unreal Engine, Fokus auf Gameplay-Mechaniken und Systemintegration.",
-    tags: ["Unreal Engine", "Gameplay", "Systeme"],
+      "KI-Systeme für Dinosaurier in Unreal Engine mit State Trees und Mass AI, prozedurale Animation und angepasste Navigation.",
+    tags: ["Unreal Engine", "KI", "Animation"],
   },
 ];

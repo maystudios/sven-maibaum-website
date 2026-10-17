@@ -24,7 +24,8 @@ export default function AboutBio({ className = "space-y-5 text-muted text-lg lea
       </p>
 
       <p>
-        Beruflich bin ich aktuell in mehreren Bereichen aktiv, die sich ideal ergänzen:
+        Seit 2026 bin ich <strong className="text-fg">CTO bei Sentrix Code</strong>,
+        meinem eigenen Unternehmen. Dort verantworte ich Architektur und Technik.
       </p>
 
       <p>
@@ -37,12 +38,11 @@ export default function AboutBio({ className = "space-y-5 text-muted text-lg lea
         >
           Axinity
         </a>
-        {' '}arbeite ich als leitender Software-Architekt an einer
-        E-Commerce-Plattform, die wir als{' '}
+        {' '}war ich von März 2025 bis April 2026 Lead Softwarearchitekt und Software
+        Developer einer E-Commerce-Plattform, die als{' '}
         <strong className="text-fg">offizieller Partner von TikTok</strong>{' '}
-        entwickeln. Unser Ziel ist es, Social-Commerce technisch neu und skalierbar
-        umzusetzen – mit stabilen Systemen, die Marken und Creator direkt miteinander
-        verbinden.
+        entsteht. Ziel war, Social Commerce technisch neu und skalierbar umzusetzen,
+        mit stabilen Systemen, die Marken und Creator direkt miteinander verbinden.
       </p>
 
       <p>
@@ -55,15 +55,15 @@ export default function AboutBio({ className = "space-y-5 text-muted text-lg lea
         >
           Emotions Gaming
         </a>{' '}
-        leite ich die Entwicklung des Spiels{' '}
+        habe ich bis März 2026 die Entwicklung des Spiels{' '}
         <a
           href="/projekte/heistline"
           className="text-brandLight hover:text-brand transition-colors duration-200 font-semibold"
         >
           „HeistLine"
         </a>
-        , einem storybasierten Action-Projekt, bei dem Gameplay und Technik eng
-        zusammenarbeiten, um ein intensives Spielerlebnis zu schaffen.
+        {' '}geleitet, einem storybasierten Action-Projekt, bei dem Gameplay und Technik
+        eng zusammenarbeiten, um ein intensives Spielerlebnis zu schaffen.
       </p>
 
       <p>

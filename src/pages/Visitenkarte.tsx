@@ -35,7 +35,7 @@ export default function Visitenkarte() {
       "N:Maibaum;Sven;;;",
       "FN:Sven Maibaum",
       "ORG:MayStudios",
-      "TITLE:Software-Architekt & Spieleentwickler",
+      "TITLE:CTO bei Sentrix Code\\, Software-Architekt & Spieleentwickler",
       "EMAIL;type=INTERNET;type=WORK:company@maystudios.net",
       "URL;type=WORK:https://sven-maibaum.com",
       "URL;type=LINKEDIN:https://www.linkedin.com/in/sven-maibaum",
@@ -135,7 +135,7 @@ export default function Visitenkarte() {
           <div className="text-center mb-8">
             <h1 className="text-2xl font-display font-bold text-cloud mb-1">Sven Maibaum</h1>
             <p className="text-sm text-muted mb-2">
-              Software-Architekt &amp; Spieleentwickler
+              CTO bei Sentrix Code · Software-Architekt &amp; Spieleentwickler
             </p>
             <p className="text-xs uppercase tracking-widest text-brand">
               MayStudios

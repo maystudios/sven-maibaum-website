@@ -269,15 +269,18 @@ Ausweichlösung, die ihren Zweck aushebelt.
   Next.js, Astro oder einem anderen Framework und keine neue Hauptversion von Vite,
   React oder Tailwind ohne seine Entscheidung.
 - **Styling:** Tailwind CSS 3 mit Design-Tokens in `tailwind.config.js` und
-  CSS-Variablen (`--sw-*`) in `src/index.css`. Hell- und Dunkelmodus über das
-  Attribut `data-theme` an `<html>`.
+  CSS-Variablen (`--sw-*`) in `src/index.css`.
+- **Nur dunkel:** Die Website hat keinen Hellmodus und keinen Umschalter. Im
+  Wortlaut des Projektverantwortlichen am 17.10.2026: „Der White Mode sollte auf
+  jeden Fall raus entfernt werden.“
 - **Bewegung:** Motion (`motion`, Import aus `"motion/react"`).
 - **Hosting:** GitHub Pages, gebaut und veröffentlicht über GitHub Actions
   (`.github/workflows/deploy.yml`) bei jedem Push auf `main`. Domain
   `sven-maibaum.com`; `www.sven-maibaum.com` leitet dorthin um.
 - **Kontaktformular:** EmailJS (`@emailjs/browser`). Die Werte stehen als
   `VITE_EMAILJS_SERVICE_ID`, `VITE_EMAILJS_TEMPLATE_ID` und `VITE_EMAILJS_PUBLIC_KEY`
-  in der lokalen `.env`.
+  in der lokalen `.env` und seit dem 17.10.2026 als Variablen des Repositorys, die
+  `deploy.yml` an den Build übergibt.
 - **Repository:** `maystudios/sven-maibaum-website`, öffentlich. Deshalb gelangen
   keine Zugangsdaten, Schlüssel, `.env`-Dateien, internen Dokumente, Kunden- oder
   Vertragsdaten ins Repository. Prüf- und Laufartefakte liegen unter
@@ -383,9 +386,16 @@ höchstem Triple-A-Niveau.“ Und: „Entscheide selbst und bau das Ganze super 
 also keine physikalischen Fehler, Windrad in Strommast oder Straße ohne Kreuzung
 kreuzt sich und so.“
 
-- **Inhalt:** Eine Landschaft aus Rechenzentren wächst Stufe für Stufe, von einem
-  kleinen Gebäude bei Mini bis zu mehreren verbundenen Standorten mit Umspannwerk,
-  Strommasten, Windrädern und blau leuchtenden Datenleitungen bei Maximal *(Vorschlag)*.
+- **Inhalt:** Eine Kamerafahrt durch die Größenordnungen. Im Wortlaut des
+  Projektverantwortlichen am 16.10.2026: „Man fängt mit irgendetwas an, das
+  vielleicht ein Skript ist“, „Und wenn man auf klein geht, kommt man irgendwie in
+  eine App rein. Wenn man dann auf mittel geht, dann geht man in die App rein, durch
+  das Netzwerkkabel durch oder durch den WLAN-Empfang, weißt du, in das Datencenter
+  rein“, „Bei groß baut sich dann, zoomen wir irgendwie raus und die Datencenter
+  bauen sich aus dem Nichts. Und bei maximal, da bauen wir dann wirklich riesen
+  Datencenter, die miteinander verbunden sind und quasi wabern“ und „Das Wichtige,
+  was wir aber hierbei haben möchten, ist dieser wirkliche Seamless Travel“. Jede
+  Stufe hat eine Animation, die in Schleife läuft.
 - **Logik:** Die Szene ist aufgebaut wie ein echter Lageplan. Straßen kreuzen sich
   nur an Kreuzungen, Leitungen verbinden Masten und Umspannwerke, Rotoren haben
   Abstand zu allem, nichts schwebt oder durchdringt etwas. Was wächst, wächst in
@@ -398,9 +408,8 @@ kreuzt sich und so.“
   wird mit dem Stiltest vom 16.10.2026 geprüft. Die Bildfolge lädt erst in der Nähe
   des Kontaktbereichs. Bei reduzierter Bewegung zeigt sie je Stufe ein Standbild
   *(Vorschlag)*.
-- **Hell und dunkel:** Je eine Fassung für den Dunkel- und den Hellmodus, in Graphit
-  mit leuchtendem Blau und in hellem Ton. Festgelegt von den Agenten nach der
-  Übertragung am 16.10.2026.
+- **Farbe:** Graphit mit leuchtendem Blau. Eine helle Fassung entfällt mit dem
+  Hellmodus (17.10.2026).
 - **Texte:** Je Stufe eine Zeile mit typischen Beispielen, ohne fremde Markennamen
   und ohne die Behauptung, Sven habe ein solches System gebaut *(Vorschlag)*.
 
@@ -424,19 +433,20 @@ Aufbau, Rhythmus und Bewegungsideen, nie Texte, Bilder, Logos, Schriften oder Co
 
 ### Farben
 
-Stand aus `tailwind.config.js` und `src/index.css`, gelesen am 16.10.2026:
+Stand aus `tailwind.config.js` und `src/index.css`, gelesen am 16.10.2026; seit dem
+17.10.2026 ohne Hellmodus:
 
 | Token | Wert | Einsatz |
 | --- | --- | --- |
-| `ink` | `#09090B` | dunkler Hintergrund (`--sw-bg` im Dunkelmodus) |
+| `ink` | `#09090B` | Hintergrund (`--sw-bg`) |
 | `graphite` | `#18181B` | Flächen (`--sw-surface`) |
 | `slate` | `#3F3F46` | Rahmen, Nebenflächen |
-| `cloud` | `#FAFAFA` | Text im Dunkelmodus (`--sw-fg`) |
+| `cloud` | `#FAFAFA` | Text (`--sw-fg`) |
 | `mist` | `#E4E4E7` | helle Flächen |
 | `brand` | `#3b82f6` | Akzent |
 | `brandDark` | `#2563EB` | Akzent, gedrückt |
 | `brandLight` | `#60a5fa` | Akzent auf dunklem Grund |
-| `fg`, `canvas`, `surface`, `muted`, `faint`, `border`, `surface2` | CSS-Variablen `--sw-*` | passen sich Hell- und Dunkelmodus an |
+| `fg`, `canvas`, `surface`, `muted`, `faint`, `border`, `surface2` | CSS-Variablen `--sw-*` | Rollen für Text, Flächen und Rahmen |
 
 Die `zinc`-Stufen in `tailwind.config.js` stehen dort nur noch aus
 Kompatibilitätsgründen. Die Farbskala `.tech-tag-*` hat die Varianten `blue`, `gray`,
@@ -483,7 +493,7 @@ Aus dem vorgeschlagenen Menü hat der Projektverantwortliche am 16.10.2026 gewä
 | Nahtlose Übergänge: die Projektkarte wächst in die Projektseite, Bild und Titel als gemeinsame Elemente | „Was wichtig ist, ist auf jeden Fall B. Nahtlose Übergänge.“ |
 | Seitenübergänge zwischen allen Routen | „Seitenübergänge, F ist wichtig, ne? So wie wir es auch bei der [Sentrix] Code-Seite haben, so geile Übergänge.“ |
 | Scroll-Erzählung mit Tiefe: Bilder bewegen sich beim Scrollen in die Tiefe, die Zeitleiste zeichnet sich | „Dann D ist sehr geil. Scroll-Erzählungen, ne? Also dass sich das Ganze bewegt in die Tiefe und Co.“ |
-| Mikro-Interaktionen: Federn beim Drücken, animierte Unterstreichungen, Theme-Schalter verwandelt sich | „Mikroanimationen sind wichtig, ne? Also dass das federt und so weiter.“ |
+| Mikro-Interaktionen: Federn beim Drücken, animierte Unterstreichungen; der Theme-Schalter entfällt mit dem Hellmodus | „Mikroanimationen sind wichtig, ne? Also dass das federt und so weiter.“ |
 | Video-Vorschau auf Projektkarten | „Videovorschau ist natürlich auch gut. Müssen wir aber halt überlegen, was wir da für ein Video haben.“ |
 | Signatur im Hero aus echter Arbeit | „A können wir auch mit einbauen. Wie gesagt, wir müssen nur halt gucken, was wir in dem Moment haben“ |
 | Effekte, die dem Mauszeiger folgen | ausgeschlossen: „diese Mauseffekte auf jeden Fall nicht, die da folgen.“ |
@@ -507,8 +517,10 @@ besten“.
 | Seitenwechsel | Auflösung über Rasterzellen mit blauen Zellen, hin und zurück (aus V3) |
 | Kontaktformular | Regler mit 3D-Szene, siehe „Seitenstruktur“, Abschnitt „Kontaktformular“ |
 
-Die Varianten V1 bis V4 liegen auf dem Branch `explore/motion-variants` und werden
-über `?v=1` bis `?v=4` aufgerufen. V4 führt die gewählte Richtung zusammen.
+V4 führt die gewählte Richtung zusammen. Der Projektverantwortliche hat V4 am
+17.10.2026 bestätigt. Im Wortlaut: „Wir möchten das Ganze auf jeden Fall schon mal
+online stellen.“ V4 ist damit die einzige Gestaltung der Website; die Varianten V1
+bis V3 bleiben nur auf dem Branch `explore/motion-variants` zum Nachsehen.
 
 ### Technik und Vorgehen
 
@@ -1012,8 +1024,8 @@ Workflow Harness (`SPEC/02-yardstick.md`, F1).
 3. Nutze die festgelegten Design-Tokens; neue Werte werden erst im Abschnitt
    „Design-System“ festgehalten, dann verwendet.
 4. Öffne das Ergebnis im echten Browser, erstelle Screenshots in den Breiten 320,
-   390, 768, 1024 und 1440 px, jeweils hell und dunkel, und prüfe Abstände,
-   Lesbarkeit, Kontrast und Bewegung. Teste die Bedienung mit Maus, Tastatur und
+   390, 768, 1024 und 1440 px und prüfe Abstände, Lesbarkeit, Kontrast und
+   Bewegung. Teste die Bedienung mit Maus, Tastatur und
    Touch, Bewegung mit voller und reduzierter Einstellung.
 5. Lies die tatsächliche Struktur zurück, etwa den DOM, statt dich auf die eigene
    Änderung zu verlassen.
@@ -1036,8 +1048,7 @@ zutreffende Punkte werden mit Grund markiert.
 7. Ein unabhängiger Agent oder ein anderes Modell hat die Änderung gegen diese Liste
    geprüft; berührte feste Projektentscheidungen sind abgestimmt.
 8. Alles, was die Arbeit vorübergehend angelegt hat, ist aufgeräumt.
-9. Screenshots in den vereinbarten Breiten, hell und dunkel und in beiden Sprachen,
-   sind geprüft.
+9. Screenshots in den vereinbarten Breiten und in beiden Sprachen sind geprüft.
 10. Tastaturbedienung und Kontrast sind geprüft.
 11. Jede neue Route steht in Router, Prerender und Sitemap, in beiden Sprachen.
 12. Die Seite lädt zur Laufzeit nichts von Dritten außer dem, was der Abschnitt
@@ -1065,8 +1076,9 @@ globalen Skills `anwalt-de` und `gdpr-dsgvo-expert`.
 - **Datenschutzerklärung:** Vollständig nach Art. 13 DSGVO, ohne Platzhalter. Sie
   nennt GitHub Pages mit den Server-Logs, deren Dauer GitHub nicht beziffert (deshalb
   ein Kriterium statt „sieben Tage“), EmailJS Pte. Ltd. aus Singapur mit Servern in
-  den USA und Standardvertragsklauseln, das Steam-Widget von Valve, die Speicherung
-  des Farbmodus im lokalen Speicher und den Kontakt per E-Mail.
+  den USA und Standardvertragsklauseln, das Steam-Widget von Valve und den Kontakt
+  per E-Mail. Den Farbmodus speichert die Website nicht mehr, seit der Hellmodus
+  entfallen ist.
 - **Drittanbieter zur Laufzeit:** Schriften werden selbst ausgeliefert, Font Awesome
   und das Bild von `placehold.co` entfallen. EmailJS sendet nur beim Absenden des
   Formulars. Die Steam-Widgets bleiben; im Wortlaut des Projektverantwortlichen am
@@ -1114,8 +1126,8 @@ mit Art. 50 und [§ 305 BGB](https://www.gesetze-im-internet.de/bgb/__305.html),
 die Datenschutzangaben von GitHub, EmailJS und Valve. Die ausführliche Recherche mit
 Zitaten liegt unter `docs/research/2026-10-16-legal.md`. Das Münchner Urteil ist eine
 erste Instanz; die Frage zur IP-Adresse liegt dem Europäischen Gerichtshof vor. Die
-Einschätzungen zu § 18 MStV, zum Farbmodus und zum Cookie des Steam-Widgets sind
-Auslegung, keine gesicherte Rechtsprechung. Die Ausnahme beim
+Einschätzungen zu § 18 MStV und zum Cookie des Steam-Widgets sind Auslegung, keine
+gesicherte Rechtsprechung. Die Ausnahme beim
 Barrierefreiheitsstärkungsgesetz setzt weniger als zehn Beschäftigte und höchstens
 2 Millionen Euro Umsatz voraus; das ist eine Angabe über MAY STUDIOS, die der
 Projektverantwortliche bestätigt.
@@ -1145,9 +1157,6 @@ Projektverantwortlichen fehlt.
 - Exambyte fertigstellen und unter `exambyte.de` im Sandbox-Modus online stellen
   (eigenes Projekt).
 
-- Kontaktformular in Produktion reparieren: Der Build in GitHub Actions bekommt die
-  EmailJS-Werte nicht, im veröffentlichten JavaScript sind sie am 16.10.2026 leer.
-  Die Werte kommen als Variablen des Repositorys in `deploy.yml`.
 - Datenschutzerklärung berichtigen: Platzhalter, EmailJS Pte. Ltd. mit
   Standardvertragsklauseln, Kriterium für die GitHub-Logs, Valve, selbst
   ausgelieferte Schriften.
@@ -1166,12 +1175,11 @@ Projektverantwortlichen fehlt.
 - Sitemap um maxsimcli, cc-templates und fab-store ergänzen; gemeinsames
   Routenverzeichnis prüfen.
 - Testgrundlage einrichten: Vitest, Playwright und ein Testschritt in `deploy.yml`.
-- Bewegungskonzept: V4 vom Projektverantwortlichen bestätigen lassen, dann Tokens und
-  Katalog in den Abschnitt „Bewegung“.
-- 3D-Szene zur Projektgröße: Stiltest auswerten und dem Projektverantwortlichen
-  zeigen; nach Bestätigung von Technik, Inhalt der Stufen, Beispieltexten und der
-  Position über dem Kontaktformular alle Stufen in beiden Fassungen rendern und
-  einbauen.
+- Bewegungskonzept: Tokens und Katalog von V4 in den Abschnitt „Bewegung“
+  übernehmen.
+- 3D-Szene zur Projektgröße: den Übergang zwischen Mini und Klein so flüssig machen
+  wie die übrigen; Beispieltexte der Stufen und die Position über dem
+  Kontaktformular bestätigen lassen.
 - KI-Look abbauen nach dem Abschnitt „Kein KI-Look“.
 - Bilder optimieren und Routen mit `React.lazy` laden.
 - Englische Fassung: URL-Aufbau bestätigen, Texte übersetzen, Prerender erweitern.

@@ -24,7 +24,7 @@ export default function Datenschutz() {
       <address className="not-italic leading-7">
         <strong>Sven Maibaum</strong>
         <br />
-        [Straße Hausnummer]
+        Bürgermeister-Schmidt-Str. 72B
         <br />
         51399 Burscheid
         <br />
@@ -34,8 +34,6 @@ export default function Datenschutz() {
         E-Mail: <a href="mailto:contact@sven-maibaum.com" className="footer-link">contact@sven-maibaum.com</a>
         <br />
         E-Mail (geschäftlich): <a href="mailto:company@maystudios.net" className="footer-link">company@maystudios.net</a>
-        <br />
-        Telefon: [Telefonnummer]
       </p>
       <p>
         Ein Datenschutzbeauftragter ist nicht bestellt. Die Voraussetzungen nach Art. 37 DSGVO liegen nicht vor.
@@ -83,20 +81,23 @@ export default function Datenschutz() {
       <h2>4. Kontaktformular (EmailJS)</h2>
       <p>
         Wenn Sie das Kontaktformular nutzen, werden Ihre Eingaben (Name, E-Mail-Adresse, Nachricht) sowie technische
-        Daten (IP-Adresse, Zeitstempel) an den Dienst EmailJS übertragen. EmailJS leitet die Nachricht als E-Mail an
-        mich weiter.
+        Daten (IP-Adresse, Zeitstempel) an den Dienst EmailJS übertragen. EmailJS stellt die Nachricht über mein
+        E-Mail-Postfach bei Google Workspace an mich zu und schickt Ihnen eine automatische Eingangsbestätigung an die
+        angegebene E-Mail-Adresse.
       </p>
       <p>
-        <strong>Dienstleister:</strong> EmailJS Corp., 100 Cambridge Street, 14th Floor, Boston, MA 02114, USA.
+        <strong>Dienstleister:</strong> EmailJS Pte. Ltd., Singapur. Die Server von EmailJS stehen in den USA und
+        werden von Amazon Web Services betrieben.
       </p>
       <p>
         <strong>Rechtsgrundlage:</strong> Art. 6 Abs. 1 lit. b DSGVO. Die Verarbeitung ist zur Beantwortung Ihrer
         Anfrage und damit zur Aufnahme einer vorvertraglichen Kommunikation erforderlich.
       </p>
       <p>
-        <strong>Drittlandübermittlung:</strong> EmailJS verarbeitet Daten auf Servern in den USA. Die Datenübermittlung
-        erfolgt auf Grundlage von EU-Standardvertragsklauseln (SCCs) nach Art. 46 Abs. 2 lit. c DSGVO als geeignete
-        Garantie nach Art. 44 ff. DSGVO.
+        <strong>Drittlandübermittlung:</strong> EmailJS verarbeitet Daten auf Servern in den USA. Für EmailJS gilt
+        weder ein Angemessenheitsbeschluss noch das EU-U.S. Data Privacy Framework. Die Datenübermittlung erfolgt
+        deshalb auf Grundlage der EU-Standardvertragsklauseln (SCCs) nach Art. 46 Abs. 2 lit. c DSGVO, die Teil der
+        Datenverarbeitungsvereinbarung von EmailJS sind (emailjs.com/legal/data-protection-agreement/).
       </p>
       <p>
         <strong>Speicherdauer:</strong> Die übermittelten Daten verbleiben, bis die Anfrage abschließend bearbeitet ist
@@ -217,7 +218,8 @@ export default function Datenschutz() {
           (Art. 46 Abs. 2 lit. c).
         </li>
         <li>
-          <strong>EmailJS</strong> (Kontaktformular), EmailJS Corp., USA: SCCs (Art. 46 Abs. 2 lit. c DSGVO).
+          <strong>EmailJS</strong> (Kontaktformular), EmailJS Pte. Ltd., Singapur, Server in den USA: SCCs
+          (Art. 46 Abs. 2 lit. c DSGVO).
         </li>
         <li>
           <strong>Google Fonts</strong> (Schriftarten), Google LLC, USA: Art. 45 DSGVO (DPF).
